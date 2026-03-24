@@ -1,0 +1,14 @@
+# Environments
+.venv/
+env/
+
+# Data (Hugging Face hosts the real data, we just keep samples here)
+data/processed/*.jsonl
+!data/processed/sample.jsonl
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Database/Secrets
+.env
