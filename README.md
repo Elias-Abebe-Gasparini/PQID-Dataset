@@ -12,5 +12,5 @@ A high-fidelity, dual-abstraction dataset for instruction-tuning Large Language 
 ## 🚀 Usage
 ```python
 from datasets import load_dataset
-dataset = load_dataset('json', data_files={'train': 'hf://datasets/Elias-Abebe-Gasparini/PQID/train.jsonl', 'validation': 'hf://datasets/Elias-Abebe-Gasparini/PQID/validation.jsonl'})
+dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 ```
