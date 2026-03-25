@@ -1,0 +1,16 @@
+# 1. Force SQL Detection
+# This ensures GitHub counts your database work in the language bar
+*.sql linguist-detectable=true
+*.sql linguist-language=SQL
+
+# 2. Ignore Data and Documentation
+# This prevents large data files or extra docs from skewing percentages
+data/* linguist-vendored
+00_database_infrastructure/*.md linguist-documentation
+scripts/README.md linguist-documentation
+
+# 3. Standardize Line Endings
+# Keeps the code consistent between Windows and Linux/GitHub
+* text=auto
+*.py text eol=lf
+*.sql text eol=lf
