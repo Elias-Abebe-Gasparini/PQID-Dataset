@@ -4,7 +4,7 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![arXiv Placeholder](https://img.shields.io/badge/arXiv-Pending-B31B1B.svg)](https://arxiv.org/)
 
-The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, parallel corpus designed for the supervised fine-tuning (SFT) of Large Language Models in quantum computing domains. 
+The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, parallel corpus designed for the supervised fine-tuning (SFT) of Large Language Models in quantum computing domains.
 
 It bridges the semantic gap between human-readable intent and hardware-executable logic by providing a 1:5 ratio of natural language instructions mapped to standard **IBM Qiskit** implementations and validated **OPENQASM 3.0** hardware representations.
 
@@ -32,9 +32,10 @@ This repository contains the complete, end-to-end MLOps and Data Engineering pip
 To validate the semantic density and training efficacy of the PQID dataset, a 1.3-Billion parameter language model was fine-tuned exclusively on this corpus. The training architecture utilized QLoRA and PyTorch FSDP, resulting in a specialized model highly capable of zero-shot Qiskit code generation and OPENQASM translation. The training scripts are available in the `05_model_training` directory.
 
 ## 📊 Dataset Overview
-- **Total Prompts:** 10,718
-- **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
-- **Languages:** Qiskit, OPENQASM 3.0
+
+* **Total Prompts:** 10,718
+* **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
+* **Languages:** Qiskit, OPENQASM 3.0
 
 ## 🚀 Quickstart: Loading the Dataset
 
