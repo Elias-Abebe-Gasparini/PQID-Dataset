@@ -41,7 +41,6 @@ To validate the semantic density and training efficacy of the PQID dataset, a 1.
 The finalized dataset is hosted on Hugging Face and can be instantly loaded into any PyTorch/TensorFlow environment:
 
 ```python
-from datasets import load_dataset
 
 # Load the dataset directly from the Hugging Face Hub
 from datasets import load_dataset
