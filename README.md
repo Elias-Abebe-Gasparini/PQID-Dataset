@@ -15,14 +15,14 @@ It bridges the semantic gap between human-readable intent and hardware-executabl
 
 - [📌 Project Overview](#-project-overview)
 - [🔄 Replication Research Ecosystem](#-replication-research-ecosystem)
-- [🏗️ Repository Architecture](#-repository-architecture)
+- [🏗️ Repository Architecture](#-Repository-Architecture)
   - [📂 File Hierarchy](#-file-hierarchy)
 - [🧠 The 1.3B Quantum-Instruct Model](#-the-13b-quantum-instruct-model)
-- [🕹️ Interactive Inference (Upcoming)](#-interactive-inference-upcoming)
-- [🛠️ Data Transformation Pipeline](#-data-transformation-pipeline)
+- [🕹️ Interactive Inference (Upcoming)](#-Interactive-Inference-Upcoming)
+- [🛠️ Data Transformation Pipeline](#-Data-Transformation-Pipeline)
 - [📊 Dataset Overview](#-dataset-overview)
 - [🚀 Quickstart: Loading the Dataset](#-quickstart-loading-the-dataset)
-- [📜 Citation & Academic Context](#-citation-academic-context)
+- [📜 Citation & Academic Context](#-citation--academic-context)
   - [⏳ Research Roadmap](#-research-roadmap)
 - [📧 Contact](#-contact)
 
