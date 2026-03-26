@@ -1,7 +1,7 @@
 # PQID: Parallel Quantum Instruction Dataset ⚛️
 
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
-[![Kaggle: Upcoming](https://img.shields.io/badge/Kaggle-Upcoming-lightgrey?logo=kaggle)](https://www.kaggle.com/abebegasparini)
+
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations at an approximate 1:5 circuit-to-instruction ratio. Each code pair has been validated for Python syntactic correctness, successful circuit construction in Qiskit, and transpilation/export into **OpenQASM 3.0**.
@@ -158,6 +158,25 @@ sequenceDiagram
 
 ## 📊 Dataset Overview
 
+### 🗄️ Dataset Schema
+
+Each entry in the PQID `.jsonl` files conforms to the following schema:
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `input` | String | The natural-language instruction or prompt describing the desired quantum logic. |
+| `output` | String | The validated target quantum code (IBM Qiskit) corresponding to the input. |
+| `metadata` | Dictionary | A nested JSON object containing provenance, traceability, and structural characteristics. |
+| `metadata.source_dataset` | String | The originating collection of the base circuit (e.g., "GitHub" or "RevLib"). |
+| `metadata.prompt_type` | String | Indicates the generation method of the prompt (e.g., "human_seed" or "paraphrase"). |
+| `metadata.circuit_hash` | String | A unique hash representing the circuit's structural identity, used for deep deduplication. |
+| `metadata.original_url` | String | The URL of the source repository or benchmark file where the original code was found. |
+| `metadata.hash` | String | The specific commit or file hash from the source repository to ensure version traceability. |
+| `metadata.end_line` | Integer | The ending line number of the extracted circuit code in the original source file. |
+| `metadata.file_path` | String | The specific file path within the original source repository. |
+| `metadata.start_line` | Integer | The starting line number of the extracted circuit code in the original source file. |
+| `metadata.github_anchor` | String | A formatted URL fragment directly pointing to the highlighted code lines in the source repository. |
+
 ### 📐 Mathematical Formalization
 
 The semantic expansion of the PQID corpus can be summarized by the **Instruction Density Ratio** ($\rho$), which measures the number of natural-language instruction variants associated with each validated base circuit:
@@ -243,11 +262,7 @@ If you use the PQID dataset or this pipeline in your research, please cite it as
 
 ### 🔬 Research Context
 
-This project is an **independent research initiative** conducted by Elias Abebe Gasparini.
-
-- **Independence:** All data engineering, SQL architecture, and model training logic were developed and funded solely by the author.
-- **Affiliation:** While the author was affiliated with Yonsei University at the time of the thesis writing, this specific body of work was produced independently of laboratory funding or institutional resources.
-- **Academic Contribution:** This dataset and its accompanying pipeline were developed as part of a Master's Thesis for the **MS in Innovation** at the **Department of Innovation, Yonsei University**. A formal breakdown of the dataset characteristics, validation methodology, and training results is currently pending publication. Once available on arXiv, the formal BibTeX citation will be updated above.
+This dataset and its accompanying compilation pipeline were developed as part of a Master's Thesis in the **Department of Innovation** at **Yonsei University**. For full details regarding the project's independent methodology, funding status, and institutional affiliation, please refer to the [RESEARCH_CONTEXT.md](./RESEARCH_CONTEXT.md) document.
 
 ### ⏳ Research Roadmap
 
