@@ -114,6 +114,13 @@ To ensure zero-install reproducibility, an interactive **Inference Notebook** is
 * **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
 * **Languages:** Qiskit, OPENQASM 3.0
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#e1f5fe', 'pie2': '#519f58'}}}%%
+pie title PQID Base Circuit Provenance
+    "GitHub Scraped (1,869)" : 1869
+    "RevLib Benchmark (249)" : 249
+```
+
 ### 🛡️ Data Quality & Deduplication
 
 Unlike standard instruction datasets, PQID underwent a multi-stage validation process:

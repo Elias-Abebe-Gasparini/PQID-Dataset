@@ -1,3 +1,5 @@
+%%Replication Infrastructure Ecosystem%%
+
 graph LR
     %% Class Definitions
     classDef github fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
@@ -32,3 +34,10 @@ graph LR
     G --> I
     H --> I
     I -- Feedback --> A
+
+    %%Pie Chart for Dataset Description%%
+
+    %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#e1f5fe', 'pie2': '#e8f5e9'}}}%%
+pie title PQID Base Circuit Provenance
+    "GitHub Scraped (1,869)" : 1869
+    "RevLib Benchmark (249)" : 249
