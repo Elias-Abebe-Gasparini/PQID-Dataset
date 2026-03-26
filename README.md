@@ -119,18 +119,24 @@ sequenceDiagram
     participant VAL as Compilation Engine
     participant Q3 as OpenQASM 3.0
 
-    Note over H,LLM: Semantic Expansion (1:5 Ratio)
+    rect rgb(121, 170, 208)
+    Note over H,LLM: Phase 1: Semantic Expansion (1:5 Ratio)
     H->>LLM: 2,118 "Natural" Prompts
     LLM-->>LLM: Paraphrasing & Rewriting
     LLM->>QK: 10,718 Instruction-Code Pairs
+    end
 
-    Note over QK,VAL: Validation Phase
+    rect rgb(130, 174, 130)
+    Note over QK,VAL: Phase 2: Logic Validation
     QK->>VAL: Execute Python Logic
     VAL-->>VAL: Syntax Check & Error Handling
+    end
     
-    Note over VAL,Q3: Hardware Mapping
+    rect rgb(190, 112, 229)
+    Note over VAL,Q3: Phase 3: Hardware Mapping
     VAL->>Q3: Transpile to Hardware Representation
     Q3-->>QK: Final Validated Pair
+    end
 ```
 
 ## 📊 Dataset Overview
