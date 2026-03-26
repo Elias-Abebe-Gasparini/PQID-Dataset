@@ -227,7 +227,7 @@ gantt
     dateFormat  YYYY-MM
     axisFormat  %b %Y
 
-    section 🏗️ Completed Engineering
+    section 🏗️ Completed Data Engineering
     01-02 - Acquisition & Harmonisation     :done, a1, 2025-01, 5M
     03-04 - Validation & LLM Generation     :done, b1, 2025-03, 7M
     05 - SFT 1.3B Model Training            :done, c1, 2025-06, 3M
