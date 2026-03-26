@@ -1,7 +1,6 @@
 # PQID: Parallel Quantum Instruction Dataset ⚛️
 
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
-
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations at an approximate 1:5 circuit-to-instruction ratio. Each code pair has been validated for Python syntactic correctness, successful circuit construction in Qiskit, and transpilation/export into **OpenQASM 3.0**.
