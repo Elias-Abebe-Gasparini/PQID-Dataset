@@ -123,4 +123,4 @@ This project is an **independent research initiative** conducted by Elias Abebe 
 For technical inquiries, dataset access, or collaboration opportunities:
 
 * **GitHub:** [Open an Issue](https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/issues)
-* **LinkedIn:** [Elias A. Gasparini](https://www.linkedin.com/in/your-profile-link)
+* **LinkedIn:** [Elias A. Gasparini](https://www.linkedin.com/in/elias-a-gasparini/)
