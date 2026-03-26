@@ -19,6 +19,11 @@ The resulting dataset provides high-quality, instruction-tuned data pairs that t
 
 ```mermaid
 graph LR
+    %% Class Definitions
+    classDef github fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef hf fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef kaggle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+
     subgraph "GitHub (The Logic)"
         A[00_DB_Infra] --> B[01_Acquisition]
         B --> C[02_Validation]
@@ -36,6 +41,12 @@ graph LR
         I[Inference Demo]
     end
 
+    %% Applying Classes
+    class A,B,C,D,E,F github;
+    class G,H hf;
+    class I kaggle;
+
+    %% Connections
     F -.-> G
     F -.-> H
     G --> I
