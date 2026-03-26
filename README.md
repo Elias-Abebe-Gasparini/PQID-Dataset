@@ -108,6 +108,31 @@ To ensure zero-install reproducibility, an interactive **Inference Notebook** is
 * **Purpose:** This notebook will provide a pre-configured environment to load the **PQID-1.3B model** and generate valid Qiskit/OpenQASM 3.0 code from natural language prompts in real-time.
 * **Why Kaggle?** By leveraging Kaggle's free GPU compute, researchers can validate the model's performance without local hardware constraints or additional cloud computing costs.
 
+## 🛠️ Data Transformation Pipeline
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant H as Human Seed
+    participant LLM as LLM Paraphraser
+    participant QK as Qiskit (Python)
+    participant VAL as Compilation Engine
+    participant Q3 as OpenQASM 3.0
+
+    Note over H,LLM: Semantic Expansion (1:5 Ratio)
+    H->>LLM: 2,118 "Natural" Prompts
+    LLM-->>LLM: Paraphrasing & Rewriting
+    LLM->>QK: 10,718 Instruction-Code Pairs
+
+    Note over QK,VAL: Validation Phase
+    QK->>VAL: Execute Python Logic
+    VAL-->>VAL: Syntax Check & Error Handling
+    
+    Note over VAL,Q3: Hardware Mapping
+    VAL->>Q3: Transpile to Hardware Representation
+    Q3-->>QK: Final Validated Pair
+```
+
 ## 📊 Dataset Overview
 
 * **Total Prompts:** 10,718

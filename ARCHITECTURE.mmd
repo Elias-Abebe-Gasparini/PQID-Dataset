@@ -35,9 +35,37 @@ graph LR
     H --> I
     I -- Feedback --> A
 
+
+
     %%Pie Chart for Dataset Description%%
 
     %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#e1f5fe', 'pie2': '#e8f5e9'}}}%%
 pie title PQID Base Circuit Provenance
     "GitHub Scraped (1,869)" : 1869
     "RevLib Benchmark (249)" : 249
+
+
+    %%Sequence Diagram Data Transformation Pipeline%%
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant H as Human Seed
+    participant LLM as LLM Paraphraser
+    participant QK as Qiskit (Python)
+    participant VAL as Compilation Engine
+    participant Q3 as OpenQASM 3.0
+
+    Note over H,LLM: Semantic Expansion (1:5 Ratio)
+    H->>LLM: 2,118 "Natural" Prompts
+    LLM-->>LLM: Paraphrasing & Rewriting
+    LLM->>QK: 10,718 Instruction-Code Pairs
+
+    Note over QK,VAL: Validation Phase
+    QK->>VAL: Execute Python Logic
+    VAL-->>VAL: Syntax Check & Error Handling
+    
+    Note over VAL,Q3: Hardware Mapping
+    VAL->>Q3: Transpile to Hardware Representation
+    Q3-->>QK: Final Validated Pair
+```
