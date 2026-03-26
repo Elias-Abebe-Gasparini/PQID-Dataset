@@ -49,7 +49,7 @@ graph LR
         E --> F[05_Training]
     end
 
-    subgraph "Hugging Face (Dataset & Model Hosting)"
+    subgraph "Hugging Face (Dataset & Model)"
         G[(PQID Dataset)]
         H[(1.3B Model Weights)]
     end
