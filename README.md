@@ -18,6 +18,7 @@ The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus
 - [🕹️ Interactive Inference (Upcoming)](#%EF%B8%8F-interactive-inference-upcoming)
 - [🛠️ Data Transformation Pipeline](#%EF%B8%8F-data-transformation-pipeline)
 - [📊 Dataset Overview](#-dataset-overview)
+- [⚠️ Limitations](#%EF%B8%8F-limitations)
 - [🚀 Quickstart: Loading the Dataset](#-quickstart-loading-the-dataset)
 - [📜 Citation & Academic Context](#-citation--academic-context)
   - [⏳ Research Roadmap](#-research-roadmap)

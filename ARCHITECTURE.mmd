@@ -1,12 +1,13 @@
 %%Replication Infrastructure Ecosystem%%
 
+```mermaid
 graph LR
     %% Class Definitions
-    classDef github fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef hf fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    classDef kaggle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef github fill:#76ddff,stroke:#01579b,stroke-width:2px;
+    classDef hf fill:#92d097,stroke:#2e7d32,stroke-width:2px;
+    classDef kaggle fill:#c1adea,stroke:#7b1fa2,stroke-width:2px;
 
-    subgraph "GitHub (The Logic)"
+    subgraph "GitHub (Source Pipeline)"
         A[00_DB_Infra] --> B[01_Acquisition]
         B --> C[02_Validation]
         C --> D[03_Gen]
@@ -14,12 +15,12 @@ graph LR
         E --> F[05_Training]
     end
 
-    subgraph "Hugging Face (The Storage)"
+    subgraph "Hugging Face (Dataset and Model Hosting)"
         G[(PQID Dataset)]
         H[(1.3B Model Weights)]
     end
 
-    subgraph "Kaggle (The Execution)"
+    subgraph "Kaggle (Interactive Inference)"
         I[Inference Demo]
     end
 
@@ -34,8 +35,7 @@ graph LR
     G --> I
     H --> I
     I -- Feedback --> A
-
-
+```
 
     %%Pie Chart for Dataset Description%%
 
@@ -63,15 +63,15 @@ sequenceDiagram
     LLM->>QK: 10,718 Instruction-Code Pairs
     end
 
-    rect rgb(130, 174, 130)
+    rect rgb(44, 189, 146)
     Note over QK,VAL: Phase 2: Logic Validation
     QK->>VAL: Execute Python Logic
     VAL-->>VAL: Syntax Check & Error Handling
     end
     
-    rect rgb(190, 112, 229)
-    Note over VAL,Q3: Phase 3: Hardware Mapping
-    VAL->>Q3: Transpile to Hardware Representation
+    rect rgb(183, 142, 203)
+    Note over VAL,Q3: Phase 3: Representation Conversion
+    VAL->>Q3: Transpile to OpenQASM 3.0 Representation
     Q3-->>QK: Final Validated Pair
     end
 ```
@@ -80,29 +80,24 @@ sequenceDiagram
 
 ```mermaid
 gantt
-    title PQID Development & High-Impact Academic Roadmap
+    title PQID Development and Publication Roadmap
     dateFormat  YYYY-MM
     axisFormat  %b %Y
 
-    section 🏗️ Completed Engineering
-    01-02 - Acquisition & Harmonisation     :done, a1, 2025-01, 5M
-    03-04 - Validation & LLM Generation     :done, b1, 2025-03, 7M
-    05 - SFT 1.3B Model Training            :done, c1, 2025-06, 3M
-    00-06 - DB Infrastructure & ETL         :done, d1, 2025-09, 6M
-    07-08 - PostgreSQL & Deduplication      :done, d2, 2026-01, 2M
+    section 🏗️ Completed Data Engineering
+    Circuit Acquisition and Harmonisation    :done, a1, 2025-01, 5M
+    Validation and Instruction Generation    :done, b1, 2025-03, 7M
+    1.3B SFT Model Training                  :done, c1, 2025-06, 3M
+    Database Infrastructure and ETL          :done, d1, 2025-09, 6M
+    PostgreSQL Deduplication Pass            :done, d2, 2026-01, 2M
 
-    section 🎓 Graduation Milestones
-    Thesis Compilation                      :done, m1, 2025-04, 3M
-    Thesis Defense                          :done, m2, 2025-06, 1M
-    Thesis Submission                       :done, m3, 2025-07, 1M
+    section 🌐 Platform Release
+    GitHub and Hugging Face Release          :active, p1, 2026-03, 1M
+    Kaggle Interactive Demo                  :active, p2, 2026-03, 2M
 
-    section 🌐 Platform Sync
-    GitHub & Hugging Face Release           :active, p1, 2026-03, 1M
-    Kaggle Interactive Demo                 :active, p2, 2026-03, 2M
-
-    section 📚 Publication Targets
-    arXiv Preprint Submission               :crit, milestone, t1, 2026-04, 1d
-    Nature Portfolio (Scientific Data) Sub  :crit, milestone, t2, 2026-04, 1d
-    ACM TQC Journal Submission              :crit, milestone, t3, 2026-04, 1d
-    NeurIPS Workshop Submission             :crit, milestone, t4, 2026-05, 1d
+    section 📚 Planned Publications
+    arXiv Preprint Submission                :crit, milestone, t1, 2026-04, 1d
+    Dataset Manuscript Submission            :crit, milestone, t2, 2026-04, 1d
+    QC Generation Manuscript Submission      :crit, milestone, t3, 2026-04, 1d
+    Model Training Workshop Submission       :crit, milestone, t4, 2026-05, 1d
 ```
