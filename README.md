@@ -143,7 +143,13 @@ sequenceDiagram
 
 ### 📐 Mathematical Formalization
 
-The semantic expansion of the PQID corpus is formally defined by the Instruction Density Ratio ($\rho$), which measures the linguistic variety mapped to each hardware-validated circuit:$$\rho=\frac{|P|}{|C_{base}|}$$Where $|P|$ represents the total volume of instruction-tuned prompts (10,718), and $|C_{base}|$ represents the set of unique, validated quantum circuits (2,118).For PQID v1.0, the density is strictly maintained at $\rho \approx 5.06$. This high ratio ensures that the fine-tuned model generalizes across a diverse linguistic distribution for any single quantum logical operation, mitigating the risk of structural overfitting and encouraging true semantic understanding.
+The semantic expansion of the PQID corpus is formally defined by the **Instruction Density Ratio** ($\rho$), which measures the linguistic variety mapped to each hardware-validated circuit:
+
+$$\rho = \frac{|P|}{|C_{base}|}$$
+
+Where $|P|$ represents the total volume of instruction-tuned prompts (10,718), and $|C_{base}|$ represents the set of unique, validated quantum circuits (2,118).
+
+For PQID v1.0, the density is strictly maintained at $\rho \approx 5.06$. This high ratio ensures that the fine-tuned model generalizes across a diverse linguistic distribution for any single quantum logical operation, mitigating the risk of structural overfitting and encouraging true semantic understanding.
 
 * **Total Prompts:** 10,718
 * **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
