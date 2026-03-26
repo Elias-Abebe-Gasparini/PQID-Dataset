@@ -52,6 +52,8 @@ PQID/
     ├── 04_metadata_analysis/
     └── 05_model_training/
 
+```
+
 ## 🧠 The 1.3B Quantum-Instruct Model
 
 To validate the semantic density and training efficacy of the PQID dataset, a 1.3-Billion parameter language model was fine-tuned exclusively on this corpus. The training architecture utilized QLoRA and PyTorch FSDP, resulting in a specialized model highly capable of zero-shot Qiskit code generation and OPENQASM translation. The training scripts are available in the `05_model_training` directory.
