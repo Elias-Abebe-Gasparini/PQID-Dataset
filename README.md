@@ -15,6 +15,32 @@ Extracting and standardizing quantum circuits from the wild presents significant
 
 The resulting dataset provides high-quality, instruction-tuned data pairs that teach LLMs how to construct, optimize, and translate complex quantum logic.
 
+```mermaid
+graph LR
+    subgraph "GitHub (The Logic)"
+        A[00_DB_Infra] --> B[01_Acquisition]
+        B --> C[02_Validation]
+        C --> D[03_Gen]
+        D --> E[04_Analysis]
+        E --> F[05_Training]
+    end
+
+    subgraph "Hugging Face (The Storage)"
+        G[(PQID Dataset)]
+        H[(1.3B Model Weights)]
+    end
+
+    subgraph "Kaggle (The Execution)"
+        I[Inference Demo]
+    end
+
+    F -.-> G
+    F -.-> H
+    G --> I
+    H --> I
+    I -- Feedback --> A
+```
+
 ## 🏗️ Repository Architecture
 
 This repository contains the complete, end-to-end MLOps and Data Engineering pipeline used to construct PQID and fine-tune its accompanying models. The codebase is modularized chronologically:
@@ -117,7 +143,7 @@ If you use the PQID dataset or this pipeline in your research, please cite it as
   year = {2026},
   publisher = {GitHub},
   journal = {GitHub Repository},
-  howpublished = {\url{[https://github.com/Elias-Abebe-Gasparini/PQID-Dataset](https://github.com/Elias-Abebe-Gasparini/PQID-Dataset)}}
+  howpublished = {\url{https://github.com/Elias-Abebe-Gasparini/PQID-Dataset}}
 }
 
 ```
