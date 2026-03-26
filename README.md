@@ -89,8 +89,11 @@ This repository contains the complete end-to-end data engineering and training p
 
 ```text
 PQID/
+├── .gitattributes
 ├── .gitignore
+├── ARCHITECTURE.mmd
 ├── README.md
+├── RESEARCH_CONTEXT.md
 ├── .github/
 │   └── FUNDING.yml
 ├── 00_database_infrastructure/
@@ -109,7 +112,7 @@ PQID/
     ├── 03_instruction_generation/
     ├── 04_metadata_analysis/
     └── 05_model_training/
-
+    
 ```
 
 ## 🧠 The 1.3B Quantum-Instruct Model
