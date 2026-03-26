@@ -39,9 +39,9 @@ The resulting dataset provides high-quality, instruction-tuned data pairs that t
 ```mermaid
 graph LR
     %% Class Definitions
-    classDef github fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef hf fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    classDef kaggle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef github fill:#76ddff,stroke:#01579b,stroke-width:2px;
+    classDef hf fill:#92d097,stroke:#2e7d32,stroke-width:2px;
+    classDef kaggle fill:#c1adea,stroke:#7b1fa2,stroke-width:2px;
 
     subgraph "GitHub (The Logic)"
         A[00_DB_Infra] --> B[01_Acquisition]
@@ -145,13 +145,13 @@ sequenceDiagram
     LLM->>QK: 10,718 Instruction-Code Pairs
     end
 
-    rect rgb(130, 174, 130)
+    rect rgb(44, 189, 146)
     Note over QK,VAL: Phase 2: Logic Validation
     QK->>VAL: Execute Python Logic
     VAL-->>VAL: Syntax Check & Error Handling
     end
     
-    rect rgb(190, 112, 229)
+    rect rgb(183, 142, 203)
     Note over VAL,Q3: Phase 3: Hardware Mapping
     VAL->>Q3: Transpile to Hardware Representation
     Q3-->>QK: Final Validated Pair
@@ -175,7 +175,7 @@ For PQID v1.0, the density is strictly maintained at $\rho \approx 5.06$. This h
 - **Languages:** Qiskit, OPENQASM 3.0
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#e1f5fe', 'pie2': '#519f58'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#6eb2d1', 'pie2': '#519f58'}}}%%
 pie title PQID Base Circuit Provenance
     "GitHub Scraped (1,869)" : 1869
     "RevLib Benchmark (249)" : 249
