@@ -9,17 +9,17 @@ The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, p
 
 It bridges the semantic gap between human-readable intent and hardware-executable logic by providing a 1:5 ratio of natural language instructions mapped to standard **IBM Qiskit** implementations and validated **OPENQASM 3.0** hardware representations.
 
----
-
 ## 📑 Table of Contents
+
+---
 
 - [📌 Project Overview](#-project-overview)
 - [🔄 Replication Research Ecosystem](#-replication-research-ecosystem)
-- [🏗️ Repository Architecture](#-Repository-Architecture)
+- [🏗️ Repository Architecture](#%EF%B8%8F-repository-architecture)
   - [📂 File Hierarchy](#-file-hierarchy)
 - [🧠 The 1.3B Quantum-Instruct Model](#-the-13b-quantum-instruct-model)
-- [🕹️ Interactive Inference (Upcoming)](#-Interactive-Inference-Upcoming)
-- [🛠️ Data Transformation Pipeline](#-Data-Transformation-Pipeline)
+- [🕹️ Interactive Inference (Upcoming)](#%EF%B8%8F-interactive-inference-upcoming)
+- [🛠️ Data Transformation Pipeline](#%EF%B8%8F-data-transformation-pipeline)
 - [📊 Dataset Overview](#-dataset-overview)
 - [🚀 Quickstart: Loading the Dataset](#-quickstart-loading-the-dataset)
 - [📜 Citation & Academic Context](#-citation--academic-context)
