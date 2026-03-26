@@ -229,15 +229,15 @@ PQID is intended as a validated resource for quantum instruction–code research
 
 ## 🚀 Quickstart: Loading the Dataset
 
-The finalized dataset is hosted on Hugging Face and can be instantly loaded into any PyTorch/TensorFlow environment:
+The finalized dataset is hosted on Hugging Face and can be instantly loaded into the target environment:
 
 ```python
 # Load the dataset directly from the Hugging Face Hub
 from datasets import load_dataset
 dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 
-print(dataset[0]["instruction"])
-print(dataset[0]["qiskit_code"])
+print(dataset[0]["input"])
+print(dataset[0]["output"])
 
 ```
 
