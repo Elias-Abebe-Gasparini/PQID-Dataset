@@ -207,6 +207,38 @@ This project is an **independent research initiative** conducted by Elias Abebe 
 
 * **Independence:** All data engineering, SQL architecture, and model training logic were developed and funded solely by the author.
 * **Affiliation:** While the author was affiliated with Yonsei University at the time of the thesis writing, this specific body of work was produced independently of laboratory funding or institutional resources.
+* **Academic Contribution:** This dataset and its accompanying pipeline were developed as part of a Master's Thesis for the **MS in Innovation** at the **Department of Innovation, Yonsei University**. A formal breakdown of the dataset characteristics, validation methodology, and training results is currently pending publication. Once available on arXiv, the formal BibTeX citation will be updated above.
+
+### ⏳ Research Roadmap
+
+```mermaid
+gantt
+    title PQID Development & High-Impact Academic Roadmap
+    dateFormat  YYYY-MM
+    axisFormat  %b %Y
+
+    section 🏗️ Completed Engineering
+    01-02: Acquisition & Harmonisation     :done, a1, 2025-01, 5M
+    03-04: Validation & LLM Generation      :done, b1, 2025-03, 7M
+    05: SFT 1.3B Model Training             :done, c1, 2025-06, 3M
+    00-06: DB Infrastructure & ETL          :done, d1, 2025-09, 6M
+    07-08: PostgreSQL & Deduplication       :done, d2, 2026-01, 2M
+
+    section 🎓 Graduation Milestones
+    Thesis Compilation                      :done, m1, 2025-04, 3M
+    Thesis Defense                          :done, m2, 2025-06, 1M
+    Thesis Submission                       :done, m3, 2025-07, 1M
+
+    section 🌐 Platform Sync
+    GitHub & Hugging Face Release           :active, p1, 2026-03, 1M
+    Kaggle Interactive Demo                 :active, p2, 2026-03, 2M
+
+    section 📚 Publication Targets
+    arXiv Preprint Submission               :crit, milestone, t1, 2026-04, 1d
+    Nature Portfolio (Scientific Data) Sub  :crit, milestone, t2, 2026-04, 1d
+    ACM TQC Journal Submission              :crit, milestone, t3, 2026-04, 1d
+    NeurIPS Workshop Submission             :crit, milestone, t4, 2026-05, 1d
+```
 
 ## 📧 Contact
 
