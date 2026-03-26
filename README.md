@@ -3,6 +3,7 @@
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![arXiv Placeholder](https://img.shields.io/badge/arXiv-Pending-B31B1B.svg)](https://arxiv.org/)
+[![Kaggle: Upcoming](https://img.shields.io/badge/Kaggle-Upcoming-lightgrey?logo=kaggle)](https://www.kaggle.com/abebegasparini)
 
 The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, parallel corpus designed for the supervised fine-tuning (SFT) of Large Language Models in quantum computing domains.
 
@@ -27,7 +28,7 @@ This repository contains the complete, end-to-end MLOps and Data Engineering pip
 
 *(For detailed execution instructions and phase-specific documentation, please see the `scripts/README.md` file).*
 
-## 📂 File Hierarchy
+### 📂 File Hierarchy
 
 ```text
 PQID/
@@ -57,6 +58,14 @@ PQID/
 ## 🧠 The 1.3B Quantum-Instruct Model
 
 To validate the semantic density and training efficacy of the PQID dataset, a 1.3-Billion parameter language model was fine-tuned exclusively on this corpus. The training architecture utilized QLoRA and PyTorch FSDP, resulting in a specialized model highly capable of zero-shot Qiskit code generation and OPENQASM translation. The training scripts are available in the `05_model_training` directory.
+
+## 🕹️ Interactive Inference (Upcoming)
+
+To ensure zero-install reproducibility, an interactive **Inference Notebook** is currently being prepared for Kaggle.
+
+* **Status:** 🏗️ *Work in Progress (Optimization for T4/P100 GPUs)*
+* **Purpose:** This notebook will provide a pre-configured environment to load the **PQID-1.3B model** and generate valid Qiskit/OpenQASM 3.0 code from natural language prompts in real-time.
+* **Why Kaggle?** By leveraging Kaggle's free GPU compute, researchers can validate the model's performance without local hardware constraints or additional cloud computing costs.
 
 ## 📊 Dataset Overview
 
@@ -95,7 +104,9 @@ print(dataset[0]["qiskit_code"])
 
 ```
 
-## 📝 How to Cite
+## 📜 Citation & Academic Context
+
+### 📝 How to Cite
 
 If you use the PQID dataset or this pipeline in your research, please cite it as follows:
 
@@ -111,7 +122,7 @@ If you use the PQID dataset or this pipeline in your research, please cite it as
 
 ```
 
-## 🔬 Research Context
+### 🔬 Research Context
 
 This project is an **independent research initiative** conducted by Elias Abebe Gasparini.
 
