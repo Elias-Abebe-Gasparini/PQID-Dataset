@@ -64,6 +64,22 @@ To validate the semantic density and training efficacy of the PQID dataset, a 1.
 * **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
 * **Languages:** Qiskit, OPENQASM 3.0
 
+### 🛡️ Data Quality & Deduplication
+
+Unlike standard instruction datasets, PQID underwent a multi-stage validation process:
+
+* **Relational Integrity:** Using a PostgreSQL backend to manage the 1:5 mapping of natural instructions to paraphrased variants.
+* **Deep Deduplication:** A SQL-based `ctid` analysis was used to identify and remove **29 semantic duplicates** that bypassed initial Python-based string-matching filters.
+* **Hardware Validation:** Every circuit in this dataset has been compiled and validated through the IBM Qiskit backend to ensure syntax and logical validity.
+
+### 📈 Dataset Splits & Generalization
+
+To prevent model memorization and encourage true linguistic generalization:
+
+* **Training/Validation (10,718 entries):** Consists of 100% paraphrased instructions.
+* **Test Set (2,118 entries):** Consists exclusively of the original "Natural" human-authored seed prompts.
+This "Zero-Shot" evaluation strategy ensures the model is tested on real human input it has never seen in its original form during training.
+
 ## 🚀 Quickstart: Loading the Dataset
 
 The finalized dataset is hosted on Hugging Face and can be instantly loaded into any PyTorch/TensorFlow environment:
@@ -76,3 +92,35 @@ dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 
 print(dataset[0]["instruction"])
 print(dataset[0]["qiskit_code"])
+
+```
+
+## 📝 How to Cite
+
+If you use the PQID dataset or this pipeline in your research, please cite it as follows:
+
+```bibtex
+@misc{gasparini2026pqid,
+  author = {Gasparini, Elias A.},
+  title = {PQID: Polyglot Quantum Instruction Dataset for Large Language Model Tuning},
+  year = {2026},
+  publisher = {GitHub},
+  journal = {GitHub Repository},
+  howpublished = {\url{[https://github.com/Elias-Abebe-Gasparini/PQID-Dataset](https://github.com/Elias-Abebe-Gasparini/PQID-Dataset)}}
+}
+
+```
+
+## 🔬 Research Context
+
+This project is an **independent research initiative** conducted by Elias Abebe Gasparini.
+
+* **Independence:** All data engineering, SQL architecture, and model training logic were developed and funded solely by the author.
+* **Affiliation:** While the author was affiliated with Yonsei University at the time of the thesis writing, this specific body of work was produced independently of laboratory funding or institutional resources.
+
+## 📧 Contact
+
+For technical inquiries, dataset access, or collaboration opportunities:
+
+* **GitHub:** [Open an Issue](https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/issues)
+* **LinkedIn:** [Elias A. Gasparini](https://www.linkedin.com/in/your-profile-link)
