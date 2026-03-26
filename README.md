@@ -15,6 +15,8 @@ Extracting and standardizing quantum circuits from the wild presents significant
 
 The resulting dataset provides high-quality, instruction-tuned data pairs that teach LLMs how to construct, optimize, and translate complex quantum logic.
 
+## 🔄 Research Ecosystem
+
 ```mermaid
 graph LR
     subgraph "GitHub (The Logic)"
