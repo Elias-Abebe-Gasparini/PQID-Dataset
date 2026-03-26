@@ -14,3 +14,6 @@ scripts/README.md linguist-documentation
 * text=auto
 *.py text eol=lf
 *.sql text eol=lf
+
+# 4. Force Mermaid Detection
+*.mmd linguist-documentation=false

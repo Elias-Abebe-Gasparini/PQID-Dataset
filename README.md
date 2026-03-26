@@ -54,6 +54,8 @@ graph LR
     I -- Feedback --> A
 ```
 
+> 🔗 **Architectural Blueprint:** [View Raw Mermaid Syntax](./ARCHITECTURE.mmd)
+
 ## 🏗️ Repository Architecture
 
 This repository contains the complete, end-to-end MLOps and Data Engineering pipeline used to construct PQID and fine-tune its accompanying models. The codebase is modularized chronologically:
