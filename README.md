@@ -9,6 +9,25 @@ The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, p
 
 It bridges the semantic gap between human-readable intent and hardware-executable logic by providing a 1:5 ratio of natural language instructions mapped to standard **IBM Qiskit** implementations and validated **OPENQASM 3.0** hardware representations.
 
+---
+
+## 📑 Table of Contents
+
+- [📌 Project Overview](#-project-overview)
+- [🔄 Replication Research Ecosystem](#-replication-research-ecosystem)
+- [🏗️ Repository Architecture](#-repository-architecture)
+  - [📂 File Hierarchy](#-file-hierarchy)
+- [🧠 The 1.3B Quantum-Instruct Model](#-the-13b-quantum-instruct-model)
+- [🕹️ Interactive Inference (Upcoming)](#-interactive-inference-upcoming)
+- [🛠️ Data Transformation Pipeline](#-data-transformation-pipeline)
+- [📊 Dataset Overview](#-dataset-overview)
+- [🚀 Quickstart: Loading the Dataset](#-quickstart-loading-the-dataset)
+- [📜 Citation & Academic Context](#-citation-academic-context)
+  - [⏳ Research Roadmap](#-research-roadmap)
+- [📧 Contact](#-contact)
+
+---
+
 ## 📌 Project Overview
 
 Extracting and standardizing quantum circuits from the wild presents significant memory and compilation challenges. PQID solves this by ingesting unstandardized base circuits from open-source GitHub repositories and the massive RevLib benchmark dataset, pushing them through a strict, error-handled compilation pipeline.
@@ -60,12 +79,12 @@ graph LR
 
 This repository contains the complete, end-to-end MLOps and Data Engineering pipeline used to construct PQID and fine-tune its accompanying models. The codebase is modularized chronologically:
 
-* **`00_database_infrastructure/`**: SQL schemas and ETL initialization for robust data storage.
-* **`01_acquisition/`**: Memory-efficient scrapers and extraction logic for GitHub and RevLib archives.
-* **`02_translation_and_validation/`**: The core Qiskit standardization and OPENQASM 3.0 compilation engine.
-* **`03_instruction_generation/`**: Asynchronous LLM pipelines for generating semantic natural language pairs.
-* **`04_metadata_analysis/`**: Statistical validation suites (token lengths, quantum gate distributions, circuit depths).
-* **`05_model_training/`**: PyTorch and Hugging Face SFT scripts used to fine-tune a 1.3B parameter model on the finalized corpus.
+- **`00_database_infrastructure/`**: SQL schemas and ETL initialization for robust data storage.
+- **`01_acquisition/`**: Memory-efficient scrapers and extraction logic for GitHub and RevLib archives.
+- **`02_translation_and_validation/`**: The core Qiskit standardization and OPENQASM 3.0 compilation engine.
+- **`03_instruction_generation/`**: Asynchronous LLM pipelines for generating semantic natural language pairs.
+- **`04_metadata_analysis/`**: Statistical validation suites (token lengths, quantum gate distributions, circuit depths).
+- **`05_model_training/`**: PyTorch and Hugging Face SFT scripts used to fine-tune a 1.3B parameter model on the finalized corpus.
 
 *(For detailed execution instructions and phase-specific documentation, please see the `scripts/README.md` file).*
 
@@ -104,9 +123,9 @@ To validate the semantic density and training efficacy of the PQID dataset, a 1.
 
 To ensure zero-install reproducibility, an interactive **Inference Notebook** is currently being prepared for Kaggle.
 
-* **Status:** 🏗️ *Work in Progress (Optimization for T4/P100 GPUs)*
-* **Purpose:** This notebook will provide a pre-configured environment to load the **PQID-1.3B model** and generate valid Qiskit/OpenQASM 3.0 code from natural language prompts in real-time.
-* **Why Kaggle?** By leveraging Kaggle's free GPU compute, researchers can validate the model's performance without local hardware constraints or additional cloud computing costs.
+- **Status:** 🏗️ *Work in Progress (Optimization for T4/P100 GPUs)*
+- **Purpose:** This notebook will provide a pre-configured environment to load the **PQID-1.3B model** and generate valid Qiskit/OpenQASM 3.0 code from natural language prompts in real-time.
+- **Why Kaggle?** By leveraging Kaggle's free GPU compute, researchers can validate the model's performance without local hardware constraints or additional cloud computing costs.
 
 ## 🛠️ Data Transformation Pipeline
 
@@ -151,9 +170,9 @@ Where $|P|$ represents the total volume of instruction-tuned prompts (10,718), a
 
 For PQID v1.0, the density is strictly maintained at $\rho \approx 5.06$. This high ratio ensures that the fine-tuned model generalizes across a diverse linguistic distribution for any single quantum logical operation, mitigating the risk of structural overfitting and encouraging true semantic understanding.
 
-* **Total Prompts:** 10,718
-* **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
-* **Languages:** Qiskit, OPENQASM 3.0
+- **Total Prompts:** 10,718
+- **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
+- **Languages:** Qiskit, OPENQASM 3.0
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#e1f5fe', 'pie2': '#519f58'}}}%%
@@ -166,16 +185,16 @@ pie title PQID Base Circuit Provenance
 
 Unlike standard instruction datasets, PQID underwent a multi-stage validation process:
 
-* **Relational Integrity:** Using a PostgreSQL backend to manage the 1:5 mapping of natural instructions to paraphrased variants.
-* **Deep Deduplication:** A SQL-based `ctid` analysis was used to identify and remove **29 semantic duplicates** that bypassed initial Python-based string-matching filters.
-* **Hardware Validation:** Every circuit in this dataset has been compiled and validated through the IBM Qiskit backend to ensure syntax and logical validity.
+- **Relational Integrity:** Using a PostgreSQL backend to manage the 1:5 mapping of natural instructions to paraphrased variants.
+- **Deep Deduplication:** A SQL-based `ctid` analysis was used to identify and remove **29 semantic duplicates** that bypassed initial Python-based string-matching filters.
+- **Hardware Validation:** Every circuit in this dataset has been compiled and validated through the IBM Qiskit backend to ensure syntax and logical validity.
 
 ### 📈 Dataset Splits & Generalization
 
 To prevent model memorization and encourage true linguistic generalization:
 
-* **Training/Validation (10,718 entries):** Consists of 100% paraphrased instructions.
-* **Test Set (2,118 entries):** Consists exclusively of the original "Natural" human-authored seed prompts.
+- **Training/Validation (10,718 entries):** Consists of 100% paraphrased instructions.
+- **Test Set (2,118 entries):** Consists exclusively of the original "Natural" human-authored seed prompts.
 This "Zero-Shot" evaluation strategy ensures the model is tested on real human input it has never seen in its original form during training.
 
 ## 🚀 Quickstart: Loading the Dataset
@@ -215,9 +234,9 @@ If you use the PQID dataset or this pipeline in your research, please cite it as
 
 This project is an **independent research initiative** conducted by Elias Abebe Gasparini.
 
-* **Independence:** All data engineering, SQL architecture, and model training logic were developed and funded solely by the author.
-* **Affiliation:** While the author was affiliated with Yonsei University at the time of the thesis writing, this specific body of work was produced independently of laboratory funding or institutional resources.
-* **Academic Contribution:** This dataset and its accompanying pipeline were developed as part of a Master's Thesis for the **MS in Innovation** at the **Department of Innovation, Yonsei University**. A formal breakdown of the dataset characteristics, validation methodology, and training results is currently pending publication. Once available on arXiv, the formal BibTeX citation will be updated above.
+- **Independence:** All data engineering, SQL architecture, and model training logic were developed and funded solely by the author.
+- **Affiliation:** While the author was affiliated with Yonsei University at the time of the thesis writing, this specific body of work was produced independently of laboratory funding or institutional resources.
+- **Academic Contribution:** This dataset and its accompanying pipeline were developed as part of a Master's Thesis for the **MS in Innovation** at the **Department of Innovation, Yonsei University**. A formal breakdown of the dataset characteristics, validation methodology, and training results is currently pending publication. Once available on arXiv, the formal BibTeX citation will be updated above.
 
 ### ⏳ Research Roadmap
 
@@ -254,5 +273,5 @@ gantt
 
 For technical inquiries, dataset access, or collaboration opportunities:
 
-* **GitHub:** [Open an Issue](https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/issues)
-* **LinkedIn:** [Elias A. Gasparini](https://www.linkedin.com/in/elias-abebe-gasparini/)
+- **GitHub:** [Open an Issue](https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/issues)
+- **LinkedIn:** [Elias A. Gasparini](https://www.linkedin.com/in/elias-abebe-gasparini/)
