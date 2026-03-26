@@ -1,9 +1,9 @@
 # PQID: Polyglot Quantum Instruction Dataset ⚛️
 
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
+[![Kaggle: Upcoming](https://img.shields.io/badge/Kaggle-Upcoming-lightgrey?logo=kaggle)](https://www.kaggle.com/abebegasparini)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![arXiv Placeholder](https://img.shields.io/badge/arXiv-Pending-B31B1B.svg)](https://arxiv.org/)
-[![Kaggle: Upcoming](https://img.shields.io/badge/Kaggle-Upcoming-lightgrey?logo=kaggle)](https://www.kaggle.com/abebegasparini)
 
 The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, parallel corpus designed for the supervised fine-tuning (SFT) of Large Language Models in quantum computing domains.
 
