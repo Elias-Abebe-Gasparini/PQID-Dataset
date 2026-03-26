@@ -1,5 +1,5 @@
 # 1. Force SQL Detection
-# This ensures GitHub counts your database work in the language bar
+# This ensures GitHub counts the database work in the language bar
 *.sql linguist-detectable=true
 *.sql linguist-language=SQL
 

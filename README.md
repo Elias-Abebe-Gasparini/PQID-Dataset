@@ -27,6 +27,31 @@ This repository contains the complete, end-to-end MLOps and Data Engineering pip
 
 *(For detailed execution instructions and phase-specific documentation, please see the `scripts/README.md` file).*
 
+## 📂 File Hierarchy
+
+```text
+PQID/
+├── .gitignore
+├── README.md
+├── .github/
+│   └── FUNDING.yml
+├── 00_database_infrastructure/
+│   ├── DATABASE.md
+│   ├── etl_and_cleaning.sql
+│   ├── schema.sql
+│   └── validation.sql
+├── data/
+│   └── processed/
+│       ├── train.jsonl
+│       └── validation.jsonl
+└── scripts/
+    ├── README.md
+    ├── 01_acquisition/
+    ├── 02_translation_and_validation/
+    ├── 03_instruction_generation/
+    ├── 04_metadata_analysis/
+    └── 05_model_training/
+
 ## 🧠 The 1.3B Quantum-Instruct Model
 
 To validate the semantic density and training efficacy of the PQID dataset, a 1.3-Billion parameter language model was fine-tuned exclusively on this corpus. The training architecture utilized QLoRA and PyTorch FSDP, resulting in a specialized model highly capable of zero-shot Qiskit code generation and OPENQASM translation. The training scripts are available in the `05_model_training` directory.
