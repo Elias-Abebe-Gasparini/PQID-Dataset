@@ -35,10 +35,10 @@ The resulting dataset provides instruction–code pairs linking natural-language
 
 ```mermaid
 graph LR
-    %% Class Definitions
-    classDef github fill:#76ddff,stroke:#01579b,stroke-width:2px;
-    classDef hf fill:#92d097,stroke:#2e7d32,stroke-width:2px;
-    classDef kaggle fill:#c1adea,stroke:#7b1fa2,stroke-width:2px;
+%% Class Definitions (Added color:#000000 to force black text)
+    classDef github fill:#76ddff,stroke:#01579b,stroke-width:2px,color:#000000;
+    classDef hf fill:#92d097,stroke:#2e7d32,stroke-width:2px,color:#000000;
+    classDef kaggle fill:#c1adea,stroke:#7b1fa2,stroke-width:2px,color:#000000;
 
     subgraph "GitHub (Source Pipeline)"
         A[00_DB_Infra] --> B[01_Acquisition]
@@ -112,7 +112,7 @@ PQID/
     ├── 03_instruction_generation/
     ├── 04_metadata_analysis/
     └── 05_model_training/
-    
+
 ```
 
 ## 🧠 The 1.3B Quantum-Instruct Model
@@ -130,6 +130,7 @@ An interactive **Inference Notebook** for Kaggle is currently in preparation.
 ## 🛠️ Data Transformation Pipeline
 
 ```mermaid
+%%{init: {'themeVariables': {'noteTextColor': '#000000', 'messageTextColor': '#000000', 'actorTextColor': '#000000'}}}%%
 sequenceDiagram
     autonumber
     participant H as Human Seed
@@ -269,6 +270,7 @@ This dataset and its accompanying compilation pipeline were developed as part of
 ### ⏳ Research Roadmap
 
 ```mermaid
+%%{init: {'themeVariables': {'taskTextColor': '#000000', 'taskTextDarkColor': '#000000', 'taskTextLightColor': '#000000', 'sectionBkgTextColor': '#000000'}}}%%
 gantt
     title PQID Development and Publication Roadmap
     dateFormat  YYYY-MM
