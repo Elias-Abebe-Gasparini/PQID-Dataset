@@ -1,10 +1,9 @@
-# PQID: Polyglot Quantum Instruction Dataset ⚛️
+# PQID: Parallel Quantum Instruction Dataset ⚛️
 
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![arXiv Placeholder](https://img.shields.io/badge/arXiv-Pending-B31B1B.svg)](https://arxiv.org/)
 
-The **Polyglot Quantum Instruction Dataset (PQID)** is a rigorously validated, parallel corpus designed for the supervised fine-tuning (SFT) of Large Language Models in quantum computing domains.
+The **Parallel Quantum Instruction Dataset (PQID)** is a rigorously validated, parallel corpus designed for the supervised fine-tuning (SFT) of Large Language Models in quantum computing domains.
 
 It bridges the semantic gap between human-readable intent and hardware-executable logic by providing a 1:5 ratio of natural language instructions mapped to standard **IBM Qiskit** implementations and validated **OPENQASM 3.0** hardware representations.
 
@@ -44,11 +43,13 @@ This dataset and its associated pipeline were developed as part of a Master's Th
 A formal breakdown of the dataset characteristics, validation methodology, and training results is currently pending publication. Once available on arXiv, the formal BibTeX citation will be updated below.
 
 ```bibtex
-@article{gasparini2026pqid,
-  title={PQID: A Polyglot Quantum Instruction Dataset for Large Language Models},
-  author={Gasparini, Elias Abebe},
-  journal={arXiv preprint pending},
-  year={2026}
+@misc{gasparini2026pqid,
+  author = {Gasparini, Elias A.},
+  title = {PQID: Parallel Quantum Instruction Dataset for Fine-Tuning Large Language Models in Quantum Circuit Design},
+  year = {2026},
+  publisher = {GitHub},
+  journal = {GitHub Repository},
+  howpublished = {\url{https://github.com/Elias-Abebe-Gasparini/PQID-Dataset}}
 }
 ```
 
@@ -62,5 +63,5 @@ The finalized dataset is hosted on Hugging Face and can be instantly loaded into
 from datasets import load_dataset
 dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 
-print(dataset[0]["instruction"])
-print(dataset[0]["qiskit_code"])
+print(dataset[0]["input"])
+print(dataset[0]["output"])
