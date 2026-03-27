@@ -63,5 +63,5 @@ The finalized dataset is hosted on Hugging Face and can be instantly loaded into
 from datasets import load_dataset
 dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 
-print(dataset[0]["input"])
-print(dataset[0]["output"])
+print(dataset["train"][0]["input"])
+print(dataset["train"][0]["output"])

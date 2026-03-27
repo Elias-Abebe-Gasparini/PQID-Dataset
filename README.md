@@ -168,17 +168,63 @@ Each entry in the PQID `.jsonl` files conforms to the following schema:
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `input` | String | The natural-language instruction or prompt describing the desired quantum logic. |
-| `output` | String | The validated target quantum code (IBM Qiskit) corresponding to the input. |
+| `output` | String | The validated target quantum code corresponding to the input. GitHub-sourced entries contain **IBM Qiskit** (Python); RevLib-sourced entries contain **OpenQASM 3.0** syntax. |
 | `metadata` | Dictionary | A nested JSON object containing provenance, traceability, and structural characteristics. |
-| `metadata.source_dataset` | String | The originating collection of the base circuit (e.g., "GitHub" or "RevLib"). |
-| `metadata.prompt_type` | String | Indicates the generation method of the prompt (e.g., "human_seed" or "paraphrase"). |
+| `metadata.source_dataset` | String | The originating collection of the base circuit (`"github"` or `"revlib"`). |
+| `metadata.prompt_type` | String | Indicates the generation method of the prompt (`"human_seed"` or `"paraphrased"`). |
 | `metadata.circuit_hash` | String | A unique hash representing the circuit's structural identity, used for deep deduplication. |
 | `metadata.original_url` | String | The URL of the source repository or benchmark file where the original code was found. |
-| `metadata.hash` | String | The specific commit or file hash from the source repository to ensure version traceability. |
-| `metadata.end_line` | Integer | The ending line number of the extracted circuit code in the original source file. |
-| `metadata.file_path` | String | The specific file path within the original source repository. |
-| `metadata.start_line` | Integer | The starting line number of the extracted circuit code in the original source file. |
-| `metadata.github_anchor` | String | A formatted URL fragment directly pointing to the highlighted code lines in the source repository. |
+| `metadata.hash` | String | *(GitHub only)* The specific commit or file hash from the source repository to ensure version traceability. |
+| `metadata.end_line` | Integer | *(GitHub only)* The ending line number of the extracted circuit code in the original source file. |
+| `metadata.file_path` | String | *(GitHub only)* The specific file path within the original source repository. |
+| `metadata.start_line` | Integer | *(GitHub only)* The starting line number of the extracted circuit code in the original source file. |
+| `metadata.github_anchor` | String | *(GitHub only)* A formatted URL fragment directly pointing to the highlighted code lines in the source repository. |
+| `metadata.filename` | String | *(RevLib only)* The original `.real` benchmark filename from the RevLib archive. |
+| `metadata.revlib_url` | String | *(RevLib only)* The direct URL to the `.real` source file on the RevLib server. |
+
+<!-- markdownlint-disable MD033 -->
+<details>
+<summary>Sample entries</summary>
+
+**GitHub-sourced entry (Qiskit output):**
+
+```json
+{
+  "input": "In Qiskit, design a quantum circuit with two qubits and place a Z gate onto the first qubit",
+  "output": "qc = QuantumCircuit(2)\nqc.z(0)",
+  "metadata": {
+    "source_dataset": "github",
+    "prompt_type": "paraphrased",
+    "circuit_hash": "08bec751305f8806c8ee172ca8eb1df3",
+    "original_url": "https://github.com/Qiskit/feedback/blob/main/demo-day-notebooks/2023-02-23/1_QiskitSynthesisUpdates.ipynb#L1-L2",
+    "hash": "08bec751305f8806c8ee172ca8eb1df3",
+    "end_line": 2,
+    "file_path": "quantum_repos/feedback/demo-day-notebooks/2023-02-23/1_QiskitSynthesisUpdates.ipynb",
+    "start_line": 1,
+    "github_anchor": "#L1-L2"
+  }
+}
+```
+
+**RevLib-sourced entry (OpenQASM 3.0 output):**
+
+```json
+{
+  "input": "Create a five-qubit quantum circuit that incorporates a pair of CNOT gates, two Toffoli gates, and a single Pauli-X gate",
+  "output": "OPENQASM 3.0;\ninclude \"stdgates.inc\";\nqubit[5] q;\ncx q[3], q[1];\nccx q[4], q[2], q[0];\ncx q[1], q[4];\nx q[1];\nccx q[1], q[0], q[4];\n",
+  "metadata": {
+    "source_dataset": "revlib",
+    "prompt_type": "paraphrased",
+    "circuit_hash": "4mod5-v1_24",
+    "original_url": "https://www.revlib.org/documents/real/4mod5-v1_24.real",
+    "filename": "4mod5-v1_24.real",
+    "revlib_url": "https://www.revlib.org/documents/real/4mod5-v1_24.real"
+  }
+}
+```
+
+</details>
+<!-- markdownlint-disable MD033 -->
 
 ### 📐 Mathematical Formalization
 
@@ -215,7 +261,7 @@ PQID underwent a multi-stage validation and deduplication process during dataset
 
 To reduce direct memorization of original prompt phrasing and encourage evaluation under linguistic variation, PQID uses a split based on paraphrased versus seed instructions:
 
-- **Training/Validation (10,718 entries):** Consists of paraphrased instruction variants.
+- **Training (9,645 entries) + Validation (1,073 entries) = 10,718 total:** Consists of paraphrased instruction variants.
 - **Test Set (2,118 entries):** Consists exclusively of the original human-authored seed prompts.
 
 This evaluation setup tests model performance on instruction formulations that were not seen in their original form during training, providing a stricter measure of robustness to phrasing variation.
@@ -240,8 +286,8 @@ The finalized dataset is hosted on Hugging Face and can be instantly loaded into
 from datasets import load_dataset
 dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 
-print(dataset[0]["input"])
-print(dataset[0]["output"])
+print(dataset["train"][0]["input"])
+print(dataset["train"][0]["output"])
 
 ```
 
