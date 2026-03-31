@@ -1,0 +1,27 @@
+PQID — HF Baseline Preprocessing Report
+==================================================
+
+train:
+  Input entries        : 9,645
+  Dropped (quality)    : 1,402
+  Dropped (dedup)      : 0
+  Comment strips       : 1,028
+  Output entries       : 8,243
+  Written to           : train_clean.jsonl
+
+validation:
+  Input entries        : 1,073
+  Dropped (quality)    : 182
+  Dropped (dedup)      : 0
+  Comment strips       : 107
+  Output entries       : 891
+  Written to           : validation_clean.jsonl
+
+==================================================
+Total output entries : 9,134
+  train              : 8,243
+  validation         : 891
+
+Next step:
+  Run enrich_metadata.py (Python 3.11) to add Qiskit metrics.
+  The *_clean.jsonl files are ready as input.
