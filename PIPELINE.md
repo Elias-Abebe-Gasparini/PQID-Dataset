@@ -317,12 +317,33 @@ The full RevLib `.tgz` archive is available locally and the extraction script (`
 Unified GitHub circuit scraper replacing all Batch 2–4 individual scrapers.
 Four parallel strategies via GitHub REST API (no local cloning):
 1. **Curated repos** — Contents API walk of repos listed in `github_urls.txt`
-2. **Code Search** — 26 query strings targeting Qiskit circuit patterns
+2. **Code Search** — core + extended Qiskit-targeted query sets (63 queries in the current notebook build)
 3. **Org repos** — Enumerate all repos from `Qiskit` and `qiskit-community` orgs
-4. **Topic repos** — 9 topics: `qiskit`, `quantum-computing`, `quantum-circuit`, `quantum-gate`, `quantum-algorithms`, `qiskit-terra`, `quantum-information`, `quantum-error-correction`, `quantum-machine-learning`
+4. **Topic repos** — core + extended GitHub topics spanning qiskit, algorithms, simulation, error correction, and quantum machine learning
 
 Dedup: MD5 of stripped code; processed URLs cached in `circuits_unified_processed.txt`.
-Output: `circuits_unified.jsonl`
+Baseline output: `circuits_unified.jsonl`
+
+**Optional append-only Phase 2 (aggressive rescrape)**:
+- Adds notebook cells after the original summary cell so the baseline acquisition remains frozen
+- Writes aggressive-only output to `circuits_unified_aggressive.jsonl`
+- Merges baseline + aggressive pools into `circuits_unified_plus_aggressive.jsonl`
+- Writes / backfills `metadata.retrieval_mode`, `metadata.retrieval_strategy`, and `metadata.retrieval_run_id` so downstream stages can audit which acquisition campaign produced each circuit
+
+### enrich_raw_circuits.py
+Backfills raw-circuit metadata before seed generation so structural features can act as prompt anchors.
+- Default input: `circuits_unified.jsonl`
+- Default output: `circuits_unified_enriched.jsonl`
+- Cache-aware and safe to rerun after schema expansion because incomplete cache records are automatically recomputed
+- Adds lightweight extraction-quality diagnostics such as `extraction_confidence`, `contains_demo_scaffolding`, `cleanup_candidate`, and `cleanup_rules_triggered` without modifying the raw scraped code
+- Recommended to run on `circuits_unified_plus_aggressive.jsonl` after the optional aggressive phase, producing `circuits_unified_plus_aggressive_enriched.jsonl`
+
+### report_extraction_quality.py
+Optional pre-seed audit pass for inspecting extraction quality on the enriched raw pool.
+- Default input: `circuits_unified_enriched.jsonl`
+- Default outputs: `extraction_quality_report.md` and `extraction_quality_samples.jsonl`
+- Read-only with respect to dataset entries: it summarizes the enriched pool and writes deterministic sample subsets for manual inspection
+- Useful for checking whether low-confidence entries or cleanup candidates should be studied further before seed generation
 
 ### generate_seeds.py / generate_seeds_pending.py / generate_seeds_expansion*.py
 Generates one natural-language instruction per circuit using `gpt-4.1-mini`.
@@ -330,7 +351,9 @@ Generates one natural-language instruction per circuit using `gpt-4.1-mini`.
 - MAX_TOKENS: 150
 - System prompt: "You are a quantum computing assistant. Given a quantum circuit implementation in Qiskit (Python) or OpenQASM 3.0, write a single concise English instruction (one sentence, under 40 words)..."
 - Resume-safe by `circuit_hash`
-- Adds `content_hash`, `prompt_word_count`, `prompt_length_chars` to metadata
+- Can incorporate precomputed structural metadata as prompt anchors when present
+- Adds `content_hash`, `prompt_word_count`, `prompt_length_chars`, and `prompt_token_count_cl100k` to metadata
+- Input file defaults to the richest available raw pool in this order: `circuits_unified_plus_phase2_plus_phase3_enriched.jsonl`, `circuits_unified_plus_phase2_plus_phase3.jsonl`, `circuits_unified_plus_aggressive_enriched.jsonl`, `circuits_unified_plus_aggressive.jsonl`, `circuits_unified_enriched.jsonl`, then `circuits_unified.jsonl`
 
 ### generate_paraphrases.py / generate_paraphrases_pending.py / generate_paraphrases_expansion*.py
 Generates 5 paraphrased instructions per seed using `gpt-4.1-mini`.
@@ -393,6 +416,19 @@ No Qiskit required; run any time.
 Pairwise BLEU-4 and Type-Token Ratio (TTR) across paraphrase groups.
 Samples 10,000 circuit groups; no Qiskit required; run any time.
 
+### Why This Execution Order Was Chosen
+The script order is not arbitrary. It is chosen by a combination of **hard data dependencies** and **compute-efficiency / reproducibility considerations**.
+
+- `enrich_raw_circuits.py` runs before seed generation because a small subset of circuit-derived metadata is useful as prompt-generation anchors and can be computed directly from the raw circuit pool.
+- `report_extraction_quality.py` is optional but recommended immediately after raw enrichment when you want a documented inspection pass before prompt generation. It stays read-only so the provenance-preserving raw scrape artifact is not altered.
+- `generate_seeds.py` must run before `generate_paraphrases.py` because paraphrases depend on an existing seed instruction.
+- `merge_and_split.py` runs before the late-stage enrichments because it creates the canonical train / validation / test artifacts. Running expensive enrichments only after this point avoids repeatedly patching transient pre-split files.
+- `enrich_metadata.py` is intentionally late because full Qiskit execution, metric extraction, and transpilation are among the most computationally expensive steps. Performing this pass on the canonical split files reduces wasted work and ensures the reported metrics correspond exactly to the released dataset artifacts.
+- `enrich_circuit_family.py` and `enrich_repo_license.py` could in principle be run earlier, because they do not depend on seed or paraphrase text. They are intentionally deferred until after canonical splitting so that only the final release files are patched, simplifying provenance and avoiding redundant I/O on intermediate files.
+- `enrich_semantic_consistency.py` is the one late-stage enrichment that truly depends on instruction generation, because it compares each paraphrase against its seed prompt via `original_prompt`.
+
+In short, the execution order is **dependency-aware first**, then **resource-efficient**, with the additional goal that each expensive enrichment is applied to the smallest stable artifact that will actually be released.
+
 ---
 
 ## 7. Metadata Schema
@@ -414,14 +450,27 @@ Every entry is a **triple parallel representation**:
 |-------|------|-------------|
 | `original_url` | str | GitHub URL of source file |
 | `file_path` | str | File path within the repository |
-| `source` | str | Source dataset identifier (`"github"`, `"revlib"`, `"hf_baseline"`, etc.) — equivalent to thesis `source_dataset` |
-| `language` | str | `"python"` (Qiskit) or `"openqasm"` |
+| `source` | str | Fine-grained acquisition source tag or upstream dataset identifier (e.g. `curated`, `search`, `org`, `topic`, `promoted_repo_v2`, `search_v2`, `hf_baseline`, `revlib`) |
+| `language` | str | `"python"` or `"jupyter"` |
 | `circuit_hash` | str | MD5 of stripped output code — primary dedup key |
 | `content_hash` | str | MD5 of (input + output) — cross-batch dedup key |
 | `hash` | str | GitHub blob SHA of the source file — version traceability (null for RevLib/HF) |
 | `start_line` | int\|null | Starting line number of the extracted circuit block in the source file (null for notebooks/RevLib/HF) |
 | `end_line` | int\|null | Ending line number of the extracted circuit block in the source file (null for notebooks/RevLib/HF) |
 | `github_anchor` | str | URL fragment pointing to the highlighted code lines (e.g. `https://github.com/org/repo/blob/main/file.py#L42-L80`); equals `original_url` when line numbers unavailable |
+| `repo_owner` | str\|null | GitHub owner (user or organisation) of the source repository |
+| `repo_name` | str\|null | GitHub repository name |
+| `scrape_date` | str\|null | ISO date the file was scraped |
+| `code_lines` | int | Number of non-empty lines in the extracted circuit code |
+| `output_token_count_cl100k` | int\|null | Token count of the circuit code (`output`) under `cl100k_base`; useful for context-budgeting and training-cost analysis |
+| `retrieval_mode` | str\|null | High-level acquisition mode: `"baseline"` or `"aggressive"`; may be null in older artifacts unless backfilled during merge |
+| `retrieval_strategy` | str\|null | Specific strategy within the mode, such as `curated`, `search`, `org`, `topic`, `promoted_repo`, or `expanded_search` |
+| `retrieval_run_id` | str\|null | Deterministic identifier for the acquisition campaign or merge backfill, used for exact reproducibility |
+
+`source`, `quality_flag`, and the `retrieval_*` fields are intentionally different:
+- `source` records the immediate scrape route or upstream dataset label
+- `quality_flag` records the downstream provenance / curation tier
+- `retrieval_mode`, `retrieval_strategy`, and `retrieval_run_id` distinguish baseline vs aggressive acquisition campaigns
 
 ### 7.2 Instruction Generation Fields (always present)
 
@@ -435,6 +484,7 @@ Every entry is a **triple parallel representation**:
 | `original_prompt` | str | The seed instruction text (for paraphrases) |
 | `prompt_word_count` | int | Word count of the input instruction |
 | `prompt_length_chars` | int | Character count of the input instruction |
+| `prompt_token_count_cl100k` | int\|null | Token count of the input instruction under `cl100k_base` |
 
 ### 7.3 Repo Context Fields (added by enrich_repo_topics.py)
 
@@ -452,6 +502,10 @@ Every entry is a **triple parallel representation**:
 | `circuit_stats_available` | bool | `True` iff a QuantumCircuit was successfully extracted |
 | `openqasm3_export_successful` | bool\|null | `True` if `qiskit.qasm3.dumps(qc)` completed without error; `null` for non-validated entries |
 | `openqasm3_export_error` | str\|null | Exception class name if export failed; `null` otherwise |
+| `extraction_confidence` | str\|null | Heuristic confidence that the extracted block primarily represents circuit-construction logic rather than surrounding tutorial/demo scaffolding (`high`, `medium`, `low`) |
+| `contains_demo_scaffolding` | bool\|null | Whether the extracted block contains likely non-essential tutorial/demo statements such as `print`, `display`, plotting, `.draw`, backend execution, or result inspection |
+| `cleanup_candidate` | bool\|null | Whether demo scaffolding is present but the block still contains clear circuit-construction signals, making it a candidate for a future derived cleaned-generation view |
+| `cleanup_rules_triggered` | list[str]\|null | Names of heuristic extraction-quality rules that fired, such as `print_call`, `draw_call`, or `backend_run` |
 
 **Validation status semantics:**
 - `validated` — executed within 3s; QuantumCircuit found in namespace
@@ -468,6 +522,7 @@ Every entry is a **triple parallel representation**:
 |-------|------|-------------|
 | `num_qubits` | int | Number of quantum bits |
 | `num_clbits` | int | Number of classical bits |
+| `quantum_register_count` | int\|null | Number of quantum registers |
 | `gate_count` | int | Total gate operations (`qc.size()`) |
 | `circuit_depth` | int | Circuit depth (`qc.depth()`) |
 | `circuit_width` | int | Total qubits + clbits (`qc.width()`) |
@@ -476,6 +531,9 @@ Every entry is a **triple parallel representation**:
 | `avg_gates_per_layer` | float | `gate_count / circuit_depth` |
 | `has_measurement` | bool | Whether circuit contains measurement operations |
 | `is_parameterized` | bool | Whether circuit has free `Parameter` objects |
+| `multi_qubit_gate_count` | int\|null | Count of gate operations acting on three or more qubits |
+| `has_control_flow` | bool\|null | Whether the circuit contains Qiskit control-flow operations |
+| `control_flow_op_count` | int\|null | Number of control-flow operations in the circuit |
 | `t_count` | int | Total T + Tdg gate count |
 | `t_depth` | int\|null | Depth counting only T/Tdg gates |
 
@@ -533,6 +591,7 @@ Total range: 0–10. Thresholds: **easy** ≤3 / **medium** 4–7 / **hard** ≥
 | Field | Type | Description |
 |-------|------|-------------|
 | `measurement_count` | int | Number of measurement operations |
+| `measured_qubit_count` | int\|null | Number of distinct qubits measured at least once |
 | `reset_usage` | bool | Whether circuit uses `reset` operations |
 | `mid_circuit_measurement` | bool | Whether measurement appears before final layer |
 | `classical_register_count` | int | Number of classical registers |
@@ -598,6 +657,8 @@ Basis gates: `["cx", "rz", "sx", "x"]`, optimization_level=1, no coupling map (b
 ---
 
 ## 9. Quality Flags & Provenance
+
+`quality_flag` is independent of `source` and the `retrieval_*` fields. It tracks dataset-quality tier after generation / curation rather than the exact raw acquisition strategy.
 
 | quality_flag | Source | Generation model |
 |-------------|--------|-----------------|
@@ -725,6 +786,8 @@ Cell 37: enrich_semantic_consistency.py  (after Cell 35, no Qiskit, GPU recommen
 Cell 38: check_leakage.py                (any time, no deps)
 Cell 39: compute_paraphrase_diversity.py (any time, no deps)
 ```
+
+This ordering should be read as an implementation policy for the released PQID pipeline, not as a claim that every later script is mathematically impossible to run earlier. Some stages are delayed deliberately so that expensive enrichment is applied only to canonical post-split artifacts rather than to transient intermediate files.
 
 ### Test Split is Sacred
 `test_clean.jsonl` (11,548 entries) is the held-out benchmark. Do not use for training, do not inspect during model development. First use only during final evaluation.
