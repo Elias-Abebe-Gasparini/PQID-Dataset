@@ -25,22 +25,23 @@ Every entry is a **triple parallel representation**:
 
 | # | Cluster | Fields | Populated by |
 |---|---------|--------|--------------|
-| 1 | [Provenance](#1-provenance) | 10 fields | scraper / preprocessor |
+| 1 | [Provenance](#1-provenance) | 18 fields | scraper / preprocessor |
 | 2 | [Instruction Generation](#2-instruction-generation) | 9 fields | generation scripts / patch_metadata / enrich_metadata |
 | 3 | [Repo Context](#3-repo-context) | 2 fields | enrich_repo_topics.py |
-| 4 | [Execution / Validation](#4-execution--validation) | 6 fields | enrich_metadata.py |
-| 5 | [Core Circuit Metrics](#5-core-circuit-metrics) | 12 fields | enrich_metadata.py |
+| 4 | [Execution / Validation](#4-execution--validation) | 13 fields | enrich_metadata.py |
+| 5 | [Core Circuit Metrics](#5-core-circuit-metrics) | 17 fields | enrich_metadata.py |
+| 5b | [Gate-set Profile Flags](#5b-gate-set-profile-flags) | 8 fields | enrich_metadata.py |
 | 6 | [XAI Complexity Indicators](#6-xai-complexity-indicators) | 3 fields | enrich_metadata.py |
-| 7 | [Entanglement Features](#7-entanglement-features) | 2 fields | enrich_metadata.py |
+| 7 | [Entanglement Features](#7-entanglement-features) | 3 fields | enrich_metadata.py |
 | 8 | [Parameterization Features](#8-parameterization-features) | 3 fields | enrich_metadata.py |
-| 9 | [Measurement / Output Structure](#9-measurement--output-structure) | 4 fields | enrich_metadata.py |
+| 9 | [Measurement / Output Structure](#9-measurement--output-structure) | 5 fields | enrich_metadata.py |
 | 10 | [Topology / Interaction Graph](#10-topology--interaction-graph) | 4 fields | enrich_metadata.py |
-| 11 | [Transpilation Metrics](#11-transpilation-metrics) | 7 fields | enrich_metadata.py |
+| 11 | [Transpilation Metrics](#11-transpilation-metrics) | 8 fields | enrich_metadata.py |
 | 12 | [License Fields](#12-license-fields) | 2 fields | enrich_repo_license.py |
 | 13 | [Circuit Family Fields](#13-circuit-family-fields) | 2 fields | enrich_circuit_family.py |
 | 14 | [Semantic Consistency Metrics](#14-semantic-consistency-metrics) | 5 fields | enrich_semantic_consistency.py |
 
-**Total metadata fields**: 71
+**Total metadata fields**: 102
 **Top-level fields**: 4 (`input`, `output`, `openqasm3_code`, `metadata`)
 
 Fields from clusters 4–11 are `null` until `enrich_metadata.py` runs. Fields from clusters 12–13 are `null` until their respective enrichment scripts run.
@@ -49,13 +50,13 @@ Fields from clusters 4–11 are `null` until `enrich_metadata.py` runs. Fields f
 
 ## 1. Provenance
 
-Always present. Set by the scraper (`scrape_github_unified.py`) or the HF baseline preprocessor (`preprocess_hf_baseline.py`).
+Core provenance fields are always present. The `retrieval_*` fields are populated by the extended GitHub acquisition notebook (the append-only aggressive rescrape cells) and may be `null` in older artifacts unless backfilled during merge.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `original_url` | `str` | GitHub Contents API URL of the source file |
 | `file_path` | `str` | File path within the repository (e.g. `src/circuits/bell.py`) |
-| `source` | `str` | Source identifier — see [Quality Flags](#quality-flags) |
+| `source` | `str` | Fine-grained acquisition source tag or upstream dataset identifier (e.g. `curated`, `search`, `org`, `topic`, `promoted_repo_v2`, `search_v2`, `hf_baseline`, `revlib`). Distinct from `quality_flag` |
 | `language` | `str` | `"python"` or `"jupyter"` |
 | `circuit_hash` | `str` | MD5 hex of stripped output code — **primary dedup key** |
 | `content_hash` | `str` | MD5 hex of (input + output) — **cross-batch dedup key** |
@@ -63,6 +64,19 @@ Always present. Set by the scraper (`scrape_github_unified.py`) or the HF baseli
 | `start_line` | `int\|null` | 1-indexed starting line of the extracted block in the source file. `null` for notebooks and HF baseline |
 | `end_line` | `int\|null` | 1-indexed ending line of the extracted block (inclusive). `null` for notebooks and HF baseline |
 | `github_anchor` | `str` | URL with line fragment (e.g. `…/file.py#L42-L80`); falls back to `original_url` when line numbers are unavailable |
+| `repo_owner` | `str\|null` | GitHub username or organisation that owns the source repository. `null` for HF baseline entries |
+| `repo_name` | `str\|null` | GitHub repository name. `null` for HF baseline entries |
+| `scrape_date` | `str\|null` | ISO 8601 date the file was scraped (e.g. `"2026-04-01"`). `null` for HF baseline entries |
+| `code_lines` | `int` | Number of non-empty lines in the circuit code (`output`). Set at scrape time; updated by `enrich_metadata.py` |
+| `output_token_count_cl100k` | `int\|null` | Token count of `output` using the `cl100k_base` tokenizer (tiktoken). Useful for SFT context-window budgeting and cost analysis. `null` if tiktoken unavailable at enrichment time |
+| `retrieval_mode` | `str\|null` | High-level acquisition mode: `"baseline"` for the original Cells 1–10 scraper flow, `"aggressive"` for the append-only Phase 2 rescrape. `null` in legacy artifacts unless backfilled during merge |
+| `retrieval_strategy` | `str\|null` | Specific strategy within the retrieval mode (e.g. `curated`, `search`, `org`, `topic`, `promoted_repo`, `expanded_search`). `null` in legacy artifacts unless backfilled |
+| `retrieval_run_id` | `str\|null` | Deterministic identifier for a retrieval campaign or merge backfill (e.g. `"aggressive_v1_2026-04-02"`, `"baseline_legacy"`). Enables exact auditability of acquisition runs |
+
+**Interpretation note:**
+- `source` = immediate scrape route or upstream dataset label
+- `quality_flag` = provenance tier assigned later in the generation / curation pipeline
+- `retrieval_mode` / `retrieval_strategy` / `retrieval_run_id` = experimental-control fields used to distinguish baseline vs aggressive acquisition campaigns
 
 ---
 
@@ -107,6 +121,13 @@ Added by `enrich_metadata.py` (Python 3.11 + Qiskit). `null` until that script r
 | `openqasm3_export_successful` | `bool\|null` | `true` if `qiskit.qasm3.dumps(qc)` completed without error; `false` if export raised an exception; `null` for non-validated entries |
 | `openqasm3_export_error` | `str\|null` | Exception class name if `openqasm3_export_successful == false`; `null` otherwise |
 | `qiskit_version` | `str` | Value of `qiskit.__version__` at enrichment time (e.g. `"1.0.2"`). Enables reproducibility checks: if a circuit fails to compile in a later Qiskit version, this field proves validation was correct at creation time |
+| `api_deprecated_usage` | `bool\|null` | `true` if `output` code contains known deprecated Qiskit API patterns (`execute(`, `Aer.get_backend(`, `BasicAer`). Text-level heuristic — does not require execution. `null` if `output` is empty |
+| `deprecated_api_patterns` | `list[str]\|null` | List of matched deprecated pattern strings (e.g. `["execute(", "BasicAer"]`). Empty list if `api_deprecated_usage == false`; `null` if `output` is empty |
+| `hallucination_type` | `str\|null` | Structured interpretation of why validation failed. `null` until `enrich_metadata.py` runs. See table below |
+| `extraction_confidence` | `str\|null` | Heuristic confidence that the extracted code block primarily represents circuit-construction logic rather than surrounding tutorial/demo scaffolding. Values are `high`, `medium`, or `low` |
+| `contains_demo_scaffolding` | `bool\|null` | `true` if the extracted block contains likely non-essential demo/tutorial statements such as `print(...)`, `display(...)`, `.draw(...)`, plotting, backend execution, or result inspection |
+| `cleanup_candidate` | `bool\|null` | `true` when demo scaffolding is present but the block still shows clear circuit-construction signals. Useful for building a future derived “cleaned generation view” without modifying the raw scrape artifact |
+| `cleanup_rules_triggered` | `list[str]\|null` | Names of heuristic extraction-quality rules that fired (e.g. `print_call`, `draw_call`, `backend_run`). Empty list if no rules fired; `null` until enrichment runs |
 
 **`validation_status` values:**
 
@@ -122,9 +143,25 @@ Added by `enrich_metadata.py` (Python 3.11 + Qiskit). `null` until that script r
 
 Only `validated` entries are in **Tier 1**. All others go to **Tier 2** (`community_unvalidated.jsonl`).
 
+**`hallucination_type` values:**
+
+| Value | Condition |
+|-------|-----------|
+| `none` | `validation_status == "validated"` |
+| `timeout` | `validation_status == "timeout"` |
+| `syntax_failure` | `validation_status == "syntax_error"` |
+| `dependency_hallucination` | `validation_status == "import_error"` — model referenced a missing module |
+| `symbol_resolution_failure` | `validation_status == "name_error"` — unresolved variable or function |
+| `non_circuit_execution` | `validation_status == "no_circuit"` — code ran but produced no `QuantumCircuit` |
+| `register_index_error` | `exec_error` + `IndexError` / `RegisterError` in traceback |
+| `api_hallucination` | `exec_error` + `AttributeError` / `TypeError` — wrong method name or signature |
+| `runtime_semantic_failure` | `exec_error` — any other runtime exception |
+
 ---
 
-## 5. Core Circuit Metrics
+## 5. Structural Circuit Metrics
+
+### Core Circuit Metrics
 
 Populated only when `circuit_stats_available == true`.
 
@@ -132,6 +169,7 @@ Populated only when `circuit_stats_available == true`.
 |-------|------|-------------|
 | `num_qubits` | `int` | Number of quantum bits (`qc.num_qubits`) |
 | `num_clbits` | `int` | Number of classical bits |
+| `quantum_register_count` | `int\|null` | Number of quantum registers (`len(qc.qregs)`). Complements `classical_register_count` and helps distinguish flat circuits from multi-register / ancilla-structured designs |
 | `gate_count` | `int` | Total gate operations (`qc.size()`) |
 | `circuit_depth` | `int` | Circuit depth (`qc.depth()`) |
 | `circuit_width` | `int` | Total qubits + clbits (`qc.width()`) |
@@ -140,8 +178,29 @@ Populated only when `circuit_stats_available == true`.
 | `avg_gates_per_layer` | `float` | `gate_count / circuit_depth` |
 | `has_measurement` | `bool` | Whether circuit contains any measurement operations |
 | `is_parameterized` | `bool` | Whether circuit contains free `Parameter` objects |
+| `multi_qubit_gate_count` | `int\|null` | Count of gate operations acting on three or more qubits (e.g. `ccx`, `cswap`, multi-controlled constructions). Excludes metadata ops such as `measure`, `barrier`, and `delay` |
+| `has_control_flow` | `bool\|null` | `true` if the circuit contains Qiskit control-flow operations such as `if_else`, `while_loop`, `for_loop`, or `switch_case` |
+| `control_flow_op_count` | `int\|null` | Number of control-flow operations in the circuit. Useful for identifying dynamic-circuit patterns and stratifying beyond static gate-only circuits |
 | `t_count` | `int` | Total T + Tdg gate count |
 | `t_depth` | `int\|null` | Depth counting only T/Tdg layers (`null` if `t_count == 0`) |
+| `unconnected_qubit_count` | `int\|null` | Number of qubits that appear in no gate operation. Non-zero values indicate register over-allocation or partial circuit extraction; useful for data quality filtering |
+
+---
+
+### Gate-set Profile Flags
+
+Boolean structural fingerprint derived from `gate_types`. Populated only when `circuit_stats_available == true`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `has_clifford_only` | `bool\|null` | All non-metadata gates are Clifford (H, CNOT, S, X, Y, Z, SWAP, etc.); circuit is efficiently classically simulable |
+| `has_clifford_t` | `bool\|null` | Circuit contains T or Tdg gates |
+| `has_rotation_gates` | `bool\|null` | Circuit contains continuous rotation gates (Rx, Ry, Rz, U, P, etc.) |
+| `has_entangling_gates` | `bool\|null` | Circuit contains 2-qubit entangling gates (CX, CZ, SWAP, ECR, etc.) |
+| `has_barriers` | `bool\|null` | Circuit uses `barrier` instructions |
+| `has_custom_gates` | `bool\|null` | Circuit contains gates outside the standard Qiskit gate set |
+| `is_unitary` | `bool\|null` | `true` if the circuit contains no measurements and no resets — i.e. it implements a unitary transformation. Separates state-preparation / algorithmic circuits from measurement-driven ones |
+| `gate_set_diversity` | `float\|null` | Shannon entropy (bits) of the gate-type frequency distribution: `H(gate_types)`. `0.0` for single-gate-type circuits; higher values indicate a richer, more varied gate vocabulary |
 
 ---
 
@@ -196,6 +255,7 @@ Thresholds: **easy** ≤ 3 / **medium** 4–7 / **hard** ≥ 8
 |-------|------|-------------|
 | `two_qubit_gate_count` | `int\|null` | Count of 2-qubit gates (CX, CZ, SWAP, etc.) |
 | `entangling_gate_ratio` | `float\|null` | `two_qubit_gate_count / gate_count`; `0.0` if `gate_count == 0` |
+| `entanglement_depth` | `int\|null` | Number of circuit layers containing at least one 2-qubit gate. Analogous to `t_depth` but for entangling operations; direct NISQ hardware cost proxy |
 
 ---
 
@@ -214,6 +274,7 @@ Thresholds: **easy** ≤ 3 / **medium** 4–7 / **hard** ≥ 8
 | Field | Type | Description |
 |-------|------|-------------|
 | `measurement_count` | `int\|null` | Number of measurement operations |
+| `measured_qubit_count` | `int\|null` | Number of distinct qubits that are measured at least once. Distinguishes full-readout from partial-readout circuits better than raw `measurement_count` alone |
 | `reset_usage` | `bool\|null` | Whether circuit uses `reset` operations |
 | `mid_circuit_measurement` | `bool\|null` | Whether measurement appears before the final layer |
 | `classical_register_count` | `int\|null` | Number of classical registers |
@@ -246,6 +307,7 @@ Transpilation target: basis gates `["cx", "rz", "sx", "x"]`, `optimization_level
 | `transpilation_overhead` | `float\|null` | `(transpiled_gate_count - gate_count) / gate_count` |
 | `transpilation_successful` | `bool\|null` | `true` if transpilation completed without error |
 | `transpilation_basis_gates` | `list[str]` | Basis gate set used for transpilation (e.g. `["cx","rz","sx","x"]`). Always present — even when transpilation fails — so all transpilation metrics are self-contextualising without needing to consult documentation |
+| `transpilation_depth_ratio` | `float\|null` | `transpiled_depth / circuit_depth`. Ratio > 1 indicates the transpiler expanded the circuit; ratio < 1 indicates depth reduction. `null` if transpilation failed or `circuit_depth == 0` |
 
 ---
 
@@ -296,6 +358,8 @@ Added by `enrich_semantic_consistency.py`. Evaluates per-entry linguistic simila
 
 The `quality_flag` field records circuit provenance tier.
 
+These values are independent of `source` and the `retrieval_*` fields. `quality_flag` tracks the dataset-quality tier used in downstream generation and curation; `source` and `retrieval_*` track how the raw circuit was acquired.
+
 | Value | Source | `generation_model` |
 |-------|--------|-------------------|
 | `hf_baseline` | Original MS thesis circuits (HuggingFace) | `human_annotated` |
@@ -324,6 +388,7 @@ For quick lookup. Cluster numbers reference the sections above.
 
 | Field | Cluster | Type |
 |-------|---------|------|
+| `api_deprecated_usage` | 4 | `bool\|null` |
 | `avg_gates_per_layer` | 5 | `float` |
 | `benchmark_difficulty` | 6 | `str` |
 | `bert_score_f1` | 14 | `float\|null` |
@@ -333,29 +398,49 @@ For quick lookup. Cluster numbers reference the sections above.
 | `circuit_family` | 13 | `str` |
 | `circuit_hash` | 1 | `str` |
 | `circuit_stats_available` | 4 | `bool` |
+| `cleanup_candidate` | 4 | `bool\|null` |
+| `cleanup_rules_triggered` | 4 | `list[str]\|null` |
+| `code_lines` | 1 | `int` |
 | `circuit_width` | 5 | `int` |
 | `classical_register_count` | 9 | `int` |
 | `connected_components` | 10 | `int` |
 | `content_hash` | 1 | `str` |
+| `contains_demo_scaffolding` | 4 | `bool\|null` |
+| `control_flow_op_count` | 5 | `int\|null` |
+| `deprecated_api_patterns` | 4 | `list[str]\|null` |
+| `entanglement_depth` | 7 | `int\|null` |
 | `entangling_gate_ratio` | 7 | `float` |
+| `extraction_confidence` | 4 | `str\|null` |
 | `file_path` | 1 | `str` |
 | `gate_count` | 5 | `int` |
+| `gate_set_diversity` | 5b | `float\|null` |
 | `gate_types` | 5 | `dict` |
 | `generation_date` | 2 | `str` |
 | `generation_model` | 2 | `str` |
 | `github_anchor` | 1 | `str` |
 | `graph_density` | 10 | `float` |
+| `hallucination_type` | 4 | `str\|null` |
+| `has_barriers` | 5b | `bool\|null` |
+| `has_clifford_only` | 5b | `bool\|null` |
+| `has_clifford_t` | 5b | `bool\|null` |
+| `has_control_flow` | 5 | `bool\|null` |
+| `has_custom_gates` | 5b | `bool\|null` |
+| `has_entangling_gates` | 5b | `bool\|null` |
 | `has_measurement` | 5 | `bool` |
+| `has_rotation_gates` | 5b | `bool\|null` |
 | `hash` | 1 | `str\|null` |
 | `end_line` | 1 | `int\|null` |
 | `interaction_graph_edges` | 10 | `int` |
 | `is_org_repo` | 3 | `bool` |
 | `is_parameterized` | 5 | `bool` |
+| `is_unitary` | 5b | `bool\|null` |
 | `language` | 1 | `str` |
 | `license_category` | 12 | `str` |
 | `max_qubit_degree` | 10 | `int` |
 | `measurement_count` | 9 | `int` |
+| `measured_qubit_count` | 9 | `int\|null` |
 | `mid_circuit_measurement` | 9 | `bool` |
+| `multi_qubit_gate_count` | 5 | `int\|null` |
 | `num_clbits` | 5 | `int` |
 | `num_gate_types` | 5 | `int` |
 | `num_parameters` | 8 | `int` |
@@ -364,6 +449,7 @@ For quick lookup. Cluster numbers reference the sections above.
 | `openqasm3_export_successful` | 4 | `bool\|null` |
 | `original_prompt` | 2 | `str` |
 | `original_url` | 1 | `str` |
+| `output_token_count_cl100k` | 1 | `int\|null` |
 | `parameter_density` | 8 | `float` |
 | `parameter_reuse` | 8 | `bool` |
 | `paraphrase_source` | 2 | `str` |
@@ -372,20 +458,28 @@ For quick lookup. Cluster numbers reference the sections above.
 | `prompt_type` | 2 | `str` |
 | `prompt_word_count` | 2 | `int` |
 | `qiskit_version` | 4 | `str` |
+| `quantum_register_count` | 5 | `int\|null` |
 | `quality_flag` | 2 | `str` |
 | `repo_license` | 12 | `str` |
+| `repo_name` | 1 | `str\|null` |
+| `repo_owner` | 1 | `str\|null` |
 | `repo_topics` | 3 | `list[str]` |
 | `normalized_edit_distance` | 14 | `float\|null` |
 | `reset_usage` | 9 | `bool` |
+| `retrieval_mode` | 1 | `str\|null` |
+| `retrieval_run_id` | 1 | `str\|null` |
+| `retrieval_strategy` | 1 | `str\|null` |
 | `rouge_l_to_seed` | 14 | `float\|null` |
 | `semantic_intent` | 13 | `str` |
 | `semantic_similarity_to_seed` | 14 | `float\|null` |
 | `size_class` | 6 | `str` |
+| `scrape_date` | 1 | `str\|null` |
 | `source` | 1 | `str` |
 | `start_line` | 1 | `int\|null` |
 | `t_count` | 5 | `int` |
 | `t_depth` | 5 | `int\|null` |
 | `transpilation_basis_gates` | 11 | `list[str]` |
+| `transpilation_depth_ratio` | 11 | `float\|null` |
 | `transpilation_overhead` | 11 | `float` |
 | `transpilation_successful` | 11 | `bool` |
 | `transpiled_cx_count` | 11 | `int` |
@@ -393,5 +487,6 @@ For quick lookup. Cluster numbers reference the sections above.
 | `transpiled_gate_count` | 11 | `int` |
 | `transpiled_single_qubit_count` | 11 | `int` |
 | `two_qubit_gate_count` | 7 | `int` |
+| `unconnected_qubit_count` | 5 | `int\|null` |
 | `validation_error_type` | 4 | `str` |
 | `validation_status` | 4 | `str` |
