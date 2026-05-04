@@ -1,0 +1,84 @@
+{
+  "phase": 3,
+  "label": "aggressive_v2_high_yield",
+  "retrieval_mode": "aggressive",
+  "retrieval_run_id": "aggressive_v2_high_yield_2026-04-04",
+  "scrape_date": "2026-04-04",
+  "baseline_output_file": "PQID\\data\\processed\\circuits_unified.jsonl",
+  "phase2_output_file": "PQID\\data\\processed\\circuits_unified_aggressive.jsonl",
+  "phase3_output_file": "PQID\\data\\processed\\circuits_unified_phase3.jsonl",
+  "merged_output_file": "PQID\\data\\processed\\circuits_unified_plus_phase2_plus_phase3.jsonl",
+  "processed_file_v3": "PQID\\data\\processed\\circuits_unified_phase3_processed.txt",
+  "max_file_size_bytes_v3": 1500000,
+  "include_doc_paths_v3": true,
+  "trusted_resweep_repos_v3": [
+    [
+      "Qiskit",
+      "documentation"
+    ],
+    [
+      "PennyLaneAI",
+      "pennylane-qiskit"
+    ],
+    [
+      "Quantinuum",
+      "pytket-qiskit"
+    ],
+    [
+      "sethuquantum",
+      "LearnQuantum"
+    ],
+    [
+      "AayushSarkar",
+      "Qiskit-Experiment-Hub"
+    ],
+    [
+      "AIComputing101",
+      "quantum-computing-101"
+    ]
+  ],
+  "search_queries_v3": [
+    "from qiskit.circuit.library import NLocal language:python",
+    "from qiskit.circuit.library import QAOAAnsatz language:python",
+    "from qiskit.circuit.library import ExcitationPreserving language:python",
+    "from qiskit.circuit.library import GroverOperator language:python",
+    "from qiskit.circuit.library import PhaseEstimation language:python",
+    "from qiskit.circuit.library import GraphState language:python",
+    "from qiskit.circuit.library import UCCSD language:python",
+    "QuantumCircuit.from_qasm_str( qiskit language:python",
+    ".to_instruction( qiskit language:python",
+    ".control( qiskit language:python",
+    "from qiskit_algorithms language:python QuantumCircuit",
+    "from qiskit_machine_learning language:python QuantumCircuit"
+  ],
+  "notebook_queries_v3": [
+    "QuantumCircuit qiskit language:jupyter-notebook path:notebooks",
+    "QuantumCircuit qiskit language:jupyter-notebook path:tutorial",
+    "QuantumCircuit qiskit language:jupyter-notebook path:examples",
+    "from qiskit.circuit.library language:jupyter-notebook",
+    "measure_all() qiskit language:jupyter-notebook"
+  ],
+  "phase3_variant": "high_yield_only",
+  "baseline_count": 21632,
+  "phase2_count": 65680,
+  "phase3_count": 4407,
+  "merged_count": 91719,
+  "trusted_resweep_total": 0,
+  "search_v2_total": 4404,
+  "notebook_search_total": 0,
+  "merged_retrieval_mode_counts": {
+    "baseline": 21632,
+    "aggressive": 70087
+  },
+  "merged_retrieval_strategy_counts": {
+    "curated": 1448,
+    "search": 17372,
+    "org": 4335,
+    "topic": 2188,
+    "promoted_repo": 127,
+    "expanded_search": 8816,
+    "empirical_promoted_repo": 53026,
+    "expanded_search_v2": 4404,
+    "gist": 3
+  }
+}

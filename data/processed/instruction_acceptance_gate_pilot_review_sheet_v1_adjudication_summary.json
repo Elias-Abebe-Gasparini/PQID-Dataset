@@ -1,0 +1,20 @@
+{
+  "adjudication_apply_version": "instruction_acceptance_gate_pilot_review_bulk_adjudication_v1",
+  "review_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_review_sheet_v1.csv",
+  "preadjudication_snapshot": "PQID/data/processed/instruction_acceptance_gate_pilot_review_sheet_v1_preadjudication_snapshot.csv",
+  "adjudication_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_disagreement_adjudication_v1.csv",
+  "rows_total": 256,
+  "rows_bulk_rewritten": 47,
+  "rows_retained_for_manual_or_existing_decision": 17,
+  "original_decision_counts": {
+    "accept": 256
+  },
+  "applied_bucket_counts": {
+    "manual_spot_check": 17,
+    "obvious_rewrite": 47
+  },
+  "final_decision_counts": {
+    "accept": 209,
+    "rewrite": 47
+  }
+}

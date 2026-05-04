@@ -4,7 +4,7 @@ enrich_circuit_family.py
 Classifies every unique circuit (by circuit_hash) into a semantic circuit
 family and intent category using GPT-4.1-mini.
 
-Adds two metadata fields to each entry in the three *_clean.jsonl files:
+Adds two metadata fields to each entry in one or more JSONL dataset files:
 
     circuit_family   bell | ghz | qft | variational | qaoa | teleportation |
                      arithmetic | oracle | ansatz | phase_estimation |
@@ -17,13 +17,15 @@ Adds two metadata fields to each entry in the three *_clean.jsonl files:
 
 Resume-safe: results cached in circuit_family_cache.jsonl.
 Only unique circuits not yet in the cache are queried.
-After all circuits are classified, the three *_clean.jsonl files are patched
+After all circuits are classified, the target JSONL files are patched
 in-place (atomic rename).
 
 Run:
     python enrich_circuit_family.py
+    python enrich_circuit_family.py --input-files path1.jsonl path2.jsonl
 """
 
+import argparse
 import asyncio
 import json
 import os
@@ -31,21 +33,13 @@ import time
 from pathlib import Path
 
 from openai import AsyncOpenAI, RateLimitError
+from project_paths import PROCESSED_DIR, format_display_path, load_openai_api_key
 
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
-API_KEY_FILE = r"C:\Users\Abebe\Downloads\IT\OPENAI\OPENAI_API_KEY_PQID_V2.txt"
+BASE = PROCESSED_DIR
 
-INPUT_FILES = [
-    BASE / "train_clean.jsonl",
-    BASE / "validation_clean.jsonl",
-    BASE / "test_clean.jsonl",
-]
 CACHE_FILE = BASE / "circuit_family_cache.jsonl"
 
 MODEL      = "gpt-4.1-mini"
@@ -61,6 +55,42 @@ VALID_INTENTS = {
     "algorithmic_subroutine", "arithmetic_reversible", "oracle_construction",
     "measurement_driven", "demonstration", "other",
 }
+
+
+def default_input_files() -> list[Path]:
+    candidates = [
+        BASE / "circuits_unified_plus_phase2_plus_phase3_core_extended_enriched.jsonl",
+        BASE / "circuits_unified_plus_phase2_plus_phase3_core_enriched.jsonl",
+        BASE / "circuits_unified_plus_aggressive_core_enriched.jsonl",
+        BASE / "train_clean.jsonl",
+        BASE / "validation_clean.jsonl",
+        BASE / "test_clean.jsonl",
+    ]
+    existing = []
+    seen = set()
+    for path in candidates:
+        if path.exists() and path not in seen:
+            existing.append(path)
+            seen.add(path)
+    return existing or [candidates[0]]
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Patch circuit-family and semantic-intent metadata into one or more JSONL files."
+    )
+    parser.add_argument(
+        "--input-files",
+        nargs="+",
+        default=[str(p) for p in default_input_files()],
+        help="One or more JSONL files to patch in place.",
+    )
+    parser.add_argument(
+        "--cache-file",
+        default=str(CACHE_FILE),
+        help="Path to the resume-safe circuit family cache JSONL.",
+    )
+    return parser.parse_args()
 
 SYSTEM_MSG = (
     "You are a quantum computing expert. Given a Qiskit circuit implementation, "
@@ -81,15 +111,7 @@ SYSTEM_MSG = (
 # I/O helpers
 # ---------------------------------------------------------------------------
 def load_api_key() -> str:
-    key = ""
-    if os.path.exists(API_KEY_FILE):
-        with open(API_KEY_FILE) as f:
-            key = f.read().strip()
-    if not key:
-        key = os.environ.get("OPENAI_API_KEY", "")
-    if not key:
-        raise SystemExit("ERROR: OpenAI API key not found.")
-    return key
+    return load_openai_api_key(__file__)
 
 
 def load_jsonl(path: Path) -> list:
@@ -179,15 +201,21 @@ async def classify_circuit(
 # Main
 # ---------------------------------------------------------------------------
 async def main():
+    args = parse_args()
+    input_files = [Path(p) for p in args.input_files]
+    cache_file = Path(args.cache_file)
+
     api_key = load_api_key()
     client  = AsyncOpenAI(api_key=api_key)
 
     print("Collecting unique circuits...", flush=True)
-    all_circuits = collect_unique_circuits(INPUT_FILES)
+    for path in input_files:
+        print(f"  - {format_display_path(path)}", flush=True)
+    all_circuits = collect_unique_circuits(input_files)
     print(f"  Unique circuits: {len(all_circuits):,}", flush=True)
 
     # Load cache
-    cache_records = load_jsonl(CACHE_FILE)
+    cache_records = load_jsonl(cache_file)
     cache = {r["circuit_hash"]: r for r in cache_records}
     print(f"  Already cached : {len(cache):,}", flush=True)
 
@@ -204,7 +232,7 @@ async def main():
         async with sem:
             rec = await classify_circuit(client, ch, code)
             cache[ch] = rec
-            append_jsonl(rec, CACHE_FILE)
+            append_jsonl(rec, cache_file)
             done += 1
             if done % 500 == 0 or done == len(pending):
                 elapsed = time.time() - t0
@@ -220,7 +248,7 @@ async def main():
     # Patch files
     print("\nPatching JSONL files...", flush=True)
     total_patched = 0
-    for path in INPUT_FILES:
+    for path in input_files:
         entries = load_jsonl(path)
         if not entries:
             continue
@@ -234,7 +262,10 @@ async def main():
                 patched += 1
         save_jsonl(entries, path)
         total_patched += patched
-        print(f"  {path.name}: patched {patched:,} / {len(entries):,}", flush=True)
+        print(
+            f"  {format_display_path(path)}: patched {patched:,} / {len(entries):,}",
+            flush=True,
+        )
 
     # Summary
     family_counts: dict = {}

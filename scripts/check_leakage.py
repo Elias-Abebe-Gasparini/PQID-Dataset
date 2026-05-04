@@ -20,10 +20,10 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
+from project_paths import PROCESSED_DIR
+
+
+BASE = PROCESSED_DIR
 
 SPLITS = {
     "train":      BASE / "train_clean.jsonl",

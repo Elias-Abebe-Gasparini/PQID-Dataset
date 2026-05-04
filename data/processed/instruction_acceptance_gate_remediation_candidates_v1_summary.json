@@ -1,0 +1,69 @@
+{
+  "remediation_version": "instruction_acceptance_gate_remediation_v1",
+  "neighbor_policy": "same_review_group_key_lineage_siblings",
+  "rows": 282,
+  "core_rewrite_groups": 47,
+  "unique_review_group_keys": 47,
+  "candidate_type_counts": {
+    "core_rewrite": 47,
+    "lineage_neighbor": 235
+  },
+  "priority_counts": {
+    "p0_rewrite_required": 47,
+    "p1_repair_lineage_neighbor": 210,
+    "p2_lineage_neighbor": 25
+  },
+  "branch_counts": {
+    "source_code": 282
+  },
+  "instruction_kind_counts": {
+    "paraphrase": 235,
+    "seed": 47
+  },
+  "role_counts": {
+    "broad_generation": 6,
+    "gold_generation": 24,
+    "repair_or_explanation": 252
+  },
+  "inherited_reason_bucket_counts": {
+    "extra_content_violates_prompt": 6,
+    "repair_not_done": 126,
+    "undefined_or_missing_symbol": 150
+  },
+  "group_size_min": 6,
+  "group_size_max": 6,
+  "group_size_mean": 6.0,
+  "top_repo_counts": {
+    "backordinary/QDP-FSL": 54,
+    "Qiskit/platypus": 36,
+    "Ahmik-Virani/Differentiating-Quantum-Bug-From-Noise-Statistical-Approach": 30,
+    "Qiskit/documentation": 18,
+    "Ali-hey-0/Qiskit": 12,
+    "qiskit-community/qiskit-community-tutorials": 12,
+    "PottierLoic/QuantumCrypto": 6,
+    "VishuVish/Generating_Bell_States_using_Qiskit": 6,
+    "PacktPublishing/Quantum-Computing-Algorithms": 6,
+    "Qiskit/qiskit-tutorials": 6,
+    "JorgeKlock/University": 6,
+    "qiskit-community/korean-community": 6,
+    "Farquhar13/QNN-Gen": 6,
+    "harry1357/Quantum": 6,
+    "nargesalavi/Parameterized-Quantum-Circuit-for-Building-a-Bell-State": 6,
+    "qiskit-community/Qiskit-Hackathon-at-World-of-QUANTUM": 6,
+    "emgervais/quantum": 6,
+    "PGelss/scikit_tt": 6,
+    "ryoichikawai/qcomp-short": 6,
+    "023b/quantum_learning": 6
+  },
+  "source_manifest_file": "PQID/data/processed/instruction_acceptance_gate_manifest_v1.jsonl",
+  "source_reviewed_file": "PQID/data/processed/instruction_acceptance_gate_pilot_reviewed_v1.jsonl",
+  "source_adjudication_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_disagreement_adjudication_v1.csv",
+  "candidate_file": "PQID/data/processed/instruction_acceptance_gate_remediation_candidates_v1.jsonl",
+  "review_sheet": "PQID/data/processed/instruction_acceptance_gate_remediation_review_sheet_v1.csv",
+  "summary_file": "PQID/data/processed/instruction_acceptance_gate_remediation_candidates_v1_summary.json",
+  "missing_core_keys_recovered_from_reviewed_file": [],
+  "batch_request_file": "PQID/data/processed/instruction_acceptance_gate_remediation_batch_requests_v1.jsonl",
+  "batch_request_model": "gpt-5.4",
+  "batch_request_temperature": 0.1,
+  "batch_request_max_output_tokens": 900
+}

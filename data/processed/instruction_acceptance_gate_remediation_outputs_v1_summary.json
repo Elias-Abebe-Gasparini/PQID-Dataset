@@ -1,0 +1,25 @@
+{
+  "remediation_result_version": "instruction_acceptance_gate_remediation_result_v1",
+  "candidate_file": "PQID/data/processed/instruction_acceptance_gate_remediation_candidates_v1.jsonl",
+  "batch_output_file": "PQID/data/processed/instruction_acceptance_gate_remediation_batch_outputs_v1.jsonl",
+  "result_file": "PQID/data/processed/instruction_acceptance_gate_remediation_outputs_v1.jsonl",
+  "review_sheet": "PQID/data/processed/instruction_acceptance_gate_remediation_outputs_v1.csv",
+  "error_file": "PQID/data/processed/instruction_acceptance_gate_remediation_errors_v1.jsonl",
+  "summary_file": "PQID/data/processed/instruction_acceptance_gate_remediation_outputs_v1_summary.json",
+  "candidate_rows": 282,
+  "result_rows": 282,
+  "error_counts": {},
+  "decision_counts": {
+    "rewrite": 282
+  },
+  "candidate_type_counts": {
+    "core_rewrite": 47,
+    "lineage_neighbor": 235
+  },
+  "missing_output_count": 0,
+  "missing_output_custom_ids_sample": [],
+  "manual_closeout_version": "instruction_acceptance_gate_remediation_manual_closeout_v1",
+  "manual_closeout_rows": 2,
+  "manual_closeout_file": "PQID/data/processed/instruction_acceptance_gate_remediation_manual_closeout_v1.json",
+  "closeout_status": "complete"
+}

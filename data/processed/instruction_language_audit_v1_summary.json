@@ -1,0 +1,482 @@
+{
+  "language_audit_version": "instruction_language_audit_v1",
+  "manifest_file": "PQID/data/processed/instruction_acceptance_gate_manifest_v1.jsonl",
+  "audit_file": "PQID/data/processed/instruction_language_audit_v1.jsonl",
+  "rows": 550314,
+  "branch_counts": {
+    "source_code": 18012,
+    "teacher_text": 532302
+  },
+  "instruction_kind_counts": {
+    "paraphrase": 458595,
+    "seed": 91719
+  },
+  "input_human_language_counts": {
+    "bn": 14,
+    "en": 550300
+  },
+  "input_human_language_resolved_counts": {
+    "bn": 14,
+    "en": 550300
+  },
+  "input_human_script_bucket_counts": {
+    "latin": 548846,
+    "latin_plus_arabic": 13,
+    "latin_plus_bengali": 14,
+    "latin_plus_devanagari": 50,
+    "latin_plus_greek": 1342,
+    "latin_plus_hebrew": 48,
+    "mixed_scripts": 1
+  },
+  "output_human_language_counts": {
+    "en": 539544,
+    "es": 216,
+    "fr": 78,
+    "mixed": 96,
+    "none": 9660,
+    "pt": 132,
+    "unknown": 588
+  },
+  "output_human_language_resolved_counts": {
+    "cyrillic_script_unresolved": 12,
+    "en": 539544,
+    "es": 216,
+    "fr": 78,
+    "ja_script": 156,
+    "ko_script": 90,
+    "mixed": 96,
+    "none": 9660,
+    "pt": 132,
+    "short_fragment": 330
+  },
+  "output_human_script_bucket_counts": {
+    "hangul": 72,
+    "latin": 548106,
+    "latin_plus_arabic": 6,
+    "latin_plus_cjk": 18,
+    "latin_plus_cyrillic": 24,
+    "latin_plus_greek": 1800,
+    "latin_plus_hangul": 54,
+    "mixed_scripts": 174,
+    "none": 60
+  },
+  "output_human_language_scope_counts": {
+    "code_comments_or_docstrings": 8352,
+    "code_only": 9660,
+    "full_output_text": 532302
+  },
+  "branch_input_human_language_counts": {
+    "source_code": {
+      "bn": 14,
+      "en": 17998
+    },
+    "teacher_text": {
+      "en": 532302
+    }
+  },
+  "branch_input_human_language_resolved_counts": {
+    "source_code": {
+      "bn": 14,
+      "en": 17998
+    },
+    "teacher_text": {
+      "en": 532302
+    }
+  },
+  "branch_output_human_language_counts": {
+    "source_code": {
+      "en": 7248,
+      "es": 216,
+      "fr": 78,
+      "mixed": 90,
+      "none": 9660,
+      "pt": 132,
+      "unknown": 588
+    },
+    "teacher_text": {
+      "en": 532296,
+      "mixed": 6
+    }
+  },
+  "branch_output_human_language_resolved_counts": {
+    "source_code": {
+      "cyrillic_script_unresolved": 12,
+      "en": 7248,
+      "es": 216,
+      "fr": 78,
+      "ja_script": 156,
+      "ko_script": 90,
+      "mixed": 90,
+      "none": 9660,
+      "pt": 132,
+      "short_fragment": 330
+    },
+    "teacher_text": {
+      "en": 532296,
+      "mixed": 6
+    }
+  },
+  "branch_instruction_kind_counts": {
+    "source_code": {
+      "paraphrase": 15010,
+      "seed": 3002
+    },
+    "teacher_text": {
+      "paraphrase": 443585,
+      "seed": 88717
+    }
+  },
+  "non_english_examples": [
+    {
+      "instruction_key": "d4cd84f17e0d8fb62cbd951e7e913ecf68d836b4",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "short_fragment",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only builds a two-qubit Z-basis measurement circuit and leaves a placeholder comment. Repair it into a complete, benchmark-ready example by replacing the placeholder w",
+      "output_preview": "measure_ZZ = QuantumCircuit(2)\nmeasure_ZZ.measure_all()\n\n# <XX>"
+    },
+    {
+      "instruction_key": "e21ce4ae66dc290b46e1b5cb7177d7a160ed0523",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "short_fragment",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet is valid but too minimal to be benchmark-ready. Repair it by expanding the 1-qubit X-and-measure example into a slightly richer circuit while preserving its basic inte",
+      "output_preview": "qc_one = QuantumCircuit(1, 1)\nqc_one.x(0)\nqc_one.measure(0, 0)\n\n# 2 state"
+    },
+    {
+      "instruction_key": "1904ad9845d28579a1e7eadfcc2370f84f5ab746",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "short_fragment",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only measures a single qubit and leaves the higher-energy-state idea unexpressed. Repair it into a minimally meaningful circuit for that topic, and briefly explain why",
+      "output_preview": "qc_ground = QuantumCircuit(1, 1)\nqc_ground.measure(0, 0)\n\n# 1 state"
+    },
+    {
+      "instruction_key": "5c5aa7afa61329a7b2f64665db4b85210570e5a7",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This Deutsch-Jozsa snippet is only a stub: complete and repair it into a runnable Qiskit circuit by adding the missing Hadamards/oracle structure and measurements, and briefly note",
+      "output_preview": "dj_circuit = QuantumCircuit(n+1, n)\n\n# Aplicar compuertas H"
+    },
+    {
+      "instruction_key": "c06610b1cb544750be039063a19fe7ab5254bef8",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 3-qubit circuit and leaves a comment saying to apply H to each qubit. Repair it by completing the circuit so all three qubits receive a Hadamard gate, a",
+      "output_preview": "qc = QuantumCircuit(3)\n# Aplicar la compuerta H a cada qubit:"
+    },
+    {
+      "instruction_key": "72e57332ac496f126685192d607e6a3f5cdb1074",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet is just a one-qubit T gate and looks too slight for a benchmark task. Briefly explain what makes it not benchmark-ready, then repair it by expanding it into a small bu",
+      "output_preview": "qc = QuantumCircuit(1)\nqc.t(0) # compuerta T en el qubit 0\nqc.draw()"
+    },
+    {
+      "instruction_key": "c5cce732432d2c70312834509e5de661cec730fa",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only builds a 2-qubit Bell-state circuit and draws it; repair it into a benchmark-ready example by adding the missing imports and replacing the nonessential display ca",
+      "output_preview": "qc = QuantumCircuit(2)\n# Aplicar la compuerta H al primero:\nqc.h(0)\n# Aplicar un CNOT:\nqc.cx(0,1)\nqc.draw()"
+    },
+    {
+      "instruction_key": "121a91652fac03aa7201388014e2cafcb743d6d2",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only puts an H on qubit 0 of a 2-qubit circuit, even though the notebook context is about entangled multi-qubit states. Repair it into a benchmark-ready example by add",
+      "output_preview": "qc = QuantumCircuit(2)\n# Aplicar la compuerta H al primero:\nqc.h(0)\nqc.draw()"
+    },
+    {
+      "instruction_key": "4e3cffde7e2e27498f7c7a2810fbaaf83c9a36d5",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This XOR example isn’t quite ready as a clean benchmark circuit: repair it so the measured outputs match the comments, and briefly note what is currently incomplete or misleading a",
+      "output_preview": "qc_ha = QuantumCircuit(4,2)\n# codificar las entradas en los qubits 0 y 1\nqc_ha.x(0) # Para a=0, remover esta línea. Para a=1, dejarla.\nqc_ha.x(1) # Para b=0, remover esta línea. Pa"
+    },
+    {
+      "instruction_key": "ab700a5f62d26cd75c2d0619ebfe1eaa1721d773",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 1-qubit circuit and applies no gates; repair it into a minimal but meaningful example for representing a qubit state, and briefly note why the original ",
+      "output_preview": "qc = QuantumCircuit(1)  # Crear un circuito cuántico con un qubit"
+    },
+    {
+      "instruction_key": "f1aa30322046e41b5861ef8214a710e4c01f7f25",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 1-qubit circuit and applies no gates; repair it into a minimal, runnable example that actually represents a qubit state and briefly note why the origina",
+      "output_preview": "qc = QuantumCircuit(1) # Crear un circuito cuántico con un qubit"
+    },
+    {
+      "instruction_key": "d8e9762f25e123c82c90336c260c2046201d42ae",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet computes half-adder outputs, but it is not benchmark-ready as written because the inputs are hard-coded and the notebook-style scaffolding remains. Repair it into a re",
+      "output_preview": "qc_ha = QuantumCircuit(4,2)\n# codificar las entradas en los qubits 0 y 1\nqc_ha.x(0) # Para a=0, remover esta línea. Para a=1, dejarla.\nqc_ha.x(1) # Para b=0, remover esta línea. Pa"
+    },
+    {
+      "instruction_key": "9cff37c0a70c8e6b99d902b4b78af392f4cbf94c",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only applies S followed by Sdg on one qubit and draws the circuit; repair it into a more benchmark-ready example by adding a minimal state-preparation or measurement s",
+      "output_preview": "qc = QuantumCircuit(1)\nqc.s(0)   # Aplicar la compuerta S al qubit 0\nqc.sdg(0) # Aplicar la compuerta Sdg al qubit 0\nqc.draw()"
+    },
+    {
+      "instruction_key": "fc0ce2f4a6405e4c91ec7377b58994bc870f6eff",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "Create the Simon algorithm setup circuit for an n-bit input register: initialize a QuantumCircuit with 2n qubits and n classical bits, apply Hadamard gates to the first n qubits be",
+      "output_preview": "simon_circuit = QuantumCircuit(n*2, n)\n\n# オラクルに入力する前にアダマールゲートを適用する\nsimon_circuit.h(range(n))    \n    \n# 可視性の向上のため、境界を挿入する\nsimon_circuit.barrier()"
+    },
+    {
+      "instruction_key": "fcbaf3c8368fe7eb21d289b58d5cac857f250e55",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This Simon circuit snippet stops right before the oracle and only applies Hadamards to the first register. Repair it into a runnable circuit by adding the missing oracle call and t",
+      "output_preview": "simon_circuit_2 = QuantumCircuit(n*2, n)\n\n# オラクルに入力する前にアダマールゲートを適用する\nsimon_circuit_2.h(range(n))\n\n# オラクルに入力する"
+    },
+    {
+      "instruction_key": "025f0a43689500da78ccacd2a6ecda3f2e779d3c",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only applies T followed immediately by Tdg on one qubit. Repair it into a more benchmark-ready example by keeping the same topic of single-qubit gates but adding a sma",
+      "output_preview": "qc = QuantumCircuit(1)\nqc.t(0)   # Aplicar la compuerta T al qubit 0\nqc.tdg(0) # Aplicar la compuerta Tdg al qubit 0\nqc.draw()"
+    },
+    {
+      "instruction_key": "3a1e68af8fde707a54490be7987d85b39cacf6db",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "es",
+      "output_human_language_resolved": "es",
+      "output_human_script_bucket": "latin",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 2-qubit circuit with a single CNOT and draw call; repair it into a more benchmark-ready entanglement example by adding the missing preparation step and ",
+      "output_preview": "qc = QuantumCircuit(2)\n# Aplicar CNOT\nqc.cx(0,1)\n# Ver el circuito:\nqc.draw()"
+    },
+    {
+      "instruction_key": "41aac6120bad9a96544d236198d9cede96134f21",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 1-qubit circuit and leaves a placeholder comment; repair it into a minimal measurement example by adding the missing classical bit and measurement opera",
+      "output_preview": "qc = QuantumCircuit(1)\n\n#### ここにコードを記入します"
+    },
+    {
+      "instruction_key": "624c1bdf43b74189e5707294204c4cb3ba33bda5",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet is just a one-qubit T gate followed by drawing the circuit. Briefly explain why it is not benchmark-ready as-is, then repair it by expanding it into a slightly richer ",
+      "output_preview": "qc = QuantumCircuit(1)\nqc.t(0) # 量子ビット0へTゲートを適用\nqc.draw()"
+    },
+    {
+      "instruction_key": "37fc8ab113577fab1f46707f8fa997079d71d60f",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet is only a placeholder for a single-qubit measurement example: repair it so the circuit actually measures qubit 0 in the X basis and briefly note why the current versio",
+      "output_preview": "measure_x = QuantumCircuit(1,1)\n# ここにコードを記入します\n\n\n\n\n\n\n\n# 量子ビット0のy測定"
+    },
+    {
+      "instruction_key": "31536d1c4ad7874884890bdec6664c5fbf87a1ec",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This measurement example is unfinished: complete the 1-qubit circuit so it measures in the Y basis and stores the result in the classical bit.",
+      "output_preview": "measure_y = QuantumCircuit(1,1)\n# ここにコードを記入します"
+    },
+    {
+      "instruction_key": "24e95957372672d130f651d07f8067debb96bdf5",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only measures qubit 0 into one classical bit and is too minimal to stand alone. Repair it into a benchmark-ready example by expanding it into a complete X-basis measur",
+      "output_preview": "measure_z = QuantumCircuit(1,1)\nmeasure_z.measure(0,0)\n\n# 量子ビット0のx測定"
+    },
+    {
+      "instruction_key": "d07437f42a2cd238c40da439b0e5afa28370d950",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 2-qubit circuit and leaves a placeholder before a comment about another state. Repair it into a runnable Qiskit example by filling in the missing operat",
+      "output_preview": "Tri1 = QuantumCircuit(2)\n# ここにコードを記入します\n\n\n\n\n\n\n# 状態Tri2の回路"
+    },
+    {
+      "instruction_key": "e2b3307ff21bb92dce36e9ab928c808b56db9bb0",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 2-qubit circuit and leaves a placeholder before a comment about the next state. Repair it into a meaningful completion for a quantum measurement lab, an",
+      "output_preview": "Tri2 = QuantumCircuit(2)\n# ここにコードを記入します\n\n\n\n\n\n# 状態Tri3の回路"
+    },
+    {
+      "instruction_key": "5f57e4073d2833d9a2bad2aa335192acec8db899",
+      "source_branch": "source_code",
+      "instruction_kind": "seed",
+      "input_human_language": "en",
+      "input_human_language_resolved": "en",
+      "input_human_script_bucket": "latin",
+      "output_human_language": "unknown",
+      "output_human_language_resolved": "ja_script",
+      "output_human_script_bucket": "mixed_scripts",
+      "output_human_language_scope": "code_comments_or_docstrings",
+      "input_preview": "This snippet only creates a 2-qubit circuit and leaves a placeholder before a comment about the Sing state. Repair it by filling in the missing Qiskit operations needed to prepare ",
+      "output_preview": "Tri3 = QuantumCircuit(2)\n# ここにコードを記入します\n\n\n\n\n\n\n# 状態Singの回路"
+    }
+  ],
+  "audit_note": "This is a heuristic language audit. It should be read as an English-dominant corpus analysis, not as a claim of perfect language identification."
+}

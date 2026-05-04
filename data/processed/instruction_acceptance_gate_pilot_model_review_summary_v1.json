@@ -1,0 +1,202 @@
+{
+  "model_review_version": "instruction_acceptance_gate_pilot_model_review_v1",
+  "source_review_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_review_sheet_v1.csv",
+  "suggestion_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_model_review_sheet_v1.csv",
+  "summary_file": "PQID/data/processed/instruction_acceptance_gate_pilot_model_review_summary_v1.json",
+  "rows": 256,
+  "model_review_model": "gpt-5.4",
+  "model_review_temperature": 0.1,
+  "model_review_status_counts": {
+    "reviewed": 256
+  },
+  "model_acceptance_decision_counts": {
+    "accept": 192,
+    "rewrite": 64
+  },
+  "human_model_decision_agreement_counts": {
+    "agree": 192,
+    "disagree": 64
+  },
+  "decision_disagreement_examples": [
+    {
+      "pilot_row_index": "35",
+      "instruction_key": "63b55b5063e8b5ba8a73907f975c34cd91450dd4",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "gold_generation"
+    },
+    {
+      "pilot_row_index": "43",
+      "instruction_key": "a93687b8d82f53a4960d17670c7aad61f0bbe864",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "gold_generation"
+    },
+    {
+      "pilot_row_index": "51",
+      "instruction_key": "07a066a423b37e7b11522c71d01e2cc4ee21416c",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "52",
+      "instruction_key": "09fe92602fe194e271dcabb855bc203308529795",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "53",
+      "instruction_key": "10af51a25be1df20fee791f94b6590adb2c886e4",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "54",
+      "instruction_key": "374425824cbe31fc8a65e32136b310356de27c2e",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "55",
+      "instruction_key": "4031e4ae16aced39352c14319416436f24781a47",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "56",
+      "instruction_key": "4526061f3aac1be1792c55b06d84d9035ae84bd8",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "57",
+      "instruction_key": "4c3d6c1a69f774bdb91a85dc81899d240bef41e9",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "58",
+      "instruction_key": "543b779394b1142ad03c5c5893d3bd3f5b35443f",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "59",
+      "instruction_key": "62146294bd017199f976b7eb2ffc509781d3ae7e",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "60",
+      "instruction_key": "649a97a3b58ded32041581bd9ad7fc34d4f7bc39",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "61",
+      "instruction_key": "70a88136732d31f6747d9023f76a2645927ed505",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "62",
+      "instruction_key": "79307aebdb2e8d33af48d8aade0379efe72903e2",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "63",
+      "instruction_key": "7e330fb0a6aebb7bbfebc7ad4e9693b61f7e4b2f",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "64",
+      "instruction_key": "891b4263a682612b4be146c71028f9dce352bd0c",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "65",
+      "instruction_key": "8a697da6221f1fc37f8978c4768844acf56e36e2",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "66",
+      "instruction_key": "a5a0f31c06e04649a02f9f8db0f0c858ef274622",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "67",
+      "instruction_key": "b2817f71bcc332c84e9bde68105cd52396efe9fa",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    },
+    {
+      "pilot_row_index": "68",
+      "instruction_key": "bcc130ff9e2267fcdb50c404d3682a8031ca8616",
+      "human_acceptance_decision": "accept",
+      "model_acceptance_decision": "rewrite",
+      "source_branch": "source_code",
+      "instruction_kind": "paraphrase",
+      "seed_role": "repair_or_explanation"
+    }
+  ]
+}

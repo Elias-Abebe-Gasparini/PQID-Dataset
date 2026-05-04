@@ -37,19 +37,13 @@ from datetime import date
 from pathlib import Path
 
 import requests
+from project_paths import PROCESSED_DIR, REPO_ROOT, load_github_token
 
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
-GITHUB_URLS_FILE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/github_urls.txt"
-)
-TOKEN_FILE = r"C:\Users\Abebe\Downloads\IT\GITHUB\GITHUB_TOKEN_PQID_V1.txt"
+BASE = PROCESSED_DIR
+GITHUB_URLS_FILE = REPO_ROOT / "github_urls.txt"
 
 OUTPUT_FILE    = BASE / "circuits_unified.jsonl"
 PROCESSED_FILE = BASE / "circuits_unified_processed.txt"  # file URLs already done
@@ -109,15 +103,7 @@ TOPICS = [
 # Helpers
 # ---------------------------------------------------------------------------
 def load_token() -> str:
-    token = ""
-    if os.path.exists(TOKEN_FILE):
-        with open(TOKEN_FILE) as f:
-            token = f.read().strip()
-    if not token:
-        token = os.environ.get("GITHUB_TOKEN", "")
-    if not token:
-        raise SystemExit("ERROR: GitHub token not found.")
-    return token
+    return load_github_token(__file__)
 
 
 def make_session(token: str) -> requests.Session:
@@ -198,10 +184,11 @@ def append_circuit(entry: dict, path: Path) -> None:
 # ---------------------------------------------------------------------------
 # Circuit extraction
 # ---------------------------------------------------------------------------
-def _extract_function_blocks(lines: list[str]) -> list[str]:
+def _extract_function_blocks(lines: list[str]) -> list[tuple]:
     """
     Extract complete function definitions that create a QuantumCircuit.
-    Returns list of function source strings.
+    Returns list of (code, start_line, end_line) tuples where line numbers
+    are 1-indexed to match GitHub's line anchor convention.
     """
     blocks = []
     i = 0
@@ -210,6 +197,7 @@ def _extract_function_blocks(lines: list[str]) -> list[str]:
         stripped = line.strip()
         # Match function definitions
         if re.match(r"^def\s+\w+\s*\(", stripped):
+            start_idx = i
             # Collect the function body
             indent = len(line) - len(line.lstrip())
             body_lines = [line]
@@ -229,17 +217,18 @@ def _extract_function_blocks(lines: list[str]) -> list[str]:
             body = "\n".join(body_lines).rstrip()
             # Only keep if it contains QuantumCircuit construction
             if "QuantumCircuit(" in body and len(body.split()) >= MIN_CIRCUIT_TOKENS:
-                blocks.append(body)
+                blocks.append((body, start_idx + 1, j))  # 1-indexed
             i = j
         else:
             i += 1
     return blocks
 
 
-def _extract_module_level_blocks(lines: list[str]) -> list[str]:
+def _extract_module_level_blocks(lines: list[str]) -> list[tuple]:
     """
     Extract module-level QuantumCircuit construction blocks
     (sequences of lines at indent=0 that include QuantumCircuit).
+    Returns list of (code, start_line, end_line) tuples (1-indexed).
     """
     blocks = []
     i = 0
@@ -255,6 +244,7 @@ def _extract_module_level_blocks(lines: list[str]) -> list[str]:
             continue
         # Start collecting if QuantumCircuit mentioned
         if "QuantumCircuit(" in stripped and not line.startswith(" "):
+            start_idx = i
             block_lines = [line]
             j = i + 1
             while j < len(lines):
@@ -285,36 +275,38 @@ def _extract_module_level_blocks(lines: list[str]) -> list[str]:
                     break
             block = "\n".join(block_lines).rstrip()
             if len(block.split()) >= MIN_CIRCUIT_TOKENS:
-                blocks.append(block)
+                blocks.append((block, start_idx + 1, j))  # 1-indexed
             i = j
         else:
             i += 1
     return blocks
 
 
-def extract_circuits_python(code: str) -> list[str]:
+def extract_circuits_python(code: str) -> list[tuple]:
     """
     Extract QuantumCircuit construction blocks from Python source.
-    Returns a list of executable code strings.
+    Returns a list of (code, start_line, end_line) tuples (1-indexed).
     """
     if "QuantumCircuit" not in code:
         return []
     lines = code.splitlines()
     results = []
+    func_codes: set[str] = set()
     # Prefer function-level extraction (more self-contained)
-    results.extend(_extract_function_blocks(lines))
-    # Also get module-level blocks not already captured
-    module_blocks = _extract_module_level_blocks(lines)
-    for blk in module_blocks:
-        # Avoid duplicating blocks already in a function
-        if not any(blk in r for r in results):
-            results.append(blk)
+    for tup in _extract_function_blocks(lines):
+        results.append(tup)
+        func_codes.add(tup[0])
+    # Also get module-level blocks not already captured by a function
+    for tup in _extract_module_level_blocks(lines):
+        if tup[0] not in func_codes:
+            results.append(tup)
     return results
 
 
-def extract_circuits_notebook(raw_json: str) -> list[str]:
+def extract_circuits_notebook(raw_json: str) -> list[tuple]:
     """
     Extract QuantumCircuit blocks from each code cell of a Jupyter notebook.
+    Returns (code, None, None) tuples — notebooks have no file-level line numbers.
     """
     try:
         nb = json.loads(raw_json)
@@ -327,7 +319,9 @@ def extract_circuits_notebook(raw_json: str) -> list[str]:
         src = cell.get("source", "")
         if isinstance(src, list):
             src = "".join(src)
-        results.extend(extract_circuits_python(src))
+        # Notebook cells don't have meaningful file-level line numbers
+        for (blk, _sl, _el) in extract_circuits_python(src):
+            results.append((blk, None, None))
     return results
 
 
@@ -367,6 +361,9 @@ def fetch_file_circuits(
     except Exception:
         return []
 
+    # GitHub blob SHA — enables exact version traceability (SCHEMA.md field: hash)
+    file_sha = data.get("sha", "")
+
     # Extract circuits
     ext = path.lower().split(".")[-1]
     if ext == "ipynb":
@@ -377,23 +374,139 @@ def fetch_file_circuits(
         return []
 
     entries = []
-    for code in blocks:
+    for (code, start_line, end_line) in blocks:
         ch = circuit_hash(code)
         if ch in seen_hashes:
             continue
         seen_hashes.add(ch)
+        if start_line is not None and end_line is not None:
+            github_anchor = f"{file_url}#L{start_line}-L{end_line}"
+        else:
+            github_anchor = file_url
         entry = {
-            "input": "",
-            "output": code,
+            "input":          "",
+            "output":         code,
+            "openqasm3_code": None,   # filled by enrich_metadata.py
             "metadata": {
-                "original_url": file_url,
-                "file_path": path,
-                "source": source_tag,
-                "language": "jupyter" if ext == "ipynb" else "python",
-                "circuit_hash": ch,
-                "repo_owner": owner,
-                "repo_name": repo,
-                "scrape_date": SCRAPE_DATE,
+                # Cluster 1 — Provenance (set here)
+                "original_url":  file_url,
+                "file_path":     path,
+                "source":        source_tag,
+                "language":      "jupyter" if ext == "ipynb" else "python",
+                "circuit_hash":  ch,
+                "content_hash":  None,   # filled by generate_seeds.py (needs instruction)
+                "hash":          file_sha,
+                "start_line":    start_line,
+                "end_line":      end_line,
+                "github_anchor": github_anchor,
+                # Scraper-internal (used by enrich_repo_topics.py)
+                "repo_owner":    owner,
+                "repo_name":     repo,
+                "scrape_date":   SCRAPE_DATE,
+                "code_lines":    len([l for l in code.splitlines() if l.strip()]),
+
+                # Cluster 2 — Instruction Generation (filled by generation scripts)
+                "prompt_type":           None,
+                "quality_flag":          None,
+                "generation_model":      None,
+                "generation_date":       None,
+                "paraphrase_source":     None,
+                "original_prompt":       None,
+                "prompt_word_count":     None,
+                "prompt_length_chars":   None,
+                "prompt_token_count_cl100k": None,
+
+                # Cluster 3 — Repo Context (filled by enrich_repo_topics.py)
+                "repo_topics":   None,
+                "is_org_repo":   None,
+
+                # Cluster 4 — Execution / Validation (filled by enrich_metadata.py)
+                "validation_status":          None,
+                "validation_error_type":      None,
+                "circuit_stats_available":    None,
+                "openqasm3_export_successful": None,
+                "openqasm3_export_error":     None,
+                "qiskit_version":             None,
+                "api_deprecated_usage":       None,
+                "deprecated_api_patterns":    None,
+                "hallucination_type":         None,
+
+                # Cluster 5 — Core Circuit Metrics (filled by enrich_metadata.py)
+                "num_qubits":              None,
+                "num_clbits":              None,
+                "gate_count":              None,
+                "circuit_depth":           None,
+                "circuit_width":           None,
+                "unconnected_qubit_count": None,
+                "gate_types":          None,
+                "num_gate_types":      None,
+                "avg_gates_per_layer": None,
+                "has_measurement":     None,
+                "is_parameterized":    None,
+                "t_count":             None,
+                "t_depth":             None,
+
+                # Cluster 5b — Gate-set Profile Flags (filled by enrich_metadata.py)
+                "has_clifford_only":    None,
+                "has_clifford_t":       None,
+                "has_rotation_gates":   None,
+                "has_entangling_gates": None,
+                "has_barriers":         None,
+                "has_custom_gates":     None,
+                "is_unitary":           None,
+                "gate_set_diversity":   None,
+
+                # Cluster 6 — XAI Complexity Indicators (filled by enrich_metadata.py)
+                "circuit_expressiveness": None,
+                "size_class":             None,
+                "benchmark_difficulty":   None,
+
+                # Cluster 7 — Entanglement Features (filled by enrich_metadata.py)
+                "two_qubit_gate_count":  None,
+                "entangling_gate_ratio": None,
+                "entanglement_depth":    None,
+
+                # Cluster 8 — Parameterization Features (filled by enrich_metadata.py)
+                "num_parameters":    None,
+                "parameter_density": None,
+                "parameter_reuse":   None,
+
+                # Cluster 9 — Measurement / Output Structure (filled by enrich_metadata.py)
+                "measurement_count":       None,
+                "reset_usage":             None,
+                "mid_circuit_measurement": None,
+                "classical_register_count": None,
+
+                # Cluster 10 — Topology / Interaction Graph (filled by enrich_metadata.py)
+                "interaction_graph_edges": None,
+                "graph_density":           None,
+                "max_qubit_degree":        None,
+                "connected_components":    None,
+
+                # Cluster 11 — Transpilation Metrics (filled by enrich_metadata.py)
+                "transpiled_depth":               None,
+                "transpiled_gate_count":          None,
+                "transpiled_cx_count":            None,
+                "transpiled_single_qubit_count":  None,
+                "transpilation_overhead":         None,
+                "transpilation_successful":       None,
+                "transpilation_basis_gates":      None,
+                "transpilation_depth_ratio":      None,
+
+                # Cluster 12 — License Fields (filled by enrich_repo_license.py)
+                "repo_license":     None,
+                "license_category": None,
+
+                # Cluster 13 — Circuit Family (filled by enrich_circuit_family.py)
+                "circuit_family":  None,
+                "semantic_intent": None,
+
+                # Cluster 14 — Semantic Consistency (filled by enrich_semantic_consistency.py)
+                "semantic_similarity_to_seed": None,
+                "bert_score_f1":               None,
+                "bleu_score_to_seed":          None,
+                "rouge_l_to_seed":             None,
+                "normalized_edit_distance":    None,
             },
         }
         entries.append(entry)

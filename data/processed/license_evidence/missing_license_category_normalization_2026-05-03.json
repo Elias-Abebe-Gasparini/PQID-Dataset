@@ -1,0 +1,45 @@
+{
+  "evidence_version": "missing_license_category_normalization_2026_05_03_v1",
+  "owner_repo": "IvanIsCoding/gist-988251a65389706b0e067a0a0c42a579",
+  "interpretation": "Rows from this legacy gist family were already restricted/internal-only with unresolved_no_license status. The null license_category field was normalized to no_license so release summaries no longer expose a vague <missing> category.",
+  "public_release_effect": "No rows are added to public release views; affected rows remain restricted/internal-only.",
+  "file_summaries": {
+    "train": {
+      "input_rows": 440580,
+      "patched_rows": 12,
+      "previous_license_category_counts": {
+        "<missing>": 12
+      },
+      "previous_license_resolution_status_counts": {
+        "<missing>": 12
+      }
+    },
+    "validation": {
+      "input_rows": 55110,
+      "patched_rows": 0,
+      "previous_license_category_counts": {},
+      "previous_license_resolution_status_counts": {}
+    },
+    "test": {
+      "input_rows": 54624,
+      "patched_rows": 6,
+      "previous_license_category_counts": {
+        "<missing>": 6
+      },
+      "previous_license_resolution_status_counts": {
+        "<missing>": 6
+      }
+    },
+    "benchmark_master": {
+      "input_rows": 13530,
+      "patched_rows": 3,
+      "previous_license_category_counts": {
+        "<missing>": 3
+      },
+      "previous_license_resolution_status_counts": {
+        "<missing>": 3
+      }
+    }
+  },
+  "total_patched_rows": 21
+}

@@ -1,0 +1,70 @@
+{
+  "evidence_version": "qbridge_mit_license_update_2026_04_28_v1",
+  "owner_repo": "runtsang/Q-Bridge",
+  "repo_license": "MIT",
+  "license_category": "permissive",
+  "license_url": "https://github.com/runtsang/Q-Bridge/blob/master/LICENSE",
+  "license_file_sha": "08e10c879dba3590133762a97490341182fef45c",
+  "license_commit": "3eaccadabbd593982d89216c08ff4c30fcd2f826",
+  "license_commit_url": "https://github.com/runtsang/Q-Bridge/commit/3eaccadabbd593982d89216c08ff4c30fcd2f826",
+  "license_commit_date": "2026-04-28T21:28:26Z",
+  "license_commit_message": "Add MIT License to the project",
+  "license_copyright": "Copyright (c) 2026 Runjia Zeng",
+  "interpretation": "Rows sourced from runtsang/Q-Bridge are reclassified from no_license to permissive/MIT based on the repository-owner root LICENSE file.",
+  "scope_note": "This resolves repository-level redistribution evidence for the Q-Bridge repository contents used by PQID. It does not independently audit any third-party code that may be embedded in that repository.",
+  "split_summaries": {
+    "train": {
+      "input_rows": 440580,
+      "patched_rows": 58776,
+      "previous_license_category_counts": {
+        "no_license": 58776
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 58776
+      }
+    },
+    "validation": {
+      "input_rows": 55110,
+      "patched_rows": 6984,
+      "previous_license_category_counts": {
+        "no_license": 6984
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 6984
+      }
+    },
+    "test": {
+      "input_rows": 54624,
+      "patched_rows": 7128,
+      "previous_license_category_counts": {
+        "no_license": 7128
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 7128
+      }
+    }
+  },
+  "total_patched_rows": 72888,
+  "cache_summary": {
+    "cache_file": "PQID/data/processed/repo_license_cache.jsonl",
+    "cache_record_found": true,
+    "previous_cache_record": {
+      "owner_repo": "runtsang/Q-Bridge",
+      "repo_license": null,
+      "license_category": "no_license"
+    },
+    "new_cache_record": {
+      "owner_repo": "runtsang/Q-Bridge",
+      "repo_license": "MIT",
+      "license_category": "permissive",
+      "license_evidence_source": "github_license_file",
+      "license_detection_method": "manual_post_freeze_owner_license_update",
+      "license_evidence_url": "https://github.com/runtsang/Q-Bridge/blob/master/LICENSE",
+      "license_evidence_commit": "3eaccadabbd593982d89216c08ff4c30fcd2f826",
+      "license_evidence_commit_url": "https://github.com/runtsang/Q-Bridge/commit/3eaccadabbd593982d89216c08ff4c30fcd2f826",
+      "license_evidence_commit_date": "2026-04-28T21:28:26Z",
+      "license_evidence_file_sha": "08e10c879dba3590133762a97490341182fef45c",
+      "license_override_version": "qbridge_mit_license_update_2026_04_28_v1"
+    }
+  }
+}

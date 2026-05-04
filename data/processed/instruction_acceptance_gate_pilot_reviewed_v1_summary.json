@@ -1,0 +1,57 @@
+{
+  "reviewed_version": "instruction_acceptance_gate_pilot_reviewed_v1",
+  "source_pilot_file": "PQID/data/processed/instruction_acceptance_gate_pilot_v1.jsonl",
+  "source_review_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_review_sheet_v1.csv",
+  "reviewed_file": "PQID/data/processed/instruction_acceptance_gate_pilot_reviewed_v1.jsonl",
+  "rows": 256,
+  "review_status_counts": {
+    "reviewed": 256
+  },
+  "decision_counts": {
+    "accept": 209,
+    "rewrite": 47
+  },
+  "rewrite_required_counts": {
+    "no": 209,
+    "yes": 47
+  },
+  "branch_counts": {
+    "source_code": 150,
+    "teacher_text": 106
+  },
+  "role_counts": {
+    "broad_generation": 50,
+    "gold_generation": 50,
+    "mutation_robustness": 50,
+    "repair_or_explanation": 50,
+    "validation_diagnosis": 56
+  },
+  "review_priority_counts": {
+    "high_tail_case": 6,
+    "normal": 250
+  },
+  "prompt_mode_counts": {
+    "<none>": 250,
+    "anti_template": 6
+  },
+  "rubric_value_counts": {
+    "role_fidelity": {
+      "major_issue": 47,
+      "pass": 209
+    },
+    "semantic_grounding": {
+      "major_issue": 47,
+      "pass": 209
+    },
+    "confidence_discipline": {
+      "pass": 256
+    },
+    "hallucination_risk": {
+      "pass": 256
+    },
+    "teacher_text_answer_quality": {
+      "n_a": 150,
+      "pass": 106
+    }
+  }
+}

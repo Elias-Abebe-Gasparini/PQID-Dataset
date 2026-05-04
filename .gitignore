@@ -1,0 +1,56 @@
+# Python and notebooks
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# OS/editor local state
+.DS_Store
+Thumbs.db
+.vscode/
+.history/
+~$*
+~WRL*.tmp
+*.tmp
+
+# Local credentials and secrets
+.env
+.env.*
+*.pem
+*.key
+*_credentials.csv
+*_accessKeys.csv
+.github_token
+
+# Logs and runtime outputs
+*.log
+*.err
+*.err.log
+*_tmp.json
+data/processed/phase3_enrich.log
+data/processed/phase3_enrich.err.log
+
+# Bulk generated datasets and caches. Public dataset payloads belong in the
+# external dataset repository; GitHub keeps code, documentation, figures, and
+# compact audit summaries.
+data/hf_download/*.jsonl
+data/processed/*.jsonl
+data/processed/*_processed.txt
+data/processed/*_cache.jsonl
+data/processed/*cache*.jsonl
+data/processed/openai_batch_jobs/
+data/processed/release_views/*.jsonl
+data/processed/seed_temperature_comparison/
+data/processed/teacher_text_model_comparison/
+
+# Generated review sheets and transient batch files
+data/processed/*review_sheet*.csv
+data/processed/*model_review*.csv
+data/processed/*batch_state*.json
+data/processed/*batch_requests*.jsonl
+data/processed/*batch_outputs*.jsonl
+
+# Legacy local script assets not needed for repository reproducibility
+scripts/*.png
+scripts/*.jpg
+scripts/*.tex
+scripts/*internal_debug_archive.ipynb

@@ -3,7 +3,28 @@
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations at an approximate 1:5 circuit-to-instruction ratio. Each code pair has been validated for Python syntactic correctness, successful circuit construction in Qiskit, and transpilation/export into **OpenQASM 3.0**.
+The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations.
+
+The original thesis-era corpus remains part of the project and is preserved below in its original presentation logic. The active repository, however, now reflects the **2026 GitHub rebuild**, whose current headline counts are:
+
+- **91,719** raw merged circuits
+- **14,267** validated materialized circuits
+- **13,530** validated non-zero-gate entries in the frozen master processable corpus
+- benchmark views of **803 / 11,999** under `n/7`
+- cleanliness-aware benchmark views of **415 / 734** under `n/8`
+
+The current full PQID schema now documents **149 metadata fields across 17 documented clusters**. The active pre-seed merged `metadata_design_v3` corpus materializes **146** of those metadata keys, with the remaining generation-only fields appearing later on seed and paraphrase artifacts.
+
+The freeze-ready v1 instruction layer contains **550,314** rows: **91,719** seeds and **458,595** paraphrases. The Stage K acceptance pilot has been adjudicated to **209 accept / 47 rewrite**, and the reviewed JSONL / summary sidecars have been synced after that adjudication. A bounded remediation sidecar closes the `47` rewrite-required rows plus `235` same-lineage neighbors (`282` candidates total): the materialized result layer now records `282 / 282` rewritten outputs after two final manual closeout overrides, without mutating the canonical acceptance-gate manifest.
+
+Public release is intentionally narrower than the full construction corpus. The current release-ready views live under `PQID/data/processed/release_views/`: `pqid_v1_public_open_*` contains **311,724** permissive-license rows, while `pqid_v1_license_valid_*` contains **319,782** license-valid rows by adding **7,356** copyleft rows and **702** manually reviewed `other`-license rows with downstream obligations preserved. Unresolved/no-license rows remain restricted/internal. The final license-normalization pass recoded the former `18` missing-license-category rows into explicit `no_license`, so the current missing-license internal manifest contains **0** rows.
+
+Documentation scope note:
+- `README.md` is the project-facing overview
+- `PIPELINE.md` is the full operational master log
+- `SCHEMA.md` is the authoritative metadata inventory
+
+So if `README.md` ever feels shorter than before, that is mostly because more implementation detail has been moved into the pipeline and schema references to avoid contradictory duplicate documentation.
 
 ## 📑 Table of Contents
 
@@ -17,10 +38,16 @@ The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus
 - [🕹️ Interactive Inference (Upcoming)](#%EF%B8%8F-interactive-inference-upcoming)
 - [🛠️ Data Transformation Pipeline](#%EF%B8%8F-data-transformation-pipeline)
 - [📊 Dataset Overview](#-dataset-overview)
+  - [🗂️ Current 2026 Rebuild Snapshot](#%EF%B8%8F-current-2026-rebuild-snapshot)
+  - [🗄️ Dataset Schema](#%EF%B8%8F-dataset-schema)
+  - [📐 Mathematical Formalization](#-mathematical-formalization)
+  - [🛡️ Data Quality & Deduplication](#%EF%B8%8F-data-quality--deduplication)
+  - [📈 Dataset Splits & Generalization](#-dataset-splits--generalization)
 - [⚠️ Limitations](#%EF%B8%8F-limitations)
 - [🚀 Quickstart: Loading the Dataset](#-quickstart-loading-the-dataset)
 - [📜 Citation & Academic Context](#-citation--academic-context)
-  - [⏳ Research Roadmap](#-research-roadmap)
+  - [📝 How to Cite](#-how-to-cite)
+  - [🔬 Research Context](#-research-context)
 - [📧 Contact](#-contact)
 
 ---
@@ -29,7 +56,7 @@ The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus
 
 Extracting and standardizing quantum circuits from heterogeneous open-source sources presents substantial parsing, memory, and compilation challenges. PQID addresses this by collecting base circuits from public GitHub repositories and the RevLib benchmark set, then processing them through a staged pipeline for normalization, validation, and representation conversion.
 
-The resulting dataset provides instruction–code pairs linking natural-language prompts to executable **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations. It is intended as a resource for supervised fine-tuning and evaluation of language models for quantum circuit generation and translation tasks.
+The resulting dataset provides instruction-code and benchmark-oriented artifacts linking natural-language prompts, executable **IBM Qiskit** implementations, and corresponding **OpenQASM 3.0** representations. It is intended as a resource for supervised fine-tuning, evaluation, and later metadata-aware benchmark design for language models in quantum circuit generation and translation tasks.
 
 ## 🔄 Replication Research Ecosystem
 
@@ -80,10 +107,10 @@ This repository contains the complete end-to-end data engineering and training p
 - **`01_acquisition/`**: Memory-efficient scrapers and extraction logic for GitHub and RevLib archives.
 - **`02_translation_and_validation/`**: The core Qiskit standardization and OpenQASM 3.0 compilation engine.
 - **`03_instruction_generation/`**: Asynchronous LLM pipelines for generating natural-language instruction pairs.
-- **`04_metadata_analysis/`**: Statistical validation suites (token lengths, quantum gate distributions, circuit depths).
-- **`05_model_training/`**: PyTorch and Hugging Face SFT scripts used to fine-tune a 1.3B parameter model on the finalized corpus.
+- **`04_metadata_analysis/`**: Statistical validation suites, benchmark-readiness analyses, and corpus-level diagnostics.
+- **`05_model_training/`**: PyTorch and Hugging Face SFT scripts used to fine-tune baseline models on earlier finalized corpora.
 
-*(For detailed execution instructions and phase-specific documentation, please see the `scripts/README.md` file).*
+*(For detailed execution instructions and phase-specific documentation, please see the `scripts/README.md` file.)*
 
 ### 📂 File Hierarchy
 
@@ -93,9 +120,8 @@ PQID/
 ├── .gitignore
 ├── ARCHITECTURE.mmd
 ├── README.md
-├── RESEARCH_CONTEXT.md
-├── .github/
-│   └── FUNDING.yml
+├── PIPELINE.md
+├── SCHEMA.md
 ├── 00_database_infrastructure/
 │   ├── DATABASE.md
 │   ├── etl_and_cleaning.sql
@@ -103,14 +129,19 @@ PQID/
 │   └── validation.sql
 ├── data/
 │   └── processed/
-│       ├── train.jsonl
-│       └── validation.jsonl
+│       ├── pqid_2026_master_corpus.jsonl
+│       ├── pqid_2026_benchmark_strict.jsonl
+│       ├── pqid_2026_benchmark_extended.jsonl
+│       ├── pqid_2026_benchmark_strict_clean.jsonl
+│       ├── pqid_2026_benchmark_extended_clean.jsonl
+│       └── *.md reports
 └── scripts/
     ├── README.md
     ├── 01_acquisition/
     ├── 02_translation_and_validation/
     ├── 03_instruction_generation/
     ├── 04_metadata_analysis/
+    ├── scrape_github_unified.ipynb
     └── 05_model_training/
 
 ```
@@ -118,6 +149,8 @@ PQID/
 ## 🧠 The 1.3B Quantum-Instruct Model
 
 To examine the training utility of the PQID corpus, a 1.3-billion-parameter language model was fine-tuned on the dataset using QLoRA and PyTorch FSDP. This model serves as an experimental downstream validation of the dataset’s usefulness for quantum circuit-generation tasks involving **IBM Qiskit** and **OpenQASM 3.0** representations. The training scripts used for these experiments are available in the `05_model_training` directory.
+
+That model should be interpreted as part of the **earlier thesis-scale PQID layer**, not as a model trained on the current 2026 rebuild.
 
 ## 🕹️ Interactive Inference (Upcoming)
 
@@ -129,37 +162,63 @@ An interactive **Inference Notebook** for Kaggle is currently in preparation.
 
 ## 🛠️ Data Transformation Pipeline
 
+The original thesis-era figure is preserved below in its original position, but the counts have been updated to reflect the current rebuild state.
+
 ```mermaid
 %%{init: {'themeVariables': {'noteTextColor': '#000000', 'messageTextColor': '#000000', 'actorTextColor': '#000000'}}}%%
 sequenceDiagram
     autonumber
-    participant H as Human Seed
-    participant LLM as LLM Paraphraser
-    participant QK as Qiskit (Python)
-    participant VAL as Compilation Engine
-    participant Q3 as OpenQASM 3.0
+    participant GH as GitHub Retrieval
+    participant EN as Enrichment
+    participant QA as Extraction Audit
+    participant MC as Master Corpus
+    participant BT as Benchmark Tiering
 
     rect rgb(121, 170, 208)
-    Note over H,LLM: Phase 1: Semantic Expansion (1:5 Ratio)
-    H->>LLM: 2,118 "Natural" Prompts
-    LLM-->>LLM: Paraphrasing & Rewriting
-    LLM->>QK: 10,718 Instruction-Code Pairs
+    Note over GH,EN: Phase 1: Acquisition and validation
+    GH->>EN: 91,719 raw circuits
+    EN-->>EN: materialized_circuit-aware execution and normalization
+    EN->>QA: 14,267 validated materialized circuits
     end
 
     rect rgb(44, 189, 146)
-    Note over QK,VAL: Phase 2: Logic Validation
-    QK->>VAL: Execute Python Logic
-    VAL-->>VAL: Syntax Check & Error Handling
+    Note over QA,MC: Phase 2: Master-corpus freeze
+    QA->>MC: 13,530 validated non-zero-gate entries
+    MC-->>MC: pre-seed metadata completion
     end
-    
+
     rect rgb(183, 142, 203)
-    Note over VAL,Q3: Phase 3: Representation Conversion
-    VAL->>Q3: Transpile to OpenQASM 3.0 Representation
-    Q3-->>QK: Final Validated Pair
+    Note over MC,BT: Phase 3: Benchmark derivation
+    MC->>BT: n/7 and n/8 readiness views
+    BT-->>MC: strict, extended, and mutation-stress subsets
     end
 ```
 
 ## 📊 Dataset Overview
+
+### 🗂️ Current 2026 Rebuild Snapshot
+
+The active rebuild is now best understood through the following corrected counts:
+
+| Artifact | Count | Notes |
+| :--- | ---: | :--- |
+| Raw merged circuits | 91,719 | unified multi-phase GitHub rebuild |
+| Validated materialized circuits | 14,267 | `validation_status == "validated"` and `materialized_circuit == True` |
+| Validated non-zero-gate circuits | 13,530 | current frozen master processable corpus |
+| Strict benchmark core (`n/7`) | 803 | original highest-trust subset |
+| Extended benchmark core (`n/7`) | 11,999 | original broad benchmark-facing subset |
+| Strict benchmark core (`n/8`) | 415 | cleanliness-aware strict subset |
+| Extended benchmark core (`n/8`) | 734 | cleanliness-aware extended subset |
+| Mutation-stress block (`n/8`) | 11,265 | mutation-suite / bug-stress layer |
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#5b9bd5', 'pie2': '#8cc084', 'pie3': '#f3c56b', 'pie4': '#d9d9d9'}}}%%
+pie title PQID 2026 Rebuild Tier Distribution
+    "Strict core candidate (803)" : 803
+    "Extended-only candidate (11,196)" : 11196
+    "Validated reserve (2,268)" : 2268
+    "Tier2 unvalidated (77,452)" : 77452
+```
 
 ### 🗄️ Dataset Schema
 
@@ -168,10 +227,11 @@ Each entry in the PQID `.jsonl` files conforms to the following schema:
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `input` | String | The natural-language instruction or prompt describing the desired quantum logic. |
-| `output` | String | The validated target quantum code (IBM Qiskit) corresponding to the input. |
-| `metadata` | Dictionary | A nested JSON object containing provenance, traceability, and structural characteristics. |
-| `metadata.source_dataset` | String | The originating collection of the base circuit (e.g., "GitHub" or "RevLib"). |
-| `metadata.prompt_type` | String | Indicates the generation method of the prompt (e.g., "human_seed" or "paraphrase"). |
+| `output` | String | The validated target quantum code corresponding to the input. GitHub-sourced entries contain **IBM Qiskit** implementations. |
+| `openqasm3_code` | String or `null` | The OpenQASM 3.0 export of the extracted circuit, when available. |
+| `metadata` | Dictionary | A nested JSON object containing provenance, traceability, structural characteristics, and benchmark-readiness annotations. |
+| `metadata.source_dataset` | String | The originating collection of the base circuit (e.g. `"github"` or `"revlib"` in legacy material). |
+| `metadata.prompt_type` | String | Indicates the generation method of the prompt (e.g. `"human_seed"` or `"paraphrased"` in the legacy instruction corpus). |
 | `metadata.circuit_hash` | String | A unique hash representing the circuit's structural identity, used for deep deduplication. |
 | `metadata.original_url` | String | The URL of the source repository or benchmark file where the original code was found. |
 | `metadata.hash` | String | The specific commit or file hash from the source repository to ensure version traceability. |
@@ -180,69 +240,120 @@ Each entry in the PQID `.jsonl` files conforms to the following schema:
 | `metadata.start_line` | Integer | The starting line number of the extracted circuit code in the original source file. |
 | `metadata.github_anchor` | String | A formatted URL fragment directly pointing to the highlighted code lines in the source repository. |
 
+The current rebuild adds a much richer metadata layer than the original thesis corpus, including:
+
+- validation outcomes and `materialized_circuit`
+- structural and transpilation metrics
+- repository context and license metadata
+- `circuit_family` and `semantic_intent`
+- benchmark readiness under both **`n/7`** and **`n/8`**
+- the additive `metadata_design_v3` transparency layer, including provenance, governance, split, benchmark-packaging, lineage, and audit-trace fields such as:
+  - `source_snapshot_timestamp`
+  - `source_snapshot_granularity`
+  - `source_revision_id`
+  - `license_evidence_source`
+  - `license_detection_method`
+  - `release_view_membership`
+  - `lineage_parent_id`
+  - `benchmark_view_membership`
+  - `near_duplicate_group_id`
+  - `domain_slice`
+  - `shift_axis`
+  - `review_trace_id`
+  - `permission_response_status`
+  - `manual_license_review_status`
+
 ### 📐 Mathematical Formalization
 
-The semantic expansion of the PQID corpus can be summarized by the **Instruction Density Ratio** ($\rho$), which measures the number of natural-language instruction variants associated with each validated base circuit:
+The original semantic expansion of the PQID corpus can be summarized by the **Instruction Density Ratio** (`rho`), which measures the number of natural-language instruction variants associated with each validated base circuit:
 
-$$
-\rho = \frac{|P|}{|C_{base}|}
-$$
+`rho = |P| / |C_base|`
 
-where $|P|$ denotes the total number of instruction-tuned prompts (10,718), and $|C_{base}|$ denotes the number of unique validated base circuits (2,118).
-
-For PQID v1.0, this yields $\rho \approx 5.06$. This ratio reflects the dataset’s emphasis on paraphrastic diversity, with multiple natural-language formulations mapped to the same underlying circuit structure. In practice, this design is intended to support training and evaluation under linguistic variation by reducing reliance on single phrasing patterns.
+For the thesis-era PQID instruction corpus, this yielded approximately:
 
 - **Total Prompts:** 10,718
 - **Base Circuits:** 2,118 (1,869 GitHub / 249 RevLib)
 - **Languages:** Qiskit, OpenQASM 3.0
 
+For the active rebuild, the mathematically relevant benchmark formalization is now the paired readiness system:
+
+- `S_7 = X_1 + X_2 + ... + X_7`
+- `S_8 = S_7 + M`
+
+where `M` is the late-stage cleanliness indicator for `non_mutation_suite_path`.
+
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#6eb2d1', 'pie2': '#519f58'}}}%%
-pie title PQID Base Circuit Provenance
-    "GitHub Scraped (1,869)" : 1869
-    "RevLib Benchmark (249)" : 249
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#6eb2d1', 'pie2': '#519f58', 'pie3': '#f3c56b', 'pie4': '#d9d9d9'}}}%%
+pie title Master Corpus Composition Under the n/8 View
+    "Strict core candidate (415)" : 415
+    "Extended core candidate (319)" : 319
+    "Validated broad candidate (1,531)" : 1531
+    "Mutation-stress candidate (11,265)" : 11265
 ```
 
 ### 🛡️ Data Quality & Deduplication
 
-PQID underwent a multi-stage validation and deduplication process during dataset construction:
+PQID underwent a multi-stage validation and deduplication process during dataset construction, and the active rebuild extends that philosophy further:
 
-- **Relational Integrity:** A PostgreSQL backend was used to manage the mapping between base circuits and their associated natural-language instruction variants.
-- **Deep Deduplication:** A SQL-based `ctid` analysis was used to identify and remove **29 semantic duplicates** that bypassed earlier Python-based string-matching filters.
-- **Code and Representation Validation:** Each circuit pair was checked for Python syntactic correctness, successful circuit construction in Qiskit, and successful transpilation/export into **OpenQASM 3.0**.
+- **Relational Integrity:** A PostgreSQL backend was used to manage mapping and traceability across corpus layers.
+- **Deep Deduplication:** SQL- and hash-based analysis was used to identify and remove semantic duplicates that bypassed earlier surface-level filters.
+- **Code and Representation Validation:** Circuits were checked for Python syntactic correctness, successful circuit construction in Qiskit, and OpenQASM exportability where applicable.
+- **Current rebuild correction:** Earlier broad `validated` totals were found to be inflated by placeholder circuits such as `qc` and `circ`; the active pipeline now tracks `materialized_circuit` explicitly.
+- **Benchmark cleaning:** The rebuild now also separates mutation-heavy material through the `non_mutation_suite_path` criterion instead of letting it silently dominate the benchmark-facing interpretation.
 
 ### 📈 Dataset Splits & Generalization
 
-To reduce direct memorization of original prompt phrasing and encourage evaluation under linguistic variation, PQID uses a split based on paraphrased versus seed instructions:
+To reduce direct memorization of original prompt phrasing and encourage evaluation under linguistic variation, the **legacy instruction corpus** used a split based on paraphrased versus seed instructions:
 
-- **Training/Validation (10,718 entries):** Consists of paraphrased instruction variants.
-- **Test Set (2,118 entries):** Consists exclusively of the original human-authored seed prompts.
+- **Training/Validation (10,718 entries):** paraphrased instruction variants
+- **Test Set (2,118 entries):** original human-authored seed prompts
 
-This evaluation setup tests model performance on instruction formulations that were not seen in their original form during training, providing a stricter measure of robustness to phrasing variation.
+For the **current rebuild**, the more relevant split logic is now benchmark-oriented:
+
+- **Master processable corpus:** 13,530
+- **Original benchmark view (`n/7`):** strict core 803, extended core 11,999
+- **Cleanliness-aware benchmark view (`n/8`):** strict core 415, extended core 734, mutation-stress block 11,265
+
+This means the rebuild supports a stricter, metadata-aware notion of generalization than the original paraphrase-only split design.
 
 ## ⚠️ Limitations
 
-PQID is intended as a validated resource for quantum instruction–code research, but several limitations should be noted:
+PQID is intended as a validated resource for quantum instruction-code research, but several limitations should be noted:
 
-- **Paraphrase-based instruction expansion:** Most instruction variants were generated through paraphrastic expansion rather than independently authored by multiple human annotators. As a result, the dataset captures linguistic variation, but not the full diversity of naturally occurring user prompts.
-- **Validation scope:** Dataset validation covers Python syntactic correctness, successful circuit construction in Qiskit, and transpilation/export into **OpenQASM 3.0**. This should not be interpreted as universal proof of semantic equivalence, hardware execution success across all backends, or full functional correctness in every downstream setting.
-- **Source distribution bias:** The base circuits were collected from public GitHub repositories and the RevLib benchmark set. Consequently, the dataset may reflect the stylistic, structural, and task-distribution biases of those sources rather than the full space of quantum programming practice.
-- **Task and framework scope:** PQID is currently centered on natural-language mappings to **IBM Qiskit** and **OpenQASM 3.0** representations. It does not yet cover a broader range of quantum software stacks, multilingual human-language instructions, or alternative hardware/software ecosystems.
-- **Model scale constraints:** The accompanying fine-tuning experiments were conducted on a **1.3B-parameter** model, which should be understood as a resource-constrained experimental baseline rather than an upper bound on the dataset’s utility. Evaluation on substantially larger open models—such as **DeepSeek-R1-Distill-Qwen-32B**, **DeepSeek-R1-Distill-Llama-70B**, or larger DeepSeek-family MoE systems such as **DeepSeek-R1**—would provide a stronger test of how PQID scales with increased model capacity, but such experiments were beyond the compute and financial resources available for the present study.
+- **Paraphrase-based instruction expansion:** Most thesis-era instruction variants were generated through paraphrastic expansion rather than independently authored by multiple human annotators. As a result, the legacy corpus captures linguistic variation, but not the full diversity of naturally occurring user prompts.
+- **Validation scope:** Dataset validation covers Python syntactic correctness, successful circuit construction in Qiskit, and transpilation/export into **OpenQASM 3.0** where applicable. This should not be interpreted as universal proof of semantic equivalence, hardware execution success across all backends, or full functional correctness in every downstream setting.
+- **Source distribution bias:** The base circuits were collected from public repositories and benchmark sources. Consequently, the dataset may reflect the stylistic, structural, and task-distribution biases of those sources rather than the full space of quantum programming practice.
+- **Provenance-limited secondary sources:** Rows whose licensing or provenance cannot be resolved are retained only in restricted/internal views and are not included in the public-open release.
+- **Task and framework scope:** PQID is currently centered on natural-language mappings to **IBM Qiskit** and **OpenQASM 3.0** representations. The instruction surface is **English-dominant**, but the corpus is not strictly English-only: source-grounded outputs can preserve multilingual upstream comments/docstrings, and a heuristic language-audit sidecar is used to quantify that distribution. In the current acceptance-gate manifest, `550,300 / 550,314` inputs resolve as English and `14` resolve as Bengali. On the output side, multilingual traces are small and concentrated in the source-grounded tail: `216` Spanish, `132` Portuguese, `78` French, `156` Japanese, `90` Korean, `12` unresolved Cyrillic-script rows, and `330` short fragments, alongside `9,660` `code_only` outputs. For reproducibility, the audit keeps both raw and resolved labels rather than collapsing them into one opaque `unknown` bucket. PQID still does not aim to cover a broader range of quantum software stacks or alternative hardware/software ecosystems.
+- **Benchmark complexity:** The 2026 rebuild is no longer just a small instruction corpus; it is also a benchmark-derivation and metadata-audit framework, which makes it richer but less plug-and-play than tiny evaluation-only benchmarks.
 - **Model-performance interpretation:** The accompanying fine-tuning experiments are intended to demonstrate the dataset’s utility, not to establish that direct generation from PQID alone is sufficient for fully reliable deployment-ready quantum code generation in all cases.
 
 ## 🚀 Quickstart: Loading the Dataset
 
-The finalized dataset is hosted on Hugging Face and can be instantly loaded into the target environment:
+The finalized dataset is hosted on Hugging Face and local processed JSONL artifacts can also be loaded directly.
 
 ```python
 # Load the dataset directly from the Hugging Face Hub
 from datasets import load_dataset
 dataset = load_dataset("Elias-Abebe-Gasparini/PQID")
 
-print(dataset[0]["input"])
-print(dataset[0]["output"])
+print(dataset)
+```
 
+```python
+# Load the current publication-facing master corpus locally
+import json
+from pathlib import Path
+
+root = Path("PQID/data/processed")
+path = root / "pqid_2026_master_corpus.jsonl"
+
+with open(path, encoding="utf-8") as f:
+    first = json.loads(next(f))
+
+print(first["metadata"]["benchmark_suitability_tier"])
+print(first["metadata"]["benchmark_suitability_tier_v2"])
+print(first["output"][:300])
 ```
 
 ## 📜 Citation & Academic Context
@@ -265,34 +376,10 @@ If you use the PQID dataset or this pipeline in your research, please cite it as
 
 ### 🔬 Research Context
 
-This dataset and its accompanying compilation pipeline were developed as part of a Master's Thesis in the **Department of Innovation** at **Yonsei University**. For full details regarding the project's independent methodology, funding status, and institutional affiliation, please refer to the [RESEARCH_CONTEXT.md](./RESEARCH_CONTEXT.md) document.
+This dataset and its accompanying compilation pipeline were developed as part of a Master's Thesis in the **Department of Innovation** at **Yonsei University** and have since evolved into a broader rebuild and benchmark-construction effort. For full details regarding the project's independent methodology, current metadata layer, and institutional framing, please refer to:
 
-### ⏳ Research Roadmap
-
-```mermaid
-%%{init: {'themeVariables': {'taskTextColor': '#000000', 'taskTextDarkColor': '#000000', 'taskTextLightColor': '#000000', 'sectionBkgTextColor': '#000000'}}}%%
-gantt
-    title PQID Development and Publication Roadmap
-    dateFormat  YYYY-MM
-    axisFormat  %b %Y
-
-    section 🏗️ Completed Data Engineering
-    Circuit Acquisition and Harmonisation    :done, a1, 2025-01, 5M
-    Validation and Instruction Generation    :done, b1, 2025-03, 7M
-    1.3B SFT Model Training                  :done, c1, 2025-06, 3M
-    Database Infrastructure and ETL          :done, d1, 2025-09, 6M
-    PostgreSQL Deduplication Pass            :done, d2, 2026-01, 2M
-
-    section 🌐 Platform Release
-    GitHub and Hugging Face Release          :active, p1, 2026-03, 1M
-    Kaggle Interactive Demo                  :active, p2, 2026-03, 2M
-
-    section 📚 Planned Publications
-    arXiv Preprint Submission                :crit, milestone, t1, 2026-04, 1d
-    Dataset Manuscript Submission            :crit, milestone, t2, 2026-04, 1d
-    QC Generation Manuscript Submission      :crit, milestone, t3, 2026-04, 1d
-    Model Training Workshop Submission       :crit, milestone, t4, 2026-05, 1d
-```
+- [PIPELINE.md](./PIPELINE.md)
+- [SCHEMA.md](./SCHEMA.md)
 
 ## 📧 Contact
 

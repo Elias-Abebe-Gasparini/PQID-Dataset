@@ -76,6 +76,7 @@ New metadata fields added to each entry:
     prompt_length_chars      int      len(input)
 
   Validation flags:
+    materialized_circuit     bool     true iff execution produced a non-placeholder circuit
     circuit_stats_available  bool
     validation_status        str
     validation_error_type    str
@@ -92,17 +93,17 @@ import json
 import os
 import threading
 import time
+import re
 import warnings
 
 warnings.filterwarnings("ignore")
 
+from project_paths import PROCESSED_DIR
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-BASE = (
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
+BASE = str(PROCESSED_DIR)
 
 SPLITS = {
     "train": {
@@ -119,16 +120,60 @@ SPLITS = {
     },
 }
 
+# Per-entry resume cache — written after every enrichment so runs are
+# fully restartable without re-processing already-done entries.
+CACHE_FILE = f"{BASE}/enrich_metadata_cache.jsonl"
+
+# Enrichment-computed fields stored in the cache record (excludes
+# identity/provenance fields that are already in the clean files).
+_ENRICHMENT_FIELDS = frozenset({
+    "validation_status", "validation_error_type", "materialized_circuit",
+    "circuit_stats_available",
+    "num_qubits", "num_clbits", "gate_count", "circuit_depth", "circuit_width",
+    "gate_types", "num_gate_types", "avg_gates_per_layer", "has_measurement",
+    "is_parameterized", "t_count", "t_depth",
+    "quantum_register_count", "multi_qubit_gate_count",
+    "has_control_flow", "control_flow_op_count",
+    "circuit_expressiveness", "size_class", "benchmark_difficulty",
+    "has_clifford_only", "has_clifford_t", "has_rotation_gates",
+    "has_entangling_gates", "has_barriers", "has_custom_gates",
+    "two_qubit_gate_count", "entangling_gate_ratio",
+    "num_parameters", "parameter_density", "parameter_reuse",
+    "measurement_count", "reset_usage", "mid_circuit_measurement",
+    "classical_register_count", "measured_qubit_count",
+    "interaction_graph_edges", "graph_density", "max_qubit_degree",
+    "connected_components",
+    "transpiled_depth", "transpiled_gate_count", "transpiled_cx_count",
+    "transpiled_single_qubit_count", "transpilation_overhead",
+    "transpilation_successful",
+    "prompt_word_count", "prompt_length_chars",
+    "openqasm3_export_successful", "openqasm3_export_error",
+    "qiskit_version", "transpilation_basis_gates",
+    "prompt_token_count_cl100k", "output_token_count_cl100k",
+    "code_lines",
+    "is_unitary", "gate_set_diversity", "entanglement_depth",
+    "unconnected_qubit_count",
+    "api_deprecated_usage", "deprecated_api_patterns", "hallucination_type",
+    "extraction_confidence", "contains_demo_scaffolding",
+    "cleanup_candidate", "cleanup_rules_triggered",
+    "transpilation_depth_ratio",
+})
+
 # ---------------------------------------------------------------------------
 # Qiskit imports (done once at module level; torch311env has qiskit installed)
 # ---------------------------------------------------------------------------
 print("Importing Qiskit...", flush=True)
+import qiskit
 import numpy as np
 from numpy import pi
 import math
 
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit import transpile as qk_transpile
+try:
+    from qiskit import qasm3 as qk_qasm3
+except Exception:
+    qk_qasm3 = None
 from qiskit.circuit import Parameter, ParameterVector
 from qiskit.circuit.library import (
     PermutationGate,
@@ -137,6 +182,12 @@ from qiskit.circuit.library import (
     RXGate, RYGate, RZGate,
     UGate, U1Gate, U2Gate, U3Gate,
 )
+
+try:
+    import tiktoken
+    _CL100K = tiktoken.get_encoding("cl100k_base")
+except Exception:
+    _CL100K = None
 
 print("Qiskit ready.", flush=True)
 
@@ -154,6 +205,43 @@ SIZE_CLASSES = ["trivial", "simple", "moderate", "complex", "very_complex"]
 # Transpilation target: IBM standard basis, no coupling map (backend-agnostic)
 TRANSPILE_BASIS_GATES = ["cx", "rz", "sx", "x"]
 
+# Deprecated Qiskit API patterns — text-level heuristic for staleness detection
+DEPRECATED_PATTERNS = [
+    "execute(",
+    "Aer.get_backend(",
+    "BasicAer",
+]
+
+EXTRACTION_DEMO_RULES = [
+    ("print_call",            re.compile(r"(?m)^\s*print\s*\(")),
+    ("display_call",          re.compile(r"(?m)^\s*display\s*\(")),
+    ("draw_call",             re.compile(r"\.draw\s*\(")),
+    ("matplotlib_plot",       re.compile(r"(?m)^\s*(?:plt\.\w+|from\s+matplotlib|import\s+matplotlib)")),
+    ("matplotlib_magic",      re.compile(r"(?m)^\s*%matplotlib\b")),
+    ("package_install",       re.compile(r"(?m)^\s*[!%]pip\b")),
+    ("backend_run",           re.compile(r"\bbackend\.run\s*\(", re.IGNORECASE)),
+    ("primitive_run",         re.compile(r"\b(?:sampler|estimator)\.run\s*\(", re.IGNORECASE)),
+    ("job_result",            re.compile(r"\bjob\.result\s*\(", re.IGNORECASE)),
+    ("result_inspection",     re.compile(r"\.(?:get_counts|get_statevector|get_unitary)\s*\(", re.IGNORECASE)),
+]
+EXTRACTION_CORE_HINTS = (
+    "QuantumCircuit(",
+    "TwoLocal(",
+    "RealAmplitudes(",
+    "EfficientSU2(",
+    "QFT(",
+    "ZZFeatureMap(",
+    "PauliFeatureMap(",
+    "NLocal(",
+    "BlueprintCircuit(",
+    "QuantumCircuit.from_qasm_str(",
+)
+EXTRACTION_GATE_SIGNAL_RE = re.compile(
+    r"\.(?:h|x|y|z|s|sdg|t|tdg|cx|cy|cz|swap|ccx|cp|ch|rx|ry|rz|p|u|measure|"
+    r"barrier|append|compose|decompose|measure_all|initialize|reset)\s*\(",
+    re.IGNORECASE,
+)
+
 ROTATION_GATES = {
     "rx", "ry", "rz", "r", "p", "u", "u1", "u2", "u3",
     "rxx", "ryy", "rzz", "rzx", "xx_minus_yy", "xx_plus_yy",
@@ -167,6 +255,71 @@ STANDARD_GATES = (
     CLIFFORD_GATES | UNIVERSAL_GATES | ROTATION_GATES | ENTANGLING_GATE_NAMES
     | {"id", "sx", "sxdg", "x", "y", "z", "measure", "barrier", "reset", "delay"}
 )
+NON_GATE_OP_NAMES = {"measure", "barrier", "reset", "delay"}
+CONTROL_FLOW_OP_NAMES = {
+    "if_else", "while_loop", "for_loop", "switch_case",
+    "break_loop", "continue_loop",
+}
+
+
+def circuit_snapshot(qc: QuantumCircuit) -> tuple:
+    """Return a lightweight structural fingerprint for placeholder detection."""
+    return (
+        qc.num_qubits,
+        qc.num_clbits,
+        qc.size(),
+        qc.depth(),
+        tuple(sorted((str(k), int(v)) for k, v in qc.count_ops().items())),
+    )
+
+
+def token_count_cl100k(text: str):
+    """Return cl100k token count or None if unavailable or text is empty."""
+    if _CL100K is None or not text or not text.strip():
+        return None
+    try:
+        return len(_CL100K.encode(text))
+    except Exception:
+        return None
+
+
+def assess_extraction_quality(output_code: str, validation_status: str | None = None) -> dict:
+    """
+    Heuristic extraction-quality assessment.
+
+    This does not modify the code. It only annotates whether the extracted block
+    appears to contain tutorial/demo scaffolding in addition to circuit logic.
+    """
+    code = output_code or ""
+    lines = [line for line in code.splitlines() if line.strip()]
+
+    triggered = [
+        name for name, pattern in EXTRACTION_DEMO_RULES
+        if pattern.search(code)
+    ]
+    contains_demo_scaffolding = bool(triggered)
+
+    has_core_constructor = any(hint in code for hint in EXTRACTION_CORE_HINTS)
+    gate_signal_count = sum(
+        1 for line in lines if EXTRACTION_GATE_SIGNAL_RE.search(line)
+    )
+    has_core_signal = has_core_constructor or gate_signal_count >= 2
+
+    cleanup_candidate = contains_demo_scaffolding and has_core_signal
+
+    if validation_status == "validated":
+        extraction_confidence = "high" if not contains_demo_scaffolding else "medium"
+    elif has_core_signal and validation_status not in {"syntax_error", "import_error"}:
+        extraction_confidence = "medium" if not contains_demo_scaffolding else "low"
+    else:
+        extraction_confidence = "low"
+
+    return {
+        "extraction_confidence": extraction_confidence,
+        "contains_demo_scaffolding": contains_demo_scaffolding,
+        "cleanup_candidate": cleanup_candidate,
+        "cleanup_rules_triggered": triggered,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -193,6 +346,25 @@ def compute_entanglement_features(qc) -> dict:
     return {
         "two_qubit_gate_count":  two_q,
         "entangling_gate_ratio": ratio,
+    }
+
+
+def compute_register_features(qc) -> dict:
+    """Count quantum registers declared on the circuit."""
+    return {
+        "quantum_register_count": len(qc.qregs),
+    }
+
+
+def compute_multi_qubit_features(qc) -> dict:
+    """Count non-metadata operations acting on three or more qubits."""
+    count = sum(
+        1
+        for op, qubits, _ in _iter_instructions(qc)
+        if len(qubits) >= 3 and op.name not in NON_GATE_OP_NAMES
+    )
+    return {
+        "multi_qubit_gate_count": count,
     }
 
 
@@ -226,16 +398,19 @@ def compute_measurement_features(qc, gate_types: dict) -> dict:
     # Mid-circuit measurement heuristic: a non-barrier instruction follows a measure
     mid_circuit = False
     seen_measure = False
-    for op, _, _ in _iter_instructions(qc):
+    measured_qubits: set = set()
+    for op, qubits, _ in _iter_instructions(qc):
         name = op.name
         if name == "measure":
             seen_measure = True
+            for q in qubits:
+                measured_qubits.add(q)
         elif seen_measure and name != "barrier":
             mid_circuit = True
-            break
 
     return {
         "measurement_count":        measurement_count,
+        "measured_qubit_count":     len(measured_qubits),
         "reset_usage":              reset_usage,
         "mid_circuit_measurement":  mid_circuit,
         "classical_register_count": len(qc.cregs),
@@ -257,6 +432,102 @@ def compute_gate_profile(gate_types: dict) -> dict:
         "has_barriers":         "barrier" in gates,
         "has_custom_gates":     bool(gates - STANDARD_GATES),
     }
+
+
+def compute_control_flow_features(qc) -> dict:
+    """Flag dynamic / control-flow constructs present in the circuit."""
+    count = sum(
+        1
+        for op, _, _ in _iter_instructions(qc)
+        if getattr(op, "name", "") in CONTROL_FLOW_OP_NAMES
+    )
+    return {
+        "has_control_flow": count > 0,
+        "control_flow_op_count": count,
+    }
+
+
+def compute_unconnected_qubit_count(qc) -> int:
+    """Count qubits declared in the circuit but never referenced by any instruction."""
+    used_qubits: set = set()
+    for op, qubits, _ in _iter_instructions(qc):
+        for q in qubits:
+            used_qubits.add(q)
+    return max(0, qc.num_qubits - len(used_qubits))
+
+
+def detect_deprecated_api_usage(output_code: str) -> tuple:
+    """
+    Scan raw output code for deprecated Qiskit API patterns.
+
+    Returns (api_deprecated_usage, deprecated_api_patterns):
+      api_deprecated_usage      bool | None — True if any pattern matched
+      deprecated_api_patterns   list[str] | None — matched patterns (empty list if none)
+    Returns (None, None) when output_code is empty or unavailable.
+    """
+    if not output_code or not output_code.strip():
+        return None, None
+    matched = [p for p in DEPRECATED_PATTERNS if p in output_code]
+    return bool(matched), matched
+
+
+def classify_hallucination_type(
+    validation_status: str,
+    validation_error_type: str,
+    error_text: str = None,
+) -> str:
+    """
+    Map validation outcome to a benchmark-grade diagnostic failure category.
+
+    Priority order:
+      validated           → none
+      timeout             → timeout
+      syntax_error        → syntax_failure
+      import_error        → dependency_hallucination
+      name_error          → symbol_resolution_failure
+      no_circuit          → non_circuit_execution
+      exec_error          → refined by error_type / error_text:
+          index/register  → register_index_error
+          attr/type/api   → api_hallucination
+          fallback        → runtime_semantic_failure
+
+    Returns None if validation_status is None or unrecognised.
+    """
+    if not validation_status:
+        return None
+    if validation_status == "validated":
+        return "none"
+    if validation_status == "timeout":
+        return "timeout"
+    if validation_status == "syntax_error":
+        return "syntax_failure"
+    if validation_status == "import_error":
+        return "dependency_hallucination"
+    if validation_status == "name_error":
+        return "symbol_resolution_failure"
+    if validation_status == "no_circuit":
+        return "non_circuit_execution"
+    if validation_status == "exec_error":
+        combined = " ".join(filter(None, [
+            (validation_error_type or "").lower(),
+            (error_text or "").lower(),
+        ]))
+        if any(kw in combined for kw in ("indexerror", "index", "registerror")):
+            return "register_index_error"
+        if any(kw in combined for kw in ("attributeerror", "typeerror")):
+            return "api_hallucination"
+        return "runtime_semantic_failure"
+    return None
+
+
+def compute_transpilation_depth_ratio(transpiled_depth, circuit_depth) -> float:
+    """
+    Ratio of transpiled depth to original circuit depth.
+    Returns None when transpilation failed or circuit_depth is zero.
+    """
+    if transpiled_depth is None or circuit_depth is None or circuit_depth == 0:
+        return None
+    return round(transpiled_depth / circuit_depth, 4)
 
 
 def compute_topology_features(qc) -> dict:
@@ -327,6 +598,8 @@ def compute_transpilation_features(qc) -> dict:
         "transpiled_single_qubit_count":  None,
         "transpilation_overhead":         None,
         "transpilation_successful":       False,
+        "transpilation_basis_gates":      list(TRANSPILE_BASIS_GATES),
+        "transpilation_depth_ratio":      None,
     }
     try:
         tqc = qk_transpile(
@@ -339,17 +612,33 @@ def compute_transpilation_features(qc) -> dict:
         total        = sum(gate_counts.values())
         sq_count     = total - cx_count
         original_total = qc.size()
-        overhead = round(total / original_total, 4) if original_total > 0 else None
+        overhead = (
+            round((total - original_total) / original_total, 4)
+            if original_total > 0 else None
+        )
+        _t_depth = tqc.depth()
         return {
-            "transpiled_depth":               tqc.depth(),
+            "transpiled_depth":               _t_depth,
             "transpiled_gate_count":          total,
             "transpiled_cx_count":            cx_count,
             "transpiled_single_qubit_count":  sq_count,
             "transpilation_overhead":         overhead,
             "transpilation_successful":       True,
+            "transpilation_basis_gates":      list(TRANSPILE_BASIS_GATES),
+            "transpilation_depth_ratio":      compute_transpilation_depth_ratio(_t_depth, qc.depth()),
         }
     except Exception:
         return _null
+
+
+def export_openqasm3(qc) -> tuple:
+    """Export a QuantumCircuit to OpenQASM 3 with structured status info."""
+    if qk_qasm3 is None:
+        return None, False, "ImportError"
+    try:
+        return qk_qasm3.dumps(qc), True, None
+    except Exception as exc:
+        return None, False, exc.__class__.__name__
 
 
 def compute_benchmark_difficulty(
@@ -457,6 +746,10 @@ def classify_size(num_qubits: int, circuit_depth: int, gate_count: int) -> str:
 def make_namespace() -> dict:
     """Return a fresh dict suitable as exec() globals for circuit code."""
     n = 3
+    qc = QuantumCircuit(QuantumRegister(n, "q"), ClassicalRegister(n, "cr"))
+    qc2 = QuantumCircuit(QuantumRegister(n, "q"), ClassicalRegister(n, "cr"))
+    circ = QuantumCircuit(n)
+    ans = QuantumCircuit(n)
     ns = {
         # --- standard library ---
         "np": np, "pi": pi, "math": math,
@@ -524,14 +817,20 @@ def make_namespace() -> dict:
         "work":    QuantumRegister(1, "work"),
         "flag":    QuantumRegister(1, "flag"),
         # --- pre-built circuit placeholders (get overwritten by most code) ---
-        "qc":   QuantumCircuit(QuantumRegister(n, "q"), ClassicalRegister(n, "cr")),
-        "qc2":  QuantumCircuit(QuantumRegister(n, "q"), ClassicalRegister(n, "cr")),
-        "circ": QuantumCircuit(n),
-        "ans":  QuantumCircuit(n),
+        "qc":   qc,
+        "qc2":  qc2,
+        "circ": circ,
+        "ans":  ans,
         # --- common loop / index variables ---
         "i": 0, "j": 0, "k": 0, "m": 0,
         "G": np.eye(4),
         "pair": (0, 1),
+    }
+    ns["__seed_circuit_snapshots__"] = {
+        id(qc): circuit_snapshot(qc),
+        id(qc2): circuit_snapshot(qc2),
+        id(circ): circuit_snapshot(circ),
+        id(ans): circuit_snapshot(ans),
     }
     return ns
 
@@ -610,6 +909,17 @@ def classify_validation_status(err: str | None, has_circuit: bool) -> tuple[str,
 # ---------------------------------------------------------------------------
 # QuantumCircuit extraction from exec namespace
 # ---------------------------------------------------------------------------
+def is_untouched_seed_circuit(qc: QuantumCircuit, seed_snapshots: dict) -> bool:
+    """Return True when *qc* is one of the seeded placeholders and still untouched."""
+    baseline = seed_snapshots.get(id(qc))
+    if baseline is None:
+        return False
+    try:
+        return circuit_snapshot(qc) == baseline
+    except Exception:
+        return False
+
+
 def extract_best_circuit(ns: dict):
     """
     Find all QuantumCircuit instances in the namespace and return the
@@ -621,13 +931,28 @@ def extract_best_circuit(ns: dict):
 
     Returns None if no QuantumCircuit found.
     """
-    circuits = [v for v in ns.values() if isinstance(v, QuantumCircuit)]
+    seed_snapshots = ns.get("__seed_circuit_snapshots__", {})
+    circuits = []
+    seen_ids: set[int] = set()
+
+    def consider(item):
+        if not isinstance(item, QuantumCircuit):
+            return
+        if is_untouched_seed_circuit(item, seed_snapshots):
+            return
+        item_id = id(item)
+        if item_id in seen_ids:
+            return
+        seen_ids.add(item_id)
+        circuits.append(item)
+
+    for value in ns.values():
+        consider(value)
     # Search inside list/tuple values (one level deep)
     for v in ns.values():
         if isinstance(v, (list, tuple)):
             for item in v:
-                if isinstance(item, QuantumCircuit) and item not in circuits:
-                    circuits.append(item)
+                consider(item)
     if not circuits:
         return None
     if len(circuits) == 1:
@@ -665,15 +990,39 @@ def extract_circuit_stats(qc: QuantumCircuit) -> dict:
         t_depth = qc.depth(filter_function=lambda x: x.operation.name in {"t", "tdg"})
     except Exception:
         t_depth = None
+    try:
+        entanglement_depth = qc.depth(filter_function=lambda x: len(x.qubits) >= 2)
+    except Exception:
+        entanglement_depth = None
+
+    # Shannon entropy of gate-type distribution (bits); 0.0 for single-gate circuits
+    _counts = [v for v in gate_types.values() if v > 0]
+    _total  = sum(_counts)
+    if _total > 0 and len(_counts) > 1:
+        import math as _math
+        gate_set_diversity = round(
+            -sum((c / _total) * _math.log2(c / _total) for c in _counts), 4
+        )
+    else:
+        gate_set_diversity = 0.0
+
     circuit_expressiveness = classify_expressiveness(gate_types, is_parameterized)
     size_class             = classify_size(qc.num_qubits, _depth, _size)
 
     entanglement  = compute_entanglement_features(qc)
+    register_meta = compute_register_features(qc)
+    multi_meta    = compute_multi_qubit_features(qc)
     params_meta   = compute_parameterization_features(qc)
     measure_meta  = compute_measurement_features(qc, gate_types)
     gate_profile  = compute_gate_profile(gate_types)
+    control_meta  = compute_control_flow_features(qc)
     topology      = compute_topology_features(qc)
     transpilation = compute_transpilation_features(qc)
+
+    is_unitary = (
+        not measure_meta["measurement_count"]
+        and not measure_meta["reset_usage"]
+    )
 
     difficulty = compute_benchmark_difficulty(
         size_class,
@@ -689,6 +1038,7 @@ def extract_circuit_stats(qc: QuantumCircuit) -> dict:
         "gate_count":              _size,
         "circuit_depth":           _depth,
         "circuit_width":           qc.width(),
+        "unconnected_qubit_count": compute_unconnected_qubit_count(qc),
         "gate_types":              gate_types,
         "num_gate_types":          num_gate_types,
         "avg_gates_per_layer":     avg_gates_per_layer,
@@ -696,14 +1046,20 @@ def extract_circuit_stats(qc: QuantumCircuit) -> dict:
         "is_parameterized":        is_parameterized,
         "t_count":                 t_count,
         "t_depth":                 t_depth,
+        **register_meta,
+        **multi_meta,
+        **control_meta,
         # ── XAI complexity indicators ─────────────────────────────────────
         "circuit_expressiveness":  circuit_expressiveness,
         "size_class":              size_class,
         "benchmark_difficulty":    difficulty,
         # ── Gate-set profile ──────────────────────────────────────────────
         **gate_profile,
+        "is_unitary":          is_unitary,
+        "gate_set_diversity":  gate_set_diversity,
         # ── Entanglement proxies ──────────────────────────────────────────
         **entanglement,
+        "entanglement_depth":  entanglement_depth,
         # ── Parameterization metadata ─────────────────────────────────────
         **params_meta,
         # ── Measurement / output structure ────────────────────────────────
@@ -735,11 +1091,26 @@ def enrich_entry(entry: dict) -> dict:
     # Prompt-side metadata (always computable, regardless of exec outcome)
     entry["metadata"]["prompt_word_count"]   = len(instr.split())
     entry["metadata"]["prompt_length_chars"] = len(instr)
+    entry["metadata"]["prompt_token_count_cl100k"] = token_count_cl100k(instr)
+    entry["metadata"]["output_token_count_cl100k"] = token_count_cl100k(code)
+    entry["metadata"]["code_lines"]          = len([l for l in code.splitlines() if l.strip()])
+    entry["metadata"]["qiskit_version"]      = getattr(qiskit, "__version__", "")
+
+    # Deprecated-API detection — text-level, always computable from raw code
+    dep_used, dep_patterns = detect_deprecated_api_usage(code)
+    entry["metadata"]["api_deprecated_usage"]    = dep_used
+    entry["metadata"]["deprecated_api_patterns"] = dep_patterns
+    entry["metadata"]["openqasm3_export_successful"] = None
+    entry["metadata"]["openqasm3_export_error"] = None
+    entry["openqasm3_code"] = entry.get("openqasm3_code")
 
     if not code or not code.strip():
+        entry["metadata"]["materialized_circuit"]     = False
         entry["metadata"]["circuit_stats_available"] = False
         entry["metadata"]["validation_status"]       = "exec_error"
         entry["metadata"]["validation_error_type"]   = "EmptyCode"
+        entry["metadata"]["hallucination_type"]      = "runtime_semantic_failure"
+        entry["metadata"].update(assess_extraction_quality(code, "exec_error"))
         return entry
 
     ns, err = exec_with_timeout(code, timeout=3.0)
@@ -747,8 +1118,13 @@ def enrich_entry(entry: dict) -> dict:
     qc = extract_best_circuit(ns) if ns is not None else None
     v_status, v_err_type = classify_validation_status(err, qc is not None)
 
+    entry["metadata"]["materialized_circuit"]   = qc is not None
     entry["metadata"]["validation_status"]     = v_status
     entry["metadata"]["validation_error_type"] = v_err_type
+    entry["metadata"]["hallucination_type"]    = classify_hallucination_type(
+        v_status, v_err_type, error_text=err
+    )
+    entry["metadata"].update(assess_extraction_quality(code, v_status))
 
     if qc is None:
         entry["metadata"]["circuit_stats_available"] = False
@@ -757,6 +1133,10 @@ def enrich_entry(entry: dict) -> dict:
     # Merge extracted stats into metadata
     stats = extract_circuit_stats(qc)
     entry["metadata"].update(stats)
+    qasm_code, qasm_ok, qasm_err = export_openqasm3(qc)
+    entry["openqasm3_code"] = qasm_code
+    entry["metadata"]["openqasm3_export_successful"] = qasm_ok
+    entry["metadata"]["openqasm3_export_error"] = qasm_err
     return entry
 
 
@@ -775,13 +1155,70 @@ def write_jsonl(entries: list, path: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Resume cache helpers
+# ---------------------------------------------------------------------------
+def load_cache(path: str) -> dict:
+    """Load enrich_metadata_cache.jsonl. Returns dict keyed by circuit_hash."""
+    cache: dict = {}
+    if not os.path.exists(path):
+        return cache
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+                ch = rec.get("circuit_hash", "")
+                if ch:
+                    cache[ch] = rec
+            except json.JSONDecodeError:
+                pass
+    return cache
+
+
+def append_to_cache(entry: dict, path: str) -> None:
+    """Append one enriched entry's computed fields to the cache file."""
+    ch = entry.get("metadata", {}).get("circuit_hash", "")
+    if not ch:
+        return
+    meta = entry.get("metadata", {})
+    record = {
+        "circuit_hash":   ch,
+        "openqasm3_code": entry.get("openqasm3_code"),
+        "enriched_meta":  {k: meta[k] for k in _ENRICHMENT_FIELDS if k in meta},
+    }
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def apply_cache_record(entry: dict, rec: dict) -> dict:
+    """Patch an entry with cached enrichment results (no re-exec needed)."""
+    entry = dict(entry)
+    entry["metadata"] = dict(entry["metadata"])
+    entry["metadata"].update(rec.get("enriched_meta", {}))
+    entry["openqasm3_code"] = rec.get("openqasm3_code")
+    return entry
+
+
+def cache_record_is_complete(rec: dict, required_fields=None) -> bool:
+    """Return True iff the cache record contains all required enrichment fields."""
+    enriched_meta = rec.get("enriched_meta", {})
+    fields = _ENRICHMENT_FIELDS if required_fields is None else set(required_fields)
+    return all(field in enriched_meta for field in fields)
+
+
+# ---------------------------------------------------------------------------
 # Process a single split
 # ---------------------------------------------------------------------------
-def process_split(split_name: str, paths: dict) -> tuple:
+def process_split(split_name: str, paths: dict, cache: dict) -> tuple:
     """
     Load, enrich, and write one split.
 
-    Returns (enriched_list, n_enriched, n_skipped, complexity_counts).
+    Entries whose circuit_hash already exists in *cache* are restored from
+    the cache instead of re-executed — making the run fully resume-safe.
+
+    Returns (enriched_list, n_enriched, n_skipped, n_from_cache, complexity_counts).
     """
     print(f"\n[{split_name}] Loading {paths['input']} ...", flush=True)
     entries = load_jsonl(paths["input"])
@@ -789,13 +1226,21 @@ def process_split(split_name: str, paths: dict) -> tuple:
     print(f"[{split_name}] {total} entries to process.", flush=True)
 
     enriched_entries = []
-    n_enriched = 0
-    n_skipped  = 0
+    n_enriched    = 0
+    n_skipped     = 0
+    n_from_cache  = 0
     complexity_counts: dict = {}
     t0 = time.time()
 
     for idx, entry in enumerate(entries):
-        enriched = enrich_entry(entry)
+        ch = entry.get("metadata", {}).get("circuit_hash", "")
+        if ch and ch in cache and cache_record_is_complete(cache[ch]):
+            enriched = apply_cache_record(entry, cache[ch])
+            n_from_cache += 1
+        else:
+            enriched = enrich_entry(entry)
+            append_to_cache(enriched, CACHE_FILE)
+
         enriched_entries.append(enriched)
 
         if enriched["metadata"].get("circuit_stats_available"):
@@ -812,23 +1257,23 @@ def process_split(split_name: str, paths: dict) -> tuple:
             print(
                 f"  [{split_name}] {idx+1}/{total} ({pct:.1f}%)  "
                 f"enriched={n_enriched}  skipped={n_skipped}  "
-                f"elapsed={elapsed:.0f}s",
+                f"cached={n_from_cache}  elapsed={elapsed:.0f}s",
                 flush=True,
             )
 
     elapsed = time.time() - t0
     print(
         f"[{split_name}] Done in {elapsed:.1f}s  "
-        f"enriched={n_enriched}  skipped={n_skipped}",
+        f"enriched={n_enriched}  skipped={n_skipped}  cached={n_from_cache}",
         flush=True,
     )
 
     # Write to tmp path first — we rename to overwrite originals only after
-    # BOTH splits complete without crashing.
+    # ALL splits complete without crashing.
     print(f"[{split_name}] Writing tmp → {paths['tmp']}", flush=True)
     write_jsonl(enriched_entries, paths["tmp"])
 
-    return enriched_entries, n_enriched, n_skipped, complexity_counts
+    return enriched_entries, n_enriched, n_skipped, n_from_cache, complexity_counts
 
 
 # ---------------------------------------------------------------------------
@@ -837,13 +1282,20 @@ def process_split(split_name: str, paths: dict) -> tuple:
 def main():
     overall_t0 = time.time()
 
-    results = {}  # split_name → (n_enriched, n_skipped, complexity_counts)
+    # Load per-entry resume cache (empty dict if first run)
+    print(f"Loading resume cache from {CACHE_FILE} ...", flush=True)
+    cache = load_cache(CACHE_FILE)
+    print(f"  Cache entries loaded: {len(cache):,}", flush=True)
+
+    results = {}  # split_name → (n_enriched, n_skipped, n_from_cache, complexity_counts)
 
     # --- Process all splits (skip missing files, e.g. test_clean before split step) ---
     active_splits = {k: v for k, v in SPLITS.items() if os.path.exists(v["input"])}
     for split_name, paths in active_splits.items():
-        _, n_enriched, n_skipped, cc_counts = process_split(split_name, paths)
-        results[split_name] = (n_enriched, n_skipped, cc_counts)
+        _, n_enriched, n_skipped, n_from_cache, cc_counts = process_split(
+            split_name, paths, cache
+        )
+        results[split_name] = (n_enriched, n_skipped, n_from_cache, cc_counts)
 
     # --- All splits completed; atomically rename tmp → original ---
     print(f"\n{len(active_splits)} split(s) complete. Renaming tmp files...",
@@ -856,13 +1308,14 @@ def main():
         print(f"  Renamed {tmp_path} -> {orig_path}", flush=True)
 
     # --- Final summary ---
-    total_enriched = sum(v[0] for v in results.values())
-    total_skipped  = sum(v[1] for v in results.values())
-    total_entries  = total_enriched + total_skipped
-    overall_elapsed = time.time() - overall_t0
+    total_enriched   = sum(v[0] for v in results.values())
+    total_skipped    = sum(v[1] for v in results.values())
+    total_from_cache = sum(v[2] for v in results.values())
+    total_entries    = total_enriched + total_skipped
+    overall_elapsed  = time.time() - overall_t0
 
     combined_cc: dict = {}
-    for _, (_, _, cc_counts) in results.items():
+    for _, (_, _, _, cc_counts) in results.items():
         for cc, cnt in cc_counts.items():
             combined_cc[cc] = combined_cc.get(cc, 0) + cnt
 
@@ -871,15 +1324,17 @@ def main():
     print(f"Total entries  : {total_entries}", flush=True)
     print(f"Enriched (OK)  : {total_enriched}  "
           f"({100 * total_enriched / max(total_entries, 1):.1f}%)", flush=True)
+    print(f"From cache     : {total_from_cache}  "
+          f"({100 * total_from_cache / max(total_entries, 1):.1f}%)", flush=True)
     print(f"Skipped        : {total_skipped}  "
           f"({100 * total_skipped  / max(total_entries, 1):.1f}%)", flush=True)
     print(f"Elapsed        : {overall_elapsed:.1f}s", flush=True)
 
     print("\nBy split:", flush=True)
-    for split_name, (n_enriched, n_skipped, _) in results.items():
+    for split_name, (n_enriched, n_skipped, n_from_cache, _) in results.items():
         n_total = n_enriched + n_skipped
         print(f"  {split_name:<12} enriched={n_enriched}  "
-              f"skipped={n_skipped}  total={n_total}", flush=True)
+              f"cached={n_from_cache}  skipped={n_skipped}  total={n_total}", flush=True)
 
     print("\nBy size_class (enriched entries only):", flush=True)
     for cc in ["trivial", "simple", "moderate", "complex", "very_complex", "unknown"]:

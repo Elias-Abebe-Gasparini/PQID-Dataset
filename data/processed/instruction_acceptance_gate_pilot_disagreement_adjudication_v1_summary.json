@@ -1,0 +1,35 @@
+{
+  "adjudication_version": "instruction_acceptance_gate_pilot_disagreement_adjudication_v1",
+  "source_model_review_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_model_review_sheet_v1.csv",
+  "adjudication_sheet": "PQID/data/processed/instruction_acceptance_gate_pilot_disagreement_adjudication_v1.csv",
+  "rows_scanned": 256,
+  "disagreement_rows": 64,
+  "branch_counts": {
+    "source_code": 58,
+    "teacher_text": 6
+  },
+  "instruction_kind_counts": {
+    "paraphrase": 30,
+    "seed": 34
+  },
+  "role_counts": {
+    "broad_generation": 3,
+    "gold_generation": 6,
+    "mutation_robustness": 6,
+    "repair_or_explanation": 49
+  },
+  "adjudication_bucket_counts": {
+    "manual_spot_check": 17,
+    "obvious_rewrite": 47
+  },
+  "proposed_final_decision_counts": {
+    "<blank>": 17,
+    "rewrite": 47
+  },
+  "adjudication_reason_bucket_counts": {
+    "<none>": 17,
+    "extra_content_violates_prompt": 1,
+    "repair_not_done": 21,
+    "undefined_or_missing_symbol": 25
+  }
+}

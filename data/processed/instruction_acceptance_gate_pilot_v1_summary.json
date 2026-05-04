@@ -1,0 +1,46 @@
+{
+  "pilot_version": "instruction_acceptance_gate_pilot_v1",
+  "source_manifest": "PQID/data/processed/instruction_acceptance_gate_manifest_v1.jsonl",
+  "pilot_file": "PQID/data/processed/instruction_acceptance_gate_pilot_v1.jsonl",
+  "manifest_rows_scanned": 550314,
+  "pilot_rows": 256,
+  "sample_per_stratum": 25,
+  "random_seed": 42,
+  "observed_strata": 10,
+  "forced_anti_template_rows": 6,
+  "branch_counts": {
+    "source_code": 150,
+    "teacher_text": 106
+  },
+  "instruction_kind_counts": {
+    "paraphrase": 131,
+    "seed": 125
+  },
+  "role_counts": {
+    "broad_generation": 50,
+    "gold_generation": 50,
+    "mutation_robustness": 50,
+    "repair_or_explanation": 50,
+    "validation_diagnosis": 56
+  },
+  "prompt_mode_counts": {
+    "<none>": 250,
+    "anti_template": 6
+  },
+  "selection_reason_counts": {
+    "forced_anti_template_tail": 6,
+    "stratified_reservoir_sample": 250
+  },
+  "stratum_counts": {
+    "source_code|paraphrase|broad_generation": 25,
+    "source_code|paraphrase|gold_generation": 25,
+    "source_code|paraphrase|repair_or_explanation": 25,
+    "source_code|seed|broad_generation": 25,
+    "source_code|seed|gold_generation": 25,
+    "source_code|seed|repair_or_explanation": 25,
+    "teacher_text|paraphrase|mutation_robustness": 25,
+    "teacher_text|paraphrase|validation_diagnosis": 31,
+    "teacher_text|seed|mutation_robustness": 25,
+    "teacher_text|seed|validation_diagnosis": 25
+  }
+}

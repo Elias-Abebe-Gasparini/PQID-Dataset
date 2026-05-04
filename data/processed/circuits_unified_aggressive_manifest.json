@@ -1,0 +1,55 @@
+{
+  "phase": 2,
+  "label": "aggressive_v1",
+  "retrieval_mode": "aggressive",
+  "retrieval_run_id": "aggressive_v1_2026-04-04",
+  "scrape_date": "2026-04-04",
+  "baseline_output_file": "PQID\\data\\processed\\circuits_unified.jsonl",
+  "aggressive_output_file": "PQID\\data\\processed\\circuits_unified_aggressive.jsonl",
+  "merged_output_file": "PQID\\data\\processed\\circuits_unified_plus_aggressive.jsonl",
+  "processed_file_v2": "PQID\\data\\processed\\circuits_unified_aggressive_processed.txt",
+  "max_file_size_bytes_v2": 1000000,
+  "include_doc_paths_v2": true,
+  "promoted_repos_v2": [
+    [
+      "PennyLaneAI",
+      "pennylane-qiskit"
+    ],
+    [
+      "Quantinuum",
+      "pytket-qiskit"
+    ]
+  ],
+  "orgs_v2": [
+    "PennyLaneAI",
+    "Quantinuum"
+  ],
+  "search_queries_v2": [
+    "from qiskit.circuit.library import TwoLocal language:python",
+    "from qiskit.circuit.library import RealAmplitudes language:python",
+    "from qiskit.circuit.library import EfficientSU2 language:python",
+    "from qiskit.circuit.library import QFT language:python",
+    "from qiskit.circuit.library import ZZFeatureMap language:python",
+    "from qiskit.circuit.library import PauliFeatureMap language:python",
+    "qc.compose( language:python",
+    "qc.append( language:python",
+    "measure_all() qiskit language:jupyter-notebook"
+  ],
+  "baseline_count": 21632,
+  "aggressive_count": 65680,
+  "broad_merged_count": 87312,
+  "empirical_repo_total_so_far": 24910,
+  "broad_retrieval_mode_counts": {
+    "baseline": 21632,
+    "aggressive": 65680
+  },
+  "broad_retrieval_strategy_counts": {
+    "curated": 1448,
+    "search": 17372,
+    "org": 4335,
+    "topic": 2188,
+    "promoted_repo": 127,
+    "expanded_search": 8816,
+    "empirical_promoted_repo": 53026
+  }
+}

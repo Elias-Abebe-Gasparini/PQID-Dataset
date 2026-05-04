@@ -1,60 +1,57 @@
-# 🗄️ PQID Database Documentation
+# PQID Database Documentation
 
-This document details the PostgreSQL infrastructure used to harmonize, store, and validate the **Polyglot Quantum Instruction Dataset (PQID)**.
+This document describes the PostgreSQL layer used in the original thesis-era PQID workflow.
 
-While initial acquisition was handled via Python, the PostgreSQL layer served as the "Source of Truth" for relational integrity and final semantic cleaning.
+It is retained for provenance, but it is **not** the source of truth for the active 2026 rebuild.
 
----
+## Status
 
-## 🏗️ Architecture Overview
+Current project state:
 
-The database utilizes two primary relational tables to map natural language instructions to optimized quantum circuits.
+- active benchmark workflow: JSONL-first, file-based pipeline
+- active source of truth: `PQID/data/processed/`
+- active orchestration: `PQID/scripts/scrape_github_unified.ipynb`
 
-- **Engine:** PostgreSQL 15+
-- **Database Name:** `quantum_nlp`
-- **Key Feature:** Extensive use of `JSONB` for flexible quantum metadata storage (gate depth, qubit counts, etc.) without requiring rigid schema migrations.
+The PostgreSQL materials in this repository should therefore be treated as:
 
----
+- archival documentation for the thesis baseline
+- useful for understanding earlier relational cleaning and deduplication logic
+- not the canonical release metadata for the rebuilt corpus
 
-## 📂 File Manifest
+## Historical Role
 
-The following scripts are located at the root of the repository and should be executed in order:
+In the thesis-era pipeline, PostgreSQL was used to:
 
-1. **`schema.sql`**:
-   - Defines the table structures for `harmonized_circuits` and `quantum_prompts`.
-   - Establishes `ON DELETE CASCADE` relationships to ensure data consistency during experimentation.
+- stage harmonized circuit and prompt records
+- enforce relational integrity between circuits and prompts
+- support deduplication and validation queries
+- produce summary statistics for the original thesis dataset
 
-2. **`etl_and_cleaning.sql`**:
-   - Documents the transformation pipeline from raw `.jsonl` staging to relational tables.
-   - **Critical Win:** Contains the Deep Deduplication Protocol using `ctid` logic which identified and removed **29 semantic duplicates** that successfully bypassed upstream Python-based cleaning.
+That historical workflow remains relevant for thesis reproducibility, but not for the corrected Phase 3 rebuild counts now used in public-facing documentation.
 
-3. **`validation.sql`**:
-   - A suite of diagnostic queries used to verify the dataset before training.
-   - Generates the split statistics (Train/Val/Test) used in Table 1 of the manuscript.
+## Files
 
----
+- `schema.sql`
+  - thesis-era relational schema
+- `etl_and_cleaning.sql`
+  - thesis-era ETL and SQL-side deduplication logic
+- `validation.sql`
+  - thesis-era validation queries
 
-## 🧪 Data Validation Results
+## Use This Document For
 
-The final database state was verified using `validation.sql` to confirm the following distribution:
+- understanding the historical database design
+- tracing how the original thesis dataset was organized
+- reproducing the earlier relational cleaning layer if needed
 
-| Source | Type | Split | Count |
-| :--- | :--- | :--- | :--- |
-| GitHub | Natural | Test | 1,869 |
-| GitHub | Paraphrased | Train | 8,546 |
-| GitHub | Paraphrased | Validation | 927 |
-| RevLib | Natural | Test | 249 |
-| RevLib | Paraphrased | Train | 1,099 |
-| RevLib | Paraphrased | Validation | 146 |
-| **Total** | | | **12,836** |
+## Do Not Use This Document For
 
----
+- current benchmark counts
+- current Hugging Face / GitHub release numbers
+- current strict or extended core statistics
 
-## 🚀 Usage & Replication
+For the active rebuild, use:
 
-To replicate this database locally:
-
-1. Run `schema.sql` to build the structure.
-2. Ingest your processed `.jsonl` files (located in `/data/processed/`).
-3. Run `etl_and_cleaning.sql` to finalize the deduplication.
-4. Execute `validation.sql` to ensure your local row counts match the published results.
+- `README.md`
+- `PIPELINE.md`
+- `SCHEMA.md`

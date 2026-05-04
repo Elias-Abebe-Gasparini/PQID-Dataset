@@ -1,0 +1,43 @@
+{
+  "manifest_version": "instruction_acceptance_gate_manifest_v1",
+  "acceptance_gate_version": "instruction_acceptance_gate_v1",
+  "manifest_file": "PQID/data/processed/instruction_acceptance_gate_manifest_v1.jsonl",
+  "total_rows": 550314,
+  "branch_counts": {
+    "source_code": 18012,
+    "teacher_text": 532302
+  },
+  "instruction_kind_counts": {
+    "paraphrase": 458595,
+    "seed": 91719
+  },
+  "branch_instruction_kind_counts": {
+    "source_code": {
+      "paraphrase": 15010,
+      "seed": 3002
+    },
+    "teacher_text": {
+      "paraphrase": 443585,
+      "seed": 88717
+    }
+  },
+  "role_counts": {
+    "broad_generation": 1914,
+    "gold_generation": 2490,
+    "mutation_robustness": 67590,
+    "repair_or_explanation": 13608,
+    "validation_diagnosis": 464712
+  },
+  "supervision_mode_counts": {
+    "source_code": 18012,
+    "teacher_text": 532302
+  },
+  "prompt_type_counts": {
+    "base_seed_quality_aware": 91719,
+    "paraphrased_quality_aware": 458595
+  },
+  "prompt_mode_counts": {
+    "<none>": 550308,
+    "anti_template": 6
+  }
+}

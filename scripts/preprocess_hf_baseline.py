@@ -42,13 +42,12 @@ import json
 import tokenize
 from pathlib import Path
 
+from project_paths import PROCESSED_DIR
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
+BASE = PROCESSED_DIR
 HF_DIR = BASE.parent / "hf_download"
 
 TRAIN_IN      = HF_DIR / "train.jsonl"

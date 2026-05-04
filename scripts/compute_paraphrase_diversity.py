@@ -37,13 +37,12 @@ import statistics
 from collections import defaultdict
 from pathlib import Path
 
+from project_paths import PROCESSED_DIR
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
+BASE = PROCESSED_DIR
 
 INPUT_FILES = [
     BASE / "train_clean.jsonl",

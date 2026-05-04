@@ -1,0 +1,430 @@
+{
+  "export_version": "pqid_license_valid_release_v1",
+  "profile": "public_open",
+  "profile_description": "Permissive-license rows only.",
+  "included_license_categories": [
+    "permissive"
+  ],
+  "include_reviewed_other": false,
+  "manually_reviewed_other_licenses": [],
+  "output_dir": "PQID/data/processed/release_views",
+  "splits": {
+    "train": {
+      "input_file": "PQID/data/processed/train_clean.jsonl",
+      "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_train.jsonl",
+      "input_rows": 440580,
+      "exported_rows": 249420,
+      "excluded_rows": 191160,
+      "exported_license_category_counts": {
+        "permissive": 249420
+      },
+      "excluded_license_category_counts": {
+        "copyleft": 5898,
+        "no_license": 184728,
+        "other": 534
+      }
+    },
+    "validation": {
+      "input_file": "PQID/data/processed/validation_clean.jsonl",
+      "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_validation.jsonl",
+      "input_rows": 55110,
+      "exported_rows": 31386,
+      "excluded_rows": 23724,
+      "exported_license_category_counts": {
+        "permissive": 31386
+      },
+      "excluded_license_category_counts": {
+        "copyleft": 648,
+        "no_license": 23022,
+        "other": 54
+      }
+    },
+    "test": {
+      "input_file": "PQID/data/processed/test_clean.jsonl",
+      "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_test.jsonl",
+      "input_rows": 54624,
+      "exported_rows": 30918,
+      "excluded_rows": 23706,
+      "exported_license_category_counts": {
+        "permissive": 30918
+      },
+      "excluded_license_category_counts": {
+        "copyleft": 810,
+        "no_license": 22782,
+        "other": 114
+      }
+    }
+  },
+  "summary_json_file": "PQID/data/processed/release_views/pqid_v1_public_open_summary.json",
+  "summary_markdown_file": "PQID/data/processed/release_views/pqid_v1_public_open_summary.md",
+  "attribution_manifest_file": "PQID/data/processed/release_views/pqid_v1_public_open_attribution_manifest.csv",
+  "total_input_rows": 550314,
+  "total_exported_rows": 311724,
+  "total_excluded_rows": 238590,
+  "exported_license_category_counts": {
+    "permissive": 311724
+  },
+  "excluded_license_category_counts": {
+    "copyleft": 7356,
+    "no_license": 230532,
+    "other": 702
+  },
+  "included_other_license_counts": {},
+  "missing_license_internal_file": "PQID/data/processed/release_views/pqid_v1_missing_license_internal_only.jsonl",
+  "missing_license_internal_summary_file": "PQID/data/processed/release_views/pqid_v1_missing_license_internal_only_summary.json",
+  "missing_license_internal_rows": 0,
+  "missing_license_internal_split_counts": {},
+  "top_excluded_repositories": [
+    {
+      "repo": "backordinary/QDP-FSL",
+      "excluded_rows": 53754,
+      "excluded_license_category_counts": {
+        "no_license": 53754
+      }
+    },
+    {
+      "repo": "wjy99-c/QDiff",
+      "excluded_rows": 49044,
+      "excluded_license_category_counts": {
+        "no_license": 49044
+      }
+    },
+    {
+      "repo": "lockephi/Allentown-L104-Node",
+      "excluded_rows": 29874,
+      "excluded_license_category_counts": {
+        "no_license": 29874
+      }
+    },
+    {
+      "repo": "dereklin1205/COMM_LAB_Final",
+      "excluded_rows": 4212,
+      "excluded_license_category_counts": {
+        "no_license": 4212
+      }
+    },
+    {
+      "repo": "peiyi1/nassc_code",
+      "excluded_rows": 1704,
+      "excluded_license_category_counts": {
+        "no_license": 1704
+      }
+    },
+    {
+      "repo": "Simula-COMPLEX/MutTG-paper",
+      "excluded_rows": 1422,
+      "excluded_license_category_counts": {
+        "no_license": 1422
+      }
+    },
+    {
+      "repo": "Xzore19/QEMI",
+      "excluded_rows": 1392,
+      "excluded_license_category_counts": {
+        "no_license": 1392
+      }
+    },
+    {
+      "repo": "AIComputing101/quantum-computing-101",
+      "excluded_rows": 1356,
+      "excluded_license_category_counts": {
+        "no_license": 1356
+      }
+    },
+    {
+      "repo": "PennyLaneAI/llvm-project",
+      "excluded_rows": 1356,
+      "excluded_license_category_counts": {
+        "no_license": 1356
+      }
+    },
+    {
+      "repo": "NiloGregginz33/QMGRExperiments",
+      "excluded_rows": 1044,
+      "excluded_license_category_counts": {
+        "no_license": 1044
+      }
+    },
+    {
+      "repo": "QuantumAmplification/ampamp",
+      "excluded_rows": 678,
+      "excluded_license_category_counts": {
+        "no_license": 678
+      }
+    },
+    {
+      "repo": "qiskit-community/qiskit-presentations",
+      "excluded_rows": 582,
+      "excluded_license_category_counts": {
+        "no_license": 582
+      }
+    },
+    {
+      "repo": "eclipse-qrisp/Qrisp",
+      "excluded_rows": 504,
+      "excluded_license_category_counts": {
+        "other": 504
+      }
+    },
+    {
+      "repo": "balewski/quantumMind",
+      "excluded_rows": 480,
+      "excluded_license_category_counts": {
+        "no_license": 480
+      }
+    },
+    {
+      "repo": "NickQrumpton/quantum-mcmc",
+      "excluded_rows": 468,
+      "excluded_license_category_counts": {
+        "no_license": 468
+      }
+    },
+    {
+      "repo": "Oichkatzelesfrettschen/MathScienceCompendium",
+      "excluded_rows": 462,
+      "excluded_license_category_counts": {
+        "copyleft": 462
+      }
+    },
+    {
+      "repo": "kazuki-matsumoto/Entangle_QNN",
+      "excluded_rows": 426,
+      "excluded_license_category_counts": {
+        "no_license": 426
+      }
+    },
+    {
+      "repo": "LBNL-HEP-QIS/QCLatticeJLabTutorial",
+      "excluded_rows": 420,
+      "excluded_license_category_counts": {
+        "no_license": 420
+      }
+    },
+    {
+      "repo": "Quantinuum/circuit-benchmarks-guppy",
+      "excluded_rows": 414,
+      "excluded_license_category_counts": {
+        "no_license": 414
+      }
+    },
+    {
+      "repo": "Chang-Shih-Yung/Trading-X",
+      "excluded_rows": 408,
+      "excluded_license_category_counts": {
+        "no_license": 408
+      }
+    },
+    {
+      "repo": "ElePT/qiskit-algorithms-test",
+      "excluded_rows": 396,
+      "excluded_license_category_counts": {
+        "no_license": 396
+      }
+    },
+    {
+      "repo": "sinugarc/TFM",
+      "excluded_rows": 396,
+      "excluded_license_category_counts": {
+        "copyleft": 396
+      }
+    },
+    {
+      "repo": "nckuasrlab/QOPS",
+      "excluded_rows": 396,
+      "excluded_license_category_counts": {
+        "copyleft": 396
+      }
+    },
+    {
+      "repo": "epiqc/PartialCompilation",
+      "excluded_rows": 372,
+      "excluded_license_category_counts": {
+        "no_license": 372
+      }
+    },
+    {
+      "repo": "pathuang1112/QDT_IL",
+      "excluded_rows": 366,
+      "excluded_license_category_counts": {
+        "no_license": 366
+      }
+    },
+    {
+      "repo": "alfredang/quantum-paradoxes",
+      "excluded_rows": 342,
+      "excluded_license_category_counts": {
+        "no_license": 342
+      }
+    },
+    {
+      "repo": "ibarra18/QAST",
+      "excluded_rows": 342,
+      "excluded_license_category_counts": {
+        "no_license": 342
+      }
+    },
+    {
+      "repo": "braqiiit/QRealBoost",
+      "excluded_rows": 330,
+      "excluded_license_category_counts": {
+        "no_license": 330
+      }
+    },
+    {
+      "repo": "esarell/QuantumEncoding",
+      "excluded_rows": 324,
+      "excluded_license_category_counts": {
+        "no_license": 324
+      }
+    },
+    {
+      "repo": "Quantinuum/qec_qpe_chem",
+      "excluded_rows": 324,
+      "excluded_license_category_counts": {
+        "no_license": 324
+      }
+    },
+    {
+      "repo": "DarriusP11/Quantum-Temporal-Bayesian-Network-Prototype-Lachesis-",
+      "excluded_rows": 318,
+      "excluded_license_category_counts": {
+        "no_license": 318
+      }
+    },
+    {
+      "repo": "Fergus-Hayes/Quantum_state_preparation_of_gravitational_waves",
+      "excluded_rows": 306,
+      "excluded_license_category_counts": {
+        "no_license": 306
+      }
+    },
+    {
+      "repo": "tcNickolas/quantum-programming-in-depth",
+      "excluded_rows": 306,
+      "excluded_license_category_counts": {
+        "no_license": 306
+      }
+    },
+    {
+      "repo": "husisy/learning",
+      "excluded_rows": 288,
+      "excluded_license_category_counts": {
+        "copyleft": 288
+      }
+    },
+    {
+      "repo": "alfredang/quantum-algorithms",
+      "excluded_rows": 282,
+      "excluded_license_category_counts": {
+        "no_license": 282
+      }
+    },
+    {
+      "repo": "LuisLlana/metamorphic_testing",
+      "excluded_rows": 282,
+      "excluded_license_category_counts": {
+        "copyleft": 282
+      }
+    },
+    {
+      "repo": "anulum/scpn-quantum-control",
+      "excluded_rows": 276,
+      "excluded_license_category_counts": {
+        "no_license": 276
+      }
+    },
+    {
+      "repo": "kanishkmittal/qbronze",
+      "excluded_rows": 276,
+      "excluded_license_category_counts": {
+        "no_license": 276
+      }
+    },
+    {
+      "repo": "Benaah/quantum-projects",
+      "excluded_rows": 270,
+      "excluded_license_category_counts": {
+        "no_license": 270
+      }
+    },
+    {
+      "repo": "m-webster/CliffordOpt",
+      "excluded_rows": 270,
+      "excluded_license_category_counts": {
+        "copyleft": 270
+      }
+    },
+    {
+      "repo": "JanusQ/MorphQPV",
+      "excluded_rows": 270,
+      "excluded_license_category_counts": {
+        "copyleft": 270
+      }
+    },
+    {
+      "repo": "PietroZanotta/Quantum-Execution",
+      "excluded_rows": 264,
+      "excluded_license_category_counts": {
+        "no_license": 264
+      }
+    },
+    {
+      "repo": "anastasiaangelo/ProjectAnastasia",
+      "excluded_rows": 252,
+      "excluded_license_category_counts": {
+        "no_license": 252
+      }
+    },
+    {
+      "repo": "ShivanshaShiva/ElAiAssistant",
+      "excluded_rows": 252,
+      "excluded_license_category_counts": {
+        "no_license": 252
+      }
+    },
+    {
+      "repo": "GIRISHBELANI/Quantum_Computing_Benchmarks",
+      "excluded_rows": 246,
+      "excluded_license_category_counts": {
+        "no_license": 246
+      }
+    },
+    {
+      "repo": "JaimePSantos/Dissertation-Tex-Code",
+      "excluded_rows": 234,
+      "excluded_license_category_counts": {
+        "no_license": 234
+      }
+    },
+    {
+      "repo": "OpenQuantumComputing/QAOA",
+      "excluded_rows": 228,
+      "excluded_license_category_counts": {
+        "copyleft": 228
+      }
+    },
+    {
+      "repo": "JanusQ/QuCT-Micro2023",
+      "excluded_rows": 228,
+      "excluded_license_category_counts": {
+        "no_license": 228
+      }
+    },
+    {
+      "repo": "nonhermitian/ReNomQ",
+      "excluded_rows": 222,
+      "excluded_license_category_counts": {
+        "no_license": 222
+      }
+    },
+    {
+      "repo": "jitenkr2030/Quantum-Fraud-Detection-Engine-",
+      "excluded_rows": 216,
+      "excluded_license_category_counts": {
+        "no_license": 216
+      }
+    }
+  ],
+  "release_rule": "Export rows whose metadata.license_category is in the selected profile. Exclude `other` rows. Always exclude no_license rows; residual missing license-category rows, if present, are restricted governance-metadata gaps."
+}

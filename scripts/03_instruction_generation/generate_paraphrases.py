@@ -20,19 +20,28 @@ import datetime
 import hashlib
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
 from openai import AsyncOpenAI, RateLimitError
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from project_paths import PROCESSED_DIR, load_openai_api_key
+
+try:
+    import tiktoken
+    _CL100K = tiktoken.get_encoding("cl100k_base")
+except Exception:
+    _CL100K = None
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
-API_KEY_FILE = r"C:\Users\Abebe\Downloads\IT\OPENAI\OPENAI_API_KEY_PQID_V2.txt"
+BASE = PROCESSED_DIR
 
 INPUT_FILE  = BASE / "seeds.jsonl"
 OUTPUT_FILE = BASE / "paraphrases.jsonl"
@@ -63,15 +72,7 @@ PARAPHRASE_PROMPT_TEMPLATE = (
 # I/O helpers
 # ---------------------------------------------------------------------------
 def load_api_key() -> str:
-    key = ""
-    if os.path.exists(API_KEY_FILE):
-        with open(API_KEY_FILE) as f:
-            key = f.read().strip()
-    if not key:
-        key = os.environ.get("OPENAI_API_KEY", "")
-    if not key:
-        raise SystemExit("ERROR: OpenAI API key not found.")
-    return key
+    return load_openai_api_key(__file__)
 
 
 def load_jsonl(path: Path) -> list:
@@ -89,6 +90,15 @@ def append_jsonl(entry: dict, path: Path) -> None:
 def content_hash(input_text: str, output_text: str) -> str:
     combined = (input_text + output_text).strip()
     return hashlib.md5(combined.encode("utf-8")).hexdigest()
+
+
+def token_count_cl100k(text: str):
+    if _CL100K is None or not text or not text.strip():
+        return None
+    try:
+        return len(_CL100K.encode(text))
+    except Exception:
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -198,6 +208,7 @@ async def main():
                         "content_hash":       ch_content,
                         "prompt_word_count":  len(para.split()),
                         "prompt_length_chars": len(para),
+                        "prompt_token_count_cl100k": token_count_cl100k(para),
                     },
                 }
                 append_jsonl(out, OUTPUT_FILE)

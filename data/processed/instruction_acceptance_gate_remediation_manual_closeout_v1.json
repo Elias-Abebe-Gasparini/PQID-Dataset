@@ -1,0 +1,28 @@
+{
+  "manual_closeout_version": "instruction_acceptance_gate_remediation_manual_closeout_v1",
+  "manual_closeout_applied_at": "2026-04-26T10:09:13+00:00",
+  "result_file": "PQID/data/processed/instruction_acceptance_gate_remediation_outputs_v1.jsonl",
+  "review_sheet": "PQID/data/processed/instruction_acceptance_gate_remediation_outputs_v1.csv",
+  "summary_file": "PQID/data/processed/instruction_acceptance_gate_remediation_outputs_v1_summary.json",
+  "applied_overrides": [
+    {
+      "instruction_key": "e5670c7ce95c8ebc48b7b8c31560e8acc9f6d112",
+      "review_group_key": "source_code:86ab0fa0bf7e497682780c0a6f887918",
+      "remediation_candidate_type": "lineage_neighbor",
+      "remediation_decision": "rewrite",
+      "changes_summary": "Manual closeout rewrite. Replaced the undefined-symbol fragment with a complete two-qubit Qiskit circuit, explicit Parameter objects, additional operations, and measurements.",
+      "residual_risk_note": "Closed by manual adjudication as a self-contained illustrative benchmark-readiness rewrite; no unresolved symbols remain."
+    },
+    {
+      "instruction_key": "dd3eaeeaaec9a4cfeaa22e8698ad726718a2caa1",
+      "review_group_key": "source_code:baca17487d68c86f5f09dc8b32144f10",
+      "remediation_candidate_type": "lineage_neighbor",
+      "remediation_decision": "rewrite",
+      "changes_summary": "Manual closeout rewrite. Preserved the requested GHZ construction while adding the missing import and removing the dangling simulator comment from the original lineage-neighbor output.",
+      "residual_risk_note": "Closed by manual adjudication; the snippet is now complete for the requested circuit-construction task."
+    }
+  ],
+  "final_decision_counts": {
+    "rewrite": 282
+  }
+}

@@ -1,7 +1,9 @@
 """
 generate_seeds.py
 -----------------
-Stage 1 — Generate one seed instruction per circuit in circuits_unified.jsonl.
+Stage 1 — Generate one seed instruction per circuit in the master processable
+corpus when available, otherwise falling back to the richest available
+raw/enriched circuit pool.
 
 For each circuit the model receives the raw Qiskit/OpenQASM code and returns
 a single concise English sentence (≤ 40 words) describing what the circuit
@@ -15,30 +17,39 @@ Run:
     python generate_seeds.py
 """
 
+import argparse
 import asyncio
 import datetime
 import hashlib
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
 from openai import AsyncOpenAI, RateLimitError
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from project_paths import PROCESSED_DIR, load_openai_api_key
+
+try:
+    import tiktoken
+    _CL100K = tiktoken.get_encoding("cl100k_base")
+except Exception:
+    _CL100K = None
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-BASE = Path(
-    "c:/Users/Abebe/Downloads/CAREER/ACADEMIC CAREER/SCHOOLS/YONSEI/"
-    "YONSEI 2023/Yonsei SS 2025/MS Thesis/MS_THESIS_DATASET/PQID/data/processed"
-)
-API_KEY_FILE = r"C:\Users\Abebe\Downloads\IT\OPENAI\OPENAI_API_KEY_PQID_V2.txt"
+BASE = PROCESSED_DIR
 
-INPUT_FILE  = BASE / "circuits_unified.jsonl"
-OUTPUT_FILE = BASE / "seeds.jsonl"
-LOG_FILE    = BASE / "seeds_errors.jsonl"
+DEFAULT_OUTPUT_FILE = BASE / "seeds.jsonl"
+DEFAULT_LOG_FILE    = BASE / "seeds_errors.jsonl"
 
-MODEL       = "gpt-4o-mini"
+MODEL       = "gpt-4.1-mini"
 BATCH_SIZE  = 30     # concurrent requests
 MAX_TOKENS  = 150    # seed instructions are short
 
@@ -47,9 +58,11 @@ GENERATION_DATE = str(datetime.date.today())
 SYSTEM_MSG = (
     "You are a quantum computing assistant. "
     "Given a quantum circuit implementation in Qiskit (Python) or OpenQASM 3.0, "
+    "and optionally some structural metadata extracted from the same circuit, "
     "write a single concise English instruction (one sentence, under 40 words) "
     "that describes what the circuit does and would lead someone to implement it. "
     "Focus on the circuit's structure and gate operations. "
+    "Treat metadata as supporting hints only, and trust the code if there is any mismatch. "
     "Do not include code, backticks, or explanations — only the instruction sentence."
 )
 
@@ -57,16 +70,56 @@ SYSTEM_MSG = (
 # ---------------------------------------------------------------------------
 # I/O helpers
 # ---------------------------------------------------------------------------
+def default_input_file() -> Path:
+    candidates = [
+        BASE / "circuits_unified_plus_phase2_plus_phase3_master_processable_enriched.jsonl",
+        BASE / "circuits_unified_plus_phase2_plus_phase3_core_enriched.jsonl",
+        BASE / "circuits_unified_plus_aggressive_core_enriched.jsonl",
+        BASE / "circuits_unified_plus_phase2_plus_phase3_enriched.jsonl",
+        BASE / "circuits_unified_plus_phase2_plus_phase3_broad_enriched.jsonl",
+        BASE / "circuits_unified_plus_phase2_plus_phase3.jsonl",
+        BASE / "circuits_unified_plus_aggressive_enriched.jsonl",
+        BASE / "circuits_unified_plus_aggressive_broad_enriched.jsonl",
+        BASE / "circuits_unified_plus_aggressive_broad.jsonl",
+        BASE / "circuits_unified_plus_aggressive.jsonl",
+        BASE / "circuits_unified_enriched.jsonl",
+        BASE / "circuits_unified.jsonl",
+    ]
+    for path in candidates:
+        if path.exists():
+            return path
+    return candidates[-1]
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Generate one seed instruction per circuit."
+    )
+    parser.add_argument(
+        "--input-file",
+        default=str(default_input_file()),
+        help="Path to the master-processable or enriched circuit JSONL pool.",
+    )
+    parser.add_argument(
+        "--output-file",
+        default=str(DEFAULT_OUTPUT_FILE),
+        help="Path to write seeds.jsonl style output.",
+    )
+    parser.add_argument(
+        "--log-file",
+        default=str(DEFAULT_LOG_FILE),
+        help="Path to write per-circuit generation errors.",
+    )
+    parser.add_argument(
+        "--no-metadata-anchors",
+        action="store_true",
+        help="Ignore structural metadata and prompt from code only.",
+    )
+    return parser.parse_args()
+
+
 def load_api_key() -> str:
-    key = ""
-    if os.path.exists(API_KEY_FILE):
-        with open(API_KEY_FILE) as f:
-            key = f.read().strip()
-    if not key:
-        key = os.environ.get("OPENAI_API_KEY", "")
-    if not key:
-        raise SystemExit("ERROR: OpenAI API key not found.")
-    return key
+    return load_openai_api_key(__file__)
 
 
 def load_jsonl(path: Path) -> list:
@@ -86,17 +139,77 @@ def content_hash(input_text: str, output_text: str) -> str:
     return hashlib.md5(combined.encode("utf-8")).hexdigest()
 
 
+def token_count_cl100k(text: str):
+    if _CL100K is None or not text or not text.strip():
+        return None
+    try:
+        return len(_CL100K.encode(text))
+    except Exception:
+        return None
+
+
+def build_metadata_anchor_text(meta: dict) -> str:
+    if not meta:
+        return ""
+
+    anchor_lines = []
+    ordered_fields = [
+        ("num_qubits", "qubits"),
+        ("num_clbits", "classical bits"),
+        ("quantum_register_count", "quantum registers"),
+        ("gate_count", "gate count"),
+        ("circuit_depth", "circuit depth"),
+        ("circuit_expressiveness", "expressiveness"),
+        ("size_class", "size class"),
+        ("benchmark_difficulty", "benchmark difficulty"),
+        ("is_parameterized", "parameterized"),
+        ("num_parameters", "parameter count"),
+        ("has_measurement", "has measurement"),
+        ("measurement_count", "measurement operations"),
+        ("measured_qubit_count", "measured qubits"),
+        ("two_qubit_gate_count", "two-qubit gates"),
+        ("multi_qubit_gate_count", "three-plus-qubit gates"),
+        ("entanglement_depth", "entanglement depth"),
+        ("has_control_flow", "has control flow"),
+        ("control_flow_op_count", "control-flow ops"),
+        ("has_barriers", "has barriers"),
+    ]
+
+    for key, label in ordered_fields:
+        value = meta.get(key)
+        if value is None or value == "":
+            continue
+        anchor_lines.append(f"- {label}: {value}")
+
+    gate_types = meta.get("gate_types")
+    if isinstance(gate_types, dict) and gate_types:
+        top_gates = sorted(gate_types.items(), key=lambda kv: (-kv[1], kv[0]))[:8]
+        anchor_lines.append(
+            "- top gate types: " + ", ".join(f"{name}:{count}" for name, count in top_gates)
+        )
+
+    if not anchor_lines:
+        return ""
+
+    return (
+        "Structural metadata extracted from the circuit "
+        "(use only as supporting hints if consistent with the code):\n"
+        + "\n".join(anchor_lines)
+    )
+
+
 # ---------------------------------------------------------------------------
 # API call
 # ---------------------------------------------------------------------------
 async def generate_seed(
-    client: AsyncOpenAI, circuit_code: str, max_retries: int = 6
+    client: AsyncOpenAI, circuit_code: str, metadata_anchor: str = "", max_retries: int = 6
 ) -> tuple[str, int]:
-    user_msg = (
-        "Here is the circuit implementation:\n\n"
-        f"{circuit_code}\n\n"
-        "Write a suitable one-sentence instruction for this circuit."
-    )
+    parts = []
+    if metadata_anchor:
+        parts.append(metadata_anchor)
+    parts.append("Here is the circuit implementation:\n\n" + circuit_code)
+    parts.append("Write a suitable one-sentence instruction for this circuit.")
+    user_msg = "\n\n".join(parts)
     for attempt in range(max_retries):
         try:
             resp = await client.chat.completions.create(
@@ -126,16 +239,25 @@ async def generate_seed(
 # Main
 # ---------------------------------------------------------------------------
 async def main():
+    args = parse_args()
     api_key = load_api_key()
     client  = AsyncOpenAI(api_key=api_key)
 
-    circuits = load_jsonl(INPUT_FILE)
+    input_file = Path(args.input_file)
+    output_file = Path(args.output_file)
+    log_file = Path(args.log_file)
+
+    circuits = load_jsonl(input_file)
+    print(f"Input file      : {input_file}", flush=True)
+    print(f"Output file     : {output_file}", flush=True)
+    print(f"Error log       : {log_file}", flush=True)
+    print(f"Metadata anchors: {not args.no_metadata_anchors}", flush=True)
     print(f"Circuits loaded : {len(circuits):,}", flush=True)
 
     # Resume: build set of already-processed circuit_hashes
     done_hashes = {
         e["metadata"]["circuit_hash"]
-        for e in load_jsonl(OUTPUT_FILE)
+        for e in load_jsonl(output_file)
     }
     todo = [
         e for e in circuits
@@ -160,11 +282,14 @@ async def main():
             code     = entry["output"]
             meta     = entry.get("metadata", {})
             ch       = meta.get("circuit_hash", "")
-            prompt, tokens = await generate_seed(client, code)
+            metadata_anchor = ""
+            if not args.no_metadata_anchors:
+                metadata_anchor = build_metadata_anchor_text(meta)
+            prompt, tokens = await generate_seed(client, code, metadata_anchor=metadata_anchor)
             total_tokens += tokens
 
             if prompt.startswith("__ERROR__"):
-                append_jsonl({"circuit_hash": ch, "error": prompt}, LOG_FILE)
+                append_jsonl({"circuit_hash": ch, "error": prompt}, log_file)
                 error_count += 1
                 return
 
@@ -181,9 +306,10 @@ async def main():
                     "content_hash":     ch_content,
                     "prompt_word_count":   len(prompt.split()),
                     "prompt_length_chars": len(prompt),
+                    "prompt_token_count_cl100k": token_count_cl100k(prompt),
                 },
             }
-            append_jsonl(out, OUTPUT_FILE)
+            append_jsonl(out, output_file)
             success_count += 1
 
     tasks = [process(e) for e in todo]

@@ -1,0 +1,34 @@
+PQID — Semantic Consistency Enrichment Report
+====================================================
+
+Sentence-transformer model : all-MiniLM-L6-v2
+BERTScore model            : bert-base-uncased
+Pair chunk size            : 500
+Sentence batch size        : 128
+BERT batch size            : 8
+
+train:
+  file                 : PQID/data/processed/train_clean.jsonl
+  seed rows            : 73,430
+  paraphrase rows      : 367,150
+  cache misses         : 0
+
+validation:
+  file                 : PQID/data/processed/validation_clean.jsonl
+  seed rows            : 9,185
+  paraphrase rows      : 45,925
+  cache misses         : 0
+
+test:
+  file                 : PQID/data/processed/test_clean.jsonl
+  seed rows            : 9,104
+  paraphrase rows      : 45,520
+  cache misses         : 0
+
+====================================================
+Newly scored paraphrases   : 0
+Final cached entries       : 458,595
+Total paraphrase rows      : 458,595
+Total seed rows            : 91,719
+Final cache misses         : 0
+Elapsed                    : 8.0 min
