@@ -3,7 +3,7 @@
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.20024477-blue)](https://doi.org/10.5281/zenodo.20024477)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Gradio Space](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway/badge.svg)](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway)
+[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-md.svg)](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway)
 
 
 The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations.
