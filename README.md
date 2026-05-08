@@ -216,7 +216,7 @@ The active rebuild is now best understood through the following corrected counts
 | Mutation-stress block (`n/8`) | 11,265 | mutation-suite / bug-stress layer |
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'pieTitleTextColor': '#111827', 'pieSectionTextColor': '#111827', 'pieLegendTextColor': '#111827', 'pieStrokeColor': '#ffffff', 'pieOuterStrokeColor': '#334155', 'pieOpacity': '0.9', 'pie1': '#8fc5e8', 'pie2': '#9ad29f', 'pie3': '#f5d37b', 'pie4': '#e5e7eb', 'fontFamily': 'Arial, sans-serif'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#111827', 'mainBkg': '#111827', 'textColor': '#f8fafc', 'primaryTextColor': '#f8fafc', 'pieTitleTextColor': '#f8fafc', 'pieSectionTextColor': '#f8fafc', 'pieLegendTextColor': '#f8fafc', 'pieStrokeColor': '#111827', 'pieOuterStrokeColor': '#e5e7eb', 'pieOpacity': '0.92', 'pie1': '#60a5fa', 'pie2': '#34d399', 'pie3': '#fbbf24', 'pie4': '#a3a3a3', 'fontFamily': 'Arial, sans-serif'}}}%%
 pie title PQID 2026 Rebuild Tier Distribution
     "Strict core candidate (803)" : 803
     "Extended-only candidate (11,196)" : 11196
@@ -287,7 +287,7 @@ For the active rebuild, the mathematically relevant benchmark formalization is n
 where `M` is the late-stage cleanliness indicator for `non_mutation_suite_path`.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'pieTitleTextColor': '#111827', 'pieSectionTextColor': '#111827', 'pieLegendTextColor': '#111827', 'pieStrokeColor': '#ffffff', 'pieOuterStrokeColor': '#334155', 'pieOpacity': '0.9', 'pie1': '#8fc5e8', 'pie2': '#9ad29f', 'pie3': '#f5d37b', 'pie4': '#e5e7eb', 'fontFamily': 'Arial, sans-serif'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#111827', 'mainBkg': '#111827', 'textColor': '#f8fafc', 'primaryTextColor': '#f8fafc', 'pieTitleTextColor': '#f8fafc', 'pieSectionTextColor': '#f8fafc', 'pieLegendTextColor': '#f8fafc', 'pieStrokeColor': '#111827', 'pieOuterStrokeColor': '#e5e7eb', 'pieOpacity': '0.92', 'pie1': '#60a5fa', 'pie2': '#34d399', 'pie3': '#fbbf24', 'pie4': '#a3a3a3', 'fontFamily': 'Arial, sans-serif'}}}%%
 pie title Master Corpus Composition Under the n/8 View
     "Strict core candidate (415)" : 415
     "Extended core candidate (319)" : 319
