@@ -3,7 +3,7 @@
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.20024477-blue)](https://doi.org/10.5281/zenodo.20024477)
 [![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-md.svg)](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway)
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](./LICENSE.md)
 
 
 The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations.
@@ -64,6 +64,7 @@ The resulting dataset provides instruction-code and benchmark-oriented artifacts
 ## 🔄 Replication Research Ecosystem
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#f8fafc', 'primaryTextColor': '#111827', 'primaryBorderColor': '#334155', 'lineColor': '#334155', 'textColor': '#111827', 'fontFamily': 'Arial, sans-serif'}}}%%
 graph LR
 %% Class Definitions (Added color:#000000 to force black text)
     classDef github fill:#76ddff,stroke:#01579b,stroke-width:2px,color:#000000;
@@ -168,7 +169,7 @@ An interactive **Inference Notebook** for Kaggle is currently in preparation.
 The original thesis-era figure is preserved below in its original position, but the counts have been updated to reflect the current rebuild state.
 
 ```mermaid
-%%{init: {'themeVariables': {'noteTextColor': '#000000', 'messageTextColor': '#000000', 'actorTextColor': '#000000'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryColor': '#f8fafc', 'primaryTextColor': '#111827', 'primaryBorderColor': '#334155', 'secondaryColor': '#e8f3fc', 'tertiaryColor': '#f8fafc', 'textColor': '#111827', 'lineColor': '#334155', 'actorBkg': '#ffffff', 'actorBorder': '#334155', 'actorTextColor': '#111827', 'actorLineColor': '#64748b', 'signalColor': '#334155', 'signalTextColor': '#111827', 'messageTextColor': '#111827', 'noteBkgColor': '#fff7cc', 'noteTextColor': '#111827', 'labelBoxBkgColor': '#ffffff', 'labelTextColor': '#111827', 'loopTextColor': '#111827', 'sequenceNumberColor': '#111827', 'fontFamily': 'Arial, sans-serif'}}}%%
 sequenceDiagram
     autonumber
     participant GH as GitHub Retrieval
@@ -215,7 +216,7 @@ The active rebuild is now best understood through the following corrected counts
 | Mutation-stress block (`n/8`) | 11,265 | mutation-suite / bug-stress layer |
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#5b9bd5', 'pie2': '#8cc084', 'pie3': '#f3c56b', 'pie4': '#d9d9d9'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'pieTitleTextColor': '#111827', 'pieSectionTextColor': '#111827', 'pieLegendTextColor': '#111827', 'pieStrokeColor': '#ffffff', 'pieOuterStrokeColor': '#334155', 'pieOpacity': '0.9', 'pie1': '#8fc5e8', 'pie2': '#9ad29f', 'pie3': '#f5d37b', 'pie4': '#e5e7eb', 'fontFamily': 'Arial, sans-serif'}}}%%
 pie title PQID 2026 Rebuild Tier Distribution
     "Strict core candidate (803)" : 803
     "Extended-only candidate (11,196)" : 11196
@@ -286,7 +287,7 @@ For the active rebuild, the mathematically relevant benchmark formalization is n
 where `M` is the late-stage cleanliness indicator for `non_mutation_suite_path`.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#6eb2d1', 'pie2': '#519f58', 'pie3': '#f3c56b', 'pie4': '#d9d9d9'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'pieTitleTextColor': '#111827', 'pieSectionTextColor': '#111827', 'pieLegendTextColor': '#111827', 'pieStrokeColor': '#ffffff', 'pieOuterStrokeColor': '#334155', 'pieOpacity': '0.9', 'pie1': '#8fc5e8', 'pie2': '#9ad29f', 'pie3': '#f5d37b', 'pie4': '#e5e7eb', 'fontFamily': 'Arial, sans-serif'}}}%%
 pie title Master Corpus Composition Under the n/8 View
     "Strict core candidate (415)" : 415
     "Extended core candidate (319)" : 319
