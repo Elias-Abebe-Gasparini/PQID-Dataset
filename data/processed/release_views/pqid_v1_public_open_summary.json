@@ -13,14 +13,14 @@
       "input_file": "PQID/data/processed/train_clean.jsonl",
       "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_train.jsonl",
       "input_rows": 440580,
-      "exported_rows": 249420,
-      "excluded_rows": 191160,
+      "exported_rows": 288744,
+      "excluded_rows": 151836,
       "exported_license_category_counts": {
-        "permissive": 249420
+        "permissive": 288744
       },
       "excluded_license_category_counts": {
         "copyleft": 5898,
-        "no_license": 184728,
+        "no_license": 145404,
         "other": 534
       }
     },
@@ -28,14 +28,14 @@
       "input_file": "PQID/data/processed/validation_clean.jsonl",
       "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_validation.jsonl",
       "input_rows": 55110,
-      "exported_rows": 31386,
-      "excluded_rows": 23724,
+      "exported_rows": 36198,
+      "excluded_rows": 18912,
       "exported_license_category_counts": {
-        "permissive": 31386
+        "permissive": 36198
       },
       "excluded_license_category_counts": {
         "copyleft": 648,
-        "no_license": 23022,
+        "no_license": 18210,
         "other": 54
       }
     },
@@ -43,14 +43,14 @@
       "input_file": "PQID/data/processed/test_clean.jsonl",
       "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_test.jsonl",
       "input_rows": 54624,
-      "exported_rows": 30918,
-      "excluded_rows": 23706,
+      "exported_rows": 35826,
+      "excluded_rows": 18798,
       "exported_license_category_counts": {
-        "permissive": 30918
+        "permissive": 35826
       },
       "excluded_license_category_counts": {
         "copyleft": 810,
-        "no_license": 22782,
+        "no_license": 17874,
         "other": 114
       }
     }
@@ -59,14 +59,14 @@
   "summary_markdown_file": "PQID/data/processed/release_views/pqid_v1_public_open_summary.md",
   "attribution_manifest_file": "PQID/data/processed/release_views/pqid_v1_public_open_attribution_manifest.csv",
   "total_input_rows": 550314,
-  "total_exported_rows": 311724,
-  "total_excluded_rows": 238590,
+  "total_exported_rows": 360768,
+  "total_excluded_rows": 189546,
   "exported_license_category_counts": {
-    "permissive": 311724
+    "permissive": 360768
   },
   "excluded_license_category_counts": {
     "copyleft": 7356,
-    "no_license": 230532,
+    "no_license": 181488,
     "other": 702
   },
   "included_other_license_counts": {},
@@ -80,13 +80,6 @@
       "excluded_rows": 53754,
       "excluded_license_category_counts": {
         "no_license": 53754
-      }
-    },
-    {
-      "repo": "wjy99-c/QDiff",
-      "excluded_rows": 49044,
-      "excluded_license_category_counts": {
-        "no_license": 49044
       }
     },
     {
@@ -420,6 +413,13 @@
     },
     {
       "repo": "jitenkr2030/Quantum-Fraud-Detection-Engine-",
+      "excluded_rows": 216,
+      "excluded_license_category_counts": {
+        "no_license": 216
+      }
+    },
+    {
+      "repo": "miguelmm97/Quantum-algorithms-infolattice",
       "excluded_rows": 216,
       "excluded_license_category_counts": {
         "no_license": 216

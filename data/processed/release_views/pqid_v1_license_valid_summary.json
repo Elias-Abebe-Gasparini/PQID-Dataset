@@ -20,45 +20,45 @@
       "input_file": "PQID/data/processed/train_clean.jsonl",
       "output_file": "PQID/data/processed/release_views/pqid_v1_license_valid_train.jsonl",
       "input_rows": 440580,
-      "exported_rows": 255852,
-      "excluded_rows": 184728,
+      "exported_rows": 295176,
+      "excluded_rows": 145404,
       "exported_license_category_counts": {
         "copyleft": 5898,
         "other": 534,
-        "permissive": 249420
+        "permissive": 288744
       },
       "excluded_license_category_counts": {
-        "no_license": 184728
+        "no_license": 145404
       }
     },
     "validation": {
       "input_file": "PQID/data/processed/validation_clean.jsonl",
       "output_file": "PQID/data/processed/release_views/pqid_v1_license_valid_validation.jsonl",
       "input_rows": 55110,
-      "exported_rows": 32088,
-      "excluded_rows": 23022,
+      "exported_rows": 36900,
+      "excluded_rows": 18210,
       "exported_license_category_counts": {
         "copyleft": 648,
         "other": 54,
-        "permissive": 31386
+        "permissive": 36198
       },
       "excluded_license_category_counts": {
-        "no_license": 23022
+        "no_license": 18210
       }
     },
     "test": {
       "input_file": "PQID/data/processed/test_clean.jsonl",
       "output_file": "PQID/data/processed/release_views/pqid_v1_license_valid_test.jsonl",
       "input_rows": 54624,
-      "exported_rows": 31842,
-      "excluded_rows": 22782,
+      "exported_rows": 36750,
+      "excluded_rows": 17874,
       "exported_license_category_counts": {
         "copyleft": 810,
         "other": 114,
-        "permissive": 30918
+        "permissive": 35826
       },
       "excluded_license_category_counts": {
-        "no_license": 22782
+        "no_license": 17874
       }
     }
   },
@@ -66,15 +66,15 @@
   "summary_markdown_file": "PQID/data/processed/release_views/pqid_v1_license_valid_summary.md",
   "attribution_manifest_file": "PQID/data/processed/release_views/pqid_v1_license_valid_attribution_manifest.csv",
   "total_input_rows": 550314,
-  "total_exported_rows": 319782,
-  "total_excluded_rows": 230532,
+  "total_exported_rows": 368826,
+  "total_excluded_rows": 181488,
   "exported_license_category_counts": {
     "copyleft": 7356,
     "other": 702,
-    "permissive": 311724
+    "permissive": 360768
   },
   "excluded_license_category_counts": {
-    "no_license": 230532
+    "no_license": 181488
   },
   "included_other_license_counts": {
     "BSD-3-Clause-Clear": 90,
@@ -92,13 +92,6 @@
       "excluded_rows": 53754,
       "excluded_license_category_counts": {
         "no_license": 53754
-      }
-    },
-    {
-      "repo": "wjy99-c/QDiff",
-      "excluded_rows": 49044,
-      "excluded_license_category_counts": {
-        "no_license": 49044
       }
     },
     {
@@ -432,6 +425,13 @@
     },
     {
       "repo": "Quantinuum/tweedledum",
+      "excluded_rows": 210,
+      "excluded_license_category_counts": {
+        "no_license": 210
+      }
+    },
+    {
+      "repo": "VincentMarquez/Memory",
       "excluded_rows": 210,
       "excluded_license_category_counts": {
         "no_license": 210

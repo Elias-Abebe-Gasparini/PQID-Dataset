@@ -1,0 +1,110 @@
+{
+  "evidence_version": "qdiff_bsd3_license_update_2026_05_09_v1",
+  "historical_owner_repo": "wjy99-c/QDiff",
+  "current_owner_repo": "UCLA-SEAL/QDiff",
+  "repo_license": "BSD-3-Clause",
+  "license_category": "permissive",
+  "license_url": "https://github.com/UCLA-SEAL/QDiff/blob/main/LICENSE",
+  "license_file_sha": "f2f2c3f6a1db411709b45fbf8f456afe04104fcc",
+  "license_commit": "e037d6462ad0c64a4d6fd5e70a1432c5ae34f78d",
+  "license_commit_url": "https://github.com/UCLA-SEAL/QDiff/commit/e037d6462ad0c64a4d6fd5e70a1432c5ae34f78d",
+  "license_commit_date": "2021-09-10T17:22:00Z",
+  "license_commit_message": "Initial commit",
+  "license_copyright": "Copyright (c) 2021, UCLA Software Engineering Analysis Laboratory (SEAL)",
+  "matched_alias_evidence": [
+    {
+      "historical_path": "benchmark/startQiskit_QC1680.py",
+      "historical_url": "https://github.com/wjy99-c/QDiff/blob/master/benchmark/startQiskit_QC1680.py",
+      "current_url": "https://github.com/UCLA-SEAL/QDiff/blob/main/benchmark/startQiskit_QC1680.py",
+      "blob_sha": "009999fbbcfa524803da50b0332fc9579cf1cc97"
+    },
+    {
+      "historical_path": "data/p2DJ/New/program/qiskit/noisy/startQiskit_noisy405.py",
+      "historical_url": "https://github.com/wjy99-c/QDiff/blob/master/data/p2DJ/New/program/qiskit/noisy/startQiskit_noisy405.py",
+      "current_url": "https://github.com/UCLA-SEAL/QDiff/blob/main/data/p2DJ/New/program/qiskit/noisy/startQiskit_noisy405.py",
+      "blob_sha": "00f2d52bfe3ffc9e353518a61bf9e68076c5404a"
+    },
+    {
+      "historical_path": "data/p4VQE/R1/benchmark/startQiskit_Class24.py",
+      "historical_url": "https://github.com/wjy99-c/QDiff/blob/master/data/p4VQE/R1/benchmark/startQiskit_Class24.py",
+      "current_url": "https://github.com/UCLA-SEAL/QDiff/blob/main/data/p4VQE/R1/benchmark/startQiskit_Class24.py",
+      "blob_sha": "072ed80bf0bbd699729fcb8427be9c439bb60f43"
+    }
+  ],
+  "interpretation": "Rows sourced from historical wjy99-c/QDiff are reclassified from no_license to permissive/BSD-3-Clause based on the root LICENSE file in UCLA-SEAL/QDiff and matched file-path/blob evidence.",
+  "scope_note": "This resolves repository-level redistribution evidence for the QDiff repository contents used by PQID. It does not independently audit any third-party code that may be embedded in that repository.",
+  "split_summaries": {
+    "train": {
+      "input_rows": 440580,
+      "patched_rows": 39324,
+      "previous_license_category_counts": {
+        "no_license": 39324
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 39324
+      }
+    },
+    "validation": {
+      "input_rows": 55110,
+      "patched_rows": 4812,
+      "previous_license_category_counts": {
+        "no_license": 4812
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 4812
+      }
+    },
+    "test": {
+      "input_rows": 54624,
+      "patched_rows": 4908,
+      "previous_license_category_counts": {
+        "no_license": 4908
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 4908
+      }
+    }
+  },
+  "total_patched_rows": 49044,
+  "cache_summary": {
+    "cache_file": "PQID/data/processed/repo_license_cache.jsonl",
+    "cache_record_found": true,
+    "previous_cache_record": {
+      "owner_repo": "wjy99-c/QDiff",
+      "repo_license": null,
+      "license_category": "no_license"
+    },
+    "new_cache_record": {
+      "owner_repo": "wjy99-c/QDiff",
+      "repo_license": "BSD-3-Clause",
+      "license_category": "permissive",
+      "license_evidence_source": "github_license_file",
+      "license_detection_method": "manual_post_freeze_repository_alias_license_update",
+      "license_evidence_url": "https://github.com/UCLA-SEAL/QDiff/blob/main/LICENSE",
+      "license_evidence_commit": "e037d6462ad0c64a4d6fd5e70a1432c5ae34f78d",
+      "license_evidence_commit_url": "https://github.com/UCLA-SEAL/QDiff/commit/e037d6462ad0c64a4d6fd5e70a1432c5ae34f78d",
+      "license_evidence_commit_date": "2021-09-10T17:22:00Z",
+      "license_evidence_file_sha": "f2f2c3f6a1db411709b45fbf8f456afe04104fcc",
+      "license_original_owner_repo": "wjy99-c/QDiff",
+      "license_current_owner_repo": "UCLA-SEAL/QDiff",
+      "license_alias_match_count": 3,
+      "license_override_version": "qdiff_bsd3_license_update_2026_05_09_v1"
+    },
+    "current_owner_cache_record": {
+      "owner_repo": "UCLA-SEAL/QDiff",
+      "repo_license": "BSD-3-Clause",
+      "license_category": "permissive",
+      "license_evidence_source": "github_license_file",
+      "license_detection_method": "manual_post_freeze_repository_alias_license_update",
+      "license_evidence_url": "https://github.com/UCLA-SEAL/QDiff/blob/main/LICENSE",
+      "license_evidence_commit": "e037d6462ad0c64a4d6fd5e70a1432c5ae34f78d",
+      "license_evidence_commit_url": "https://github.com/UCLA-SEAL/QDiff/commit/e037d6462ad0c64a4d6fd5e70a1432c5ae34f78d",
+      "license_evidence_commit_date": "2021-09-10T17:22:00Z",
+      "license_evidence_file_sha": "f2f2c3f6a1db411709b45fbf8f456afe04104fcc",
+      "license_original_owner_repo": "wjy99-c/QDiff",
+      "license_current_owner_repo": "UCLA-SEAL/QDiff",
+      "license_alias_match_count": 3,
+      "license_override_version": "qdiff_bsd3_license_update_2026_05_09_v1"
+    }
+  }
+}
