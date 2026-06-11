@@ -58,11 +58,13 @@ print(dataset)
 
 ## Reproducibility
 
-The corresponding code, manuscript, figure, and release-workflow materials are maintained in the GitHub repository at:
+The corresponding code, manuscript, figure, and release-workflow snapshot is archived in the GitHub repository at:
 
-`https://github.com/Elias-Abebe-Gasparini/PQID-Dataset`
+`https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/tree/v1.0.0-scientific-data-submission`
 
-Release refresh: `v1.0.1`, incorporating the QDiff BSD-3-Clause evidence update.
+Tagged commit:
+
+`2a8e1fb2284e7f8a43e748b291c4a8eb37f599f7`
 
 ## Citation
 
