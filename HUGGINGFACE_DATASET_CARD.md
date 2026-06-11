@@ -26,10 +26,10 @@ This Hugging Face release exposes the **public-open PQID v1 view**. It contains 
 
 | Split | Rows | File |
 | --- | ---: | --- |
-| train | 288,744 | `train.jsonl` |
-| validation | 36,198 | `validation.jsonl` |
-| test | 35,826 | `test.jsonl` |
-| total | 360,768 |  |
+| train | 331,908 | `train.jsonl` |
+| validation | 41,520 | `validation.jsonl` |
+| test | 41,094 | `test.jsonl` |
+| total | 414,522 |  |
 
 ## Release Files
 
@@ -43,7 +43,7 @@ Additional release and audit files are included under `release/`:
 
 ## Licensing
 
-The dataset-level license is marked as `other` because PQID is composed of source-derived rows with row-level and repository-level license metadata. The default Hugging Face payload includes permissive-license rows only. Individual rows retain upstream license evidence in `metadata.repo_license`, `metadata.license_category`, and related governance fields. Users should consult row metadata and the attribution manifest for downstream reuse obligations. The v1.0.1 license-evidence pass adds the BSD-3-Clause `UCLA-SEAL/QDiff` rows to the public-open view.
+The dataset-level license is marked as `other` because PQID is composed of source-derived rows with row-level and repository-level license metadata. The default Hugging Face payload includes permissive-license rows only. Individual rows retain upstream license evidence in `metadata.repo_license`, `metadata.license_category`, and related governance fields. Users should consult row metadata and the attribution manifest for downstream reuse obligations. The v1.0.1 license-evidence pass adds the BSD-3-Clause `UCLA-SEAL/QDiff` rows to the public-open view; the v1.0.2 pass adds the MIT `backordinary/QDP-FSL` rows after upstream license clearance.
 
 Rows classified as `no_license` are excluded from public release views and retained only for internal audit. Copyleft and manually reviewed `other` rows are not included in the default Hugging Face payload.
 
@@ -62,7 +62,7 @@ The corresponding sanitized public code and documentation are maintained on GitH
 
 - GitHub: `https://github.com/Elias-Abebe-Gasparini/PQID-Dataset`
 - Zenodo DOI: `10.5281/zenodo.20024477`
-- Release refresh: `v1.0.1`, incorporating the QDiff BSD-3-Clause evidence update
+- Release refresh: `v1.0.2`, incorporating the QDiff BSD-3-Clause and QDP-FSL MIT evidence updates
 
 Key public reproducibility files include:
 
@@ -77,7 +77,7 @@ Please cite the archived Zenodo version for the public reproducibility package:
 ```bibtex
 @dataset{gasparini_2026_pqid,
   author    = {Gasparini, Elias Abebe},
-  title     = {PQID v1.0.1: Parallel Quantum Instruction Dataset},
+  title     = {PQID v1.0.2: Parallel Quantum Instruction Dataset},
   year      = {2026},
   publisher = {Zenodo},
   doi       = {10.5281/zenodo.20024477},

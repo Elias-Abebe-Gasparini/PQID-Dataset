@@ -1,0 +1,74 @@
+{
+  "evidence_version": "qdp_fsl_mit_license_update_2026_05_27_v1",
+  "owner_repo": "backordinary/QDP-FSL",
+  "repo_license": "MIT",
+  "license_category": "permissive",
+  "license_url": "https://github.com/backordinary/QDP-FSL/blob/main/LICENSE",
+  "license_file_sha": "0c5cf621f6a353513f6e42c2133c1022eb8113a3",
+  "license_file_sha256": "d0cfc23f26bc3bf0889fbe65601a4228108afead62d6d5be8fd7fbe6b973674d",
+  "license_commit": "5e31343fc0acaf0037add1322e59902f56ec7c18",
+  "license_commit_url": "https://github.com/backordinary/QDP-FSL/commit/5e31343fc0acaf0037add1322e59902f56ec7c18",
+  "license_commit_date": "2026-05-27T00:02:04+08:00",
+  "license_commit_message": "Create LICENSE",
+  "license_copyright": "Copyright (c) 2026 backordinary",
+  "interpretation": "Rows sourced from backordinary/QDP-FSL are reclassified from no_license to permissive/MIT based on the root LICENSE file added to the upstream repository.",
+  "scope_note": "This resolves repository-level redistribution evidence for QDP-FSL contents used by PQID. It does not independently audit any third-party code that may be embedded in that repository.",
+  "split_summaries": {
+    "train": {
+      "input_rows": 440580,
+      "patched_rows": 43164,
+      "previous_license_category_counts": {
+        "no_license": 43164
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 43164
+      }
+    },
+    "validation": {
+      "input_rows": 55110,
+      "patched_rows": 5322,
+      "previous_license_category_counts": {
+        "no_license": 5322
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 5322
+      }
+    },
+    "test": {
+      "input_rows": 54624,
+      "patched_rows": 5268,
+      "previous_license_category_counts": {
+        "no_license": 5268
+      },
+      "previous_repo_license_counts": {
+        "<missing>": 5268
+      }
+    }
+  },
+  "total_patched_rows": 53754,
+  "cache_summary": {
+    "cache_file": "PQID/data/processed/repo_license_cache.jsonl",
+    "cache_record_found": true,
+    "previous_cache_record": {
+      "owner_repo": "backordinary/QDP-FSL",
+      "repo_license": null,
+      "license_category": "no_license"
+    },
+    "new_cache_record": {
+      "owner_repo": "backordinary/QDP-FSL",
+      "repo_license": "MIT",
+      "license_category": "permissive",
+      "license_evidence_source": "github_license_file",
+      "license_detection_method": "manual_post_freeze_repository_license_update",
+      "license_evidence_url": "https://github.com/backordinary/QDP-FSL/blob/main/LICENSE",
+      "license_evidence_commit": "5e31343fc0acaf0037add1322e59902f56ec7c18",
+      "license_evidence_commit_url": "https://github.com/backordinary/QDP-FSL/commit/5e31343fc0acaf0037add1322e59902f56ec7c18",
+      "license_evidence_commit_date": "2026-05-27T00:02:04+08:00",
+      "license_evidence_file_sha": "0c5cf621f6a353513f6e42c2133c1022eb8113a3",
+      "license_evidence_file_sha256": "d0cfc23f26bc3bf0889fbe65601a4228108afead62d6d5be8fd7fbe6b973674d",
+      "license_original_owner_repo": "backordinary/QDP-FSL",
+      "license_current_owner_repo": "backordinary/QDP-FSL",
+      "license_override_version": "qdp_fsl_mit_license_update_2026_05_27_v1"
+    }
+  }
+}

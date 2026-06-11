@@ -402,6 +402,10 @@ def main() -> None:
     behavior, release = write_tables(df)
     draw_panel(df, behavior, release, FIGURES, "Times New Roman")
     draw_panel(df, behavior, release, FIGURES_CALIBRI, "Calibri")
+    from sync_manuscript_figure_labels import sync_manuscript_figure_labels
+
+    for target in sync_manuscript_figure_labels():
+        print(f"synced {target}")
     print(f"saved {BEHAVIOR_CSV}")
     print(f"saved {RELEASE_VIEW_CSV}")
 

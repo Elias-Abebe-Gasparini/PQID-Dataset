@@ -1,6 +1,6 @@
 # PQID Public Release Plan
 
-Last updated: 2026-05-23
+Last updated: 2026-05-27
 
 ## Release Stance
 
@@ -44,14 +44,14 @@ payload remains stricter and uploads only the permissive `public_open` view.
 
 Counts:
 
-- train: `295,176`
-- validation: `36,900`
-- test: `36,750`
-- total: `368,826`
+- train: `338,340`
+- validation: `42,222`
+- test: `42,018`
+- total: `422,580`
 
 This view contains:
 
-- `360,768` permissive rows marked `public_open`
+- `414,522` permissive rows marked `public_open`
 - `7,356` copyleft rows marked `public_open_with_obligations`
 - `702` manually reviewed `other` rows marked `public_open_with_obligations`
 
@@ -76,10 +76,10 @@ object:
 
 Counts:
 
-- train: `288,744`
-- validation: `36,198`
-- test: `35,826`
-- total: `360,768`
+- train: `331,908`
+- validation: `41,520`
+- test: `41,094`
+- total: `414,522`
 
 All rows are `license_category == permissive` and
 `public_release_bucket == public_open`.
@@ -88,7 +88,7 @@ All rows are `license_category == permissive` and
 
 The license-valid view excludes:
 
-- `181,488` `no_license` rows
+- `127,734` `no_license` rows
 - `0` missing-license rows
 
 These rows remain restricted/internal and should be discussed in limitations and
@@ -106,6 +106,14 @@ BSD-3-Clause based on the current `UCLA-SEAL/QDiff` root license and matched
 file-path/blob evidence. It also normalizes the former missing-license-category
 tail into explicit `no_license`, leaving `0` rows in the internal missing
 license-category manifest.
+
+## v1.0.2 License-Evidence Refresh
+
+The v1.0.2 refresh reclassifies `53,754` historical `backordinary/QDP-FSL`
+rows as MIT after the upstream repository added a root `LICENSE` file on
+2026-05-27. The evidence record is stored at
+`PQID/data/processed/license_evidence/qdp_fsl_mit_license_update_2026-05-27.json`
+and records the upstream commit, license-file blob SHA, and SHA-256 digest.
 
 ## Dataset Card Requirements
 

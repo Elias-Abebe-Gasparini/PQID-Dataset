@@ -6,16 +6,16 @@
 - included license categories: `copyleft, other, permissive`
 - manually reviewed other licenses: `BSD-3-Clause-Clear, CC-BY-4.0, EPL-2.0, MulanPSL-2.0`
 - total input rows: `550,314`
-- total exported rows: `368,826`
-- total excluded rows: `181,488`
+- total exported rows: `422,580`
+- total excluded rows: `127,734`
 
 ## Split Counts
 
 | split      | input_rows | exported_rows | excluded_rows |
 | ---------- | ---------- | ------------- | ------------- |
-| train      | 440580     | 295176        | 145404        |
-| validation | 55110      | 36900         | 18210         |
-| test       | 54624      | 36750         | 17874         |
+| train      | 440580     | 338340        | 102240        |
+| validation | 55110      | 42222         | 12888         |
+| test       | 54624      | 42018         | 12606         |
 
 ## Exported License Categories
 
@@ -23,13 +23,13 @@
 | ---------------- | ------ |
 | copyleft         | 7356   |
 | other            | 702    |
-| permissive       | 360768 |
+| permissive       | 414522 |
 
 ## Excluded License Categories
 
 | license_category | rows   |
 | ---------------- | ------ |
-| no_license       | 181488 |
+| no_license       | 127734 |
 
 ## Release Rule
 

@@ -20,7 +20,7 @@ HF_DATASET_URL = "https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID"
 GITHUB_URL = "https://github.com/Elias-Abebe-Gasparini/PQID-Dataset"
 ZENODO_URL = "https://doi.org/10.5281/zenodo.20024477"
 ISSUES_URL = "https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/issues"
-RELEASE_VERSION = "v1.0.1"
+RELEASE_VERSION = "v1.0.2"
 
 SUMMARY_FILES = [
     "release/pqid_v1_public_open_summary.json",
@@ -38,11 +38,11 @@ ATTRIBUTION_FILE = ATTRIBUTION_FILES[0]
 PUBLIC_OPEN_SUMMARY = {
     "profile": "public-open",
     "description": "Default Hugging Face payload; permissive-license rows only.",
-    "train": 288744,
-    "validation": 36198,
-    "test": 35826,
-    "total": 360768,
-    "restricted_rows": 189546,
+    "train": 331908,
+    "validation": 41520,
+    "test": 41094,
+    "total": 414522,
+    "restricted_rows": 135792,
 }
 
 LICENSE_VALID_SUMMARY = {
@@ -51,16 +51,16 @@ LICENSE_VALID_SUMMARY = {
         "Auditable release view with permissive, copyleft, and manually reviewed "
         "other-license rows; obligations remain in metadata."
     ),
-    "train": 295176,
-    "validation": 36900,
-    "test": 36750,
-    "total": 368826,
-    "restricted_rows": 181488,
+    "train": 338340,
+    "validation": 42222,
+    "test": 42018,
+    "total": 422580,
+    "restricted_rows": 127734,
 }
 
 LICENSE_CATEGORY_ROWS = [
-    {"license_category": "permissive", "rows": 360768, "row_percent": 65.5568},
-    {"license_category": "no_license", "rows": 181488, "row_percent": 32.9790},
+    {"license_category": "permissive", "rows": 414522, "row_percent": 75.3186},
+    {"license_category": "no_license", "rows": 127734, "row_percent": 23.2111},
     {"license_category": "copyleft", "rows": 7356, "row_percent": 1.3367},
     {"license_category": "other", "rows": 702, "row_percent": 0.1276},
 ]
@@ -68,15 +68,15 @@ LICENSE_CATEGORY_ROWS = [
 LICENSE_BEHAVIOR_ROWS = [
     {
         "behavior_family": "no public licence detected",
-        "rows": 181488,
-        "row_percent": 32.9790,
-        "unique_repositories": 2732,
+        "rows": 127734,
+        "row_percent": 23.2111,
+        "unique_repositories": 2731,
     },
     {
         "behavior_family": "permissive / low-obligation",
-        "rows": 360018,
-        "row_percent": 65.4205,
-        "unique_repositories": 1629,
+        "rows": 413772,
+        "row_percent": 75.1883,
+        "unique_repositories": 1630,
     },
     {
         "behavior_family": "weak file/library reciprocity",
@@ -150,7 +150,7 @@ PIPELINE_STAGES = [
         "object": "License-aware public views",
         "audit_value": "No-license rows are restricted; the default public payload exposes public-open data.",
         "layer": "Release governance",
-        "rows": "360,768 public-open",
+        "rows": "414,522 public-open",
         "artifact": "export_license_valid_release_views.py",
     },
 ]
@@ -294,7 +294,7 @@ PIPELINE_EXPLORER_STAGES = [
         "color": "#486b74",
         "x": 865,
         "y": 112,
-        "metric": "360,768 public-open rows",
+        "metric": "414,522 public-open rows",
         "headline": "Public release without redistributing no-license rows",
         "detail": (
             "The public-open Hugging Face payload exposes permissive-license rows. "
@@ -325,22 +325,22 @@ PIPELINE_EXPLORER_EDGES = [
 ]
 
 TOP_RESTRICTED_REPOSITORIES = [
-    {"rank": 1, "repository": "backordinary/QDP-FSL", "restricted_rows": 53754},
-    {"rank": 2, "repository": "lockephi/Allentown-L104-Node", "restricted_rows": 29874},
-    {"rank": 3, "repository": "dereklin1205/COMM_LAB_Final", "restricted_rows": 4212},
-    {"rank": 4, "repository": "peiyi1/nassc_code", "restricted_rows": 1704},
-    {"rank": 5, "repository": "Simula-COMPLEX/MutTG-paper", "restricted_rows": 1422},
-    {"rank": 6, "repository": "Xzore19/QEMI", "restricted_rows": 1392},
-    {"rank": 7, "repository": "AIComputing101/quantum-computing-101", "restricted_rows": 1356},
-    {"rank": 8, "repository": "PennyLaneAI/llvm-project", "restricted_rows": 1356},
-    {"rank": 9, "repository": "NiloGregginz33/QMGRExperiments", "restricted_rows": 1044},
-    {"rank": 10, "repository": "QuantumAmplification/ampamp", "restricted_rows": 678},
+    {"rank": 1, "repository": "lockephi/Allentown-L104-Node", "restricted_rows": 29874},
+    {"rank": 2, "repository": "dereklin1205/COMM_LAB_Final", "restricted_rows": 4212},
+    {"rank": 3, "repository": "peiyi1/nassc_code", "restricted_rows": 1704},
+    {"rank": 4, "repository": "Simula-COMPLEX/MutTG-paper", "restricted_rows": 1422},
+    {"rank": 5, "repository": "Xzore19/QEMI", "restricted_rows": 1392},
+    {"rank": 6, "repository": "AIComputing101/quantum-computing-101", "restricted_rows": 1356},
+    {"rank": 7, "repository": "PennyLaneAI/llvm-project", "restricted_rows": 1356},
+    {"rank": 8, "repository": "NiloGregginz33/QMGRExperiments", "restricted_rows": 1044},
+    {"rank": 9, "repository": "QuantumAmplification/ampamp", "restricted_rows": 678},
+    {"rank": 10, "repository": "qiskit-community/qiskit-presentations", "restricted_rows": 582},
 ]
 
 EXACT_LICENSE_ROWS = [
-    {"license_category": "no_license", "license": "no detected public license", "rows": 181488, "row_percent": 32.9790},
-    {"license_category": "permissive", "license": "MIT", "rows": 175830, "row_percent": 31.9508},
+    {"license_category": "permissive", "license": "MIT", "rows": 229584, "row_percent": 41.7187},
     {"license_category": "permissive", "license": "Apache-2.0", "rows": 133302, "row_percent": 24.2229},
+    {"license_category": "no_license", "license": "no detected public license", "rows": 127734, "row_percent": 23.2111},
     {"license_category": "permissive", "license": "BSD-3-Clause", "rows": 49926, "row_percent": 9.0723},
     {"license_category": "copyleft", "license": "GPL-3.0", "rows": 5988, "row_percent": 1.0881},
     {"license_category": "copyleft", "license": "AGPL-3.0", "rows": 876, "row_percent": 0.1592},
@@ -381,22 +381,22 @@ QUALITY_AUDIT_ROWS = [
     {
         "layer": "Release audit",
         "mechanic": "Repository-license metadata controls which rows are public-open, license-valid, or restricted.",
-        "evidence": "360,768 public-open rows; 368,826 license-valid rows; 181,488 restricted rows.",
+        "evidence": "414,522 public-open rows; 422,580 license-valid rows; 127,734 restricted rows.",
         "platform_value": "Makes the public payload auditable without redistributing no-license material.",
     },
 ]
 
 FIGURE_GALLERY_ROWS = [
-    {"figure": "Figure 1", "file": "fig1_pqid_construction_pipeline_designed.png", "role": "End-to-end construction pipeline"},
-    {"figure": "Figure 2", "file": "fig2_release_stratification_designed.png", "role": "Release governance and stratification"},
-    {"figure": "Figure 3", "file": "fig3_seed_generation_workflow_designed.png", "role": "OpenAI seed-generation workflow"},
-    {"figure": "Figure 4", "file": "fig4_validation_audit_layers_designed.png", "role": "Validation and audit layers"},
-    {"figure": "Figure 5", "file": "fig5_readiness_statistics.png", "role": "Benchmark-readiness statistics"},
-    {"figure": "Figure 6", "file": "fig6_semantic_paraphrase_quality.png", "role": "Semantic and paraphrase quality"},
-    {"figure": "Figure 7", "file": "fig7_release_composition.png", "role": "License and release composition"},
-    {"figure": "Supplementary Figure S4", "file": "suppfig_s4_acquisition_pareto_diminishing_returns.png", "role": "Acquisition concentration and diminishing returns"},
-    {"figure": "Supplementary Figure S5", "file": "suppfig_s5_linguistic_distribution.png", "role": "Language-audit distribution"},
-    {"figure": "Supplementary Figure S6", "file": "suppfig_s6_license_behavior_panel.png", "role": "License-behaviour clustering"},
+    {"figure": "Figure 1", "file": "suppfig_s4_acquisition_pareto_diminishing_returns.png", "role": "GitHub Acquisition Structure and Diminishing Returns"},
+    {"figure": "Figure 2", "file": "fig1_pqid_construction_pipeline_designed.png", "role": "PQID construction stages and row-level evidence retention"},
+    {"figure": "Figure 3", "file": "fig3_seed_generation_workflow_designed.png", "role": "Quality-aware instruction-generation flow and branch closure"},
+    {"figure": "Figure 4", "file": "fig2_release_stratification_designed.png", "role": "Release stratification by license evidence and distribution treatment"},
+    {"figure": "Figure 5", "file": "fig7_release_composition.png", "role": "License and release-composition statistics"},
+    {"figure": "Figure 6", "file": "fig4_validation_audit_layers_designed.png", "role": "Evidence-retention matrix across validation and audit layers"},
+    {"figure": "Figure 7", "file": "fig5_readiness_statistics.png", "role": "Benchmark-readiness statistical audit"},
+    {"figure": "Figure 8", "file": "fig6_semantic_paraphrase_quality.png", "role": "Semantic and paraphrase-quality statistics"},
+    {"figure": "Appendix Figure D1", "file": "suppfig_s6_license_behavior_panel.png", "role": "License behavioral families and release-view composition"},
+    {"figure": "Appendix Figure H1", "file": "suppfig_s5_linguistic_distribution.png", "role": "Language audit"},
 ]
 
 FIGURE_BY_LABEL = {
@@ -415,12 +415,12 @@ REVIEWER_CHECKLIST_ROWS = [
 INTEGRITY_EXPECTATIONS = [
     {
         "check": "Public-open split arithmetic",
-        "expected": "train + validation + test = 360,768 rows",
+        "expected": "train + validation + test = 414,522 rows",
         "evidence": "Configured Hugging Face public-open summary.",
     },
     {
         "check": "License-valid construction accounting",
-        "expected": "368,826 license-valid rows and 181,488 restricted rows",
+        "expected": "422,580 license-valid rows and 127,734 restricted rows",
         "evidence": "Release-composition tables and license-distribution analysis.",
     },
     {
@@ -663,22 +663,22 @@ def _release_flow_html() -> str:
     flow = {
         "nodes": [
             {"id": "construction", "label": "Construction corpus", "rows": 550314, "x": 60, "y": 185, "color": "#2f6f8f", "detail": "All rows available to the construction and audit pipeline before public release filtering."},
-            {"id": "license_valid", "label": "License-valid rows", "rows": 368826, "x": 350, "y": 105, "color": "#4f7f52", "detail": "Rows with resolved permissive, copyleft, or manually reviewed other licenses. Obligations remain in metadata."},
-            {"id": "restricted", "label": "Restricted rows", "rows": 181488, "x": 350, "y": 268, "color": "#b55d5d", "detail": "No detected public license. Retained for internal audit context and not redistributed."},
-            {"id": "public_open", "label": "Public-open HF view", "rows": 360768, "x": 650, "y": 92, "color": "#486b74", "detail": "Default Hugging Face payload. Public-open release rows only."},
+            {"id": "license_valid", "label": "License-valid rows", "rows": 422580, "x": 350, "y": 105, "color": "#4f7f52", "detail": "Rows with resolved permissive, copyleft, or manually reviewed other licenses. Obligations remain in metadata."},
+            {"id": "restricted", "label": "Restricted rows", "rows": 127734, "x": 350, "y": 268, "color": "#b55d5d", "detail": "No detected public license. Retained for internal audit context and not redistributed."},
+            {"id": "public_open", "label": "Public-open HF view", "rows": 414522, "x": 650, "y": 92, "color": "#486b74", "detail": "Default Hugging Face payload. Public-open release rows only."},
             {"id": "obligation_view", "label": "Obligation-preserved rows", "rows": 8058, "x": 650, "y": 220, "color": "#936a2d", "detail": "Copyleft and reviewed other-license rows documented in license-valid release summaries, not in the default public-open payload."},
-            {"id": "train", "label": "Train", "rows": 288744, "x": 890, "y": 62, "color": "#557c55", "detail": "Public-open training split."},
-            {"id": "validation", "label": "Validation", "rows": 36198, "x": 890, "y": 138, "color": "#7a5b9a", "detail": "Public-open validation split."},
-            {"id": "test", "label": "Test", "rows": 35826, "x": 890, "y": 214, "color": "#936a2d", "detail": "Public-open test split."},
+            {"id": "train", "label": "Train", "rows": 331908, "x": 890, "y": 62, "color": "#557c55", "detail": "Public-open training split."},
+            {"id": "validation", "label": "Validation", "rows": 41520, "x": 890, "y": 138, "color": "#7a5b9a", "detail": "Public-open validation split."},
+            {"id": "test", "label": "Test", "rows": 41094, "x": 890, "y": 214, "color": "#936a2d", "detail": "Public-open test split."},
         ],
         "links": [
-            {"source": "construction", "target": "license_valid", "rows": 368826, "label": "license resolved"},
-            {"source": "construction", "target": "restricted", "rows": 181488, "label": "restricted"},
-            {"source": "license_valid", "target": "public_open", "rows": 360768, "label": "public-open"},
+            {"source": "construction", "target": "license_valid", "rows": 422580, "label": "license resolved"},
+            {"source": "construction", "target": "restricted", "rows": 127734, "label": "restricted"},
+            {"source": "license_valid", "target": "public_open", "rows": 414522, "label": "public-open"},
             {"source": "license_valid", "target": "obligation_view", "rows": 8058, "label": "obligations retained"},
-            {"source": "public_open", "target": "train", "rows": 288744, "label": "train"},
-            {"source": "public_open", "target": "validation", "rows": 36198, "label": "validation"},
-            {"source": "public_open", "target": "test", "rows": 35826, "label": "test"},
+            {"source": "public_open", "target": "train", "rows": 331908, "label": "train"},
+            {"source": "public_open", "target": "validation", "rows": 41520, "label": "validation"},
+            {"source": "public_open", "target": "test", "rows": 41094, "label": "test"},
         ],
     }
     flow_json = json.dumps(flow)
@@ -711,7 +711,7 @@ function detail(d,label){{
   const node=d.target?byId.get(d.target):d;
   const color=node.color||"#2f6f8f";
   document.getElementById("detail").style.setProperty("--accent",color);
-  document.getElementById("detail").innerHTML=`<h3>${{node.label}}</h3><div class="metric">${{fmt(d.rows||node.rows)}} rows</div><p>${{d.label?`Flow: ${{d.label}}.`:""}} ${{node.detail}}</p><p class="muted">Public-open rows: 360,768. License-valid rows: 368,826. Restricted rows: 181,488.</p>`;
+  document.getElementById("detail").innerHTML=`<h3>${{node.label}}</h3><div class="metric">${{fmt(d.rows||node.rows)}} rows</div><p>${{d.label?`Flow: ${{d.label}}.`:""}} ${{node.detail}}</p><p class="muted">Public-open rows: 414,522. License-valid rows: 422,580. Restricted rows: 127,734.</p>`;
   d3.selectAll(".node").classed("active", n=>n.id===node.id || (d.source&&n.id===d.source));
   d3.selectAll(".flow").classed("active", l=>l===d || l.source===node.id || l.target===node.id);
 }}
@@ -758,7 +758,7 @@ function bars(svgId,data,title,labelKey,colorFn){{const svg=d3.select(svgId); sv
 g.selectAll("g").data(data).join("g").attr("transform",(d,i)=>`translate(0,${{i*21}})`).each(function(d){{const row=d3.select(this); row.append("text").attr("class","label").attr("x",0).attr("y",12).text(d[labelKey]).append("title").text(d[labelKey]); row.append("rect").attr("class","bar").attr("x",190).attr("y",1).attr("height",13).attr("width",x(d.rows)).attr("fill",colorFn(d)).on("click",()=>detail(d[labelKey],d.rows,d.row_percent||d.row_percent, d.license_category?`Category: ${{d.license_category}}.`:`Repositories: ${{d.unique_repositories}}.`)); row.append("text").attr("class","value").attr("x",198+x(d.rows)).attr("y",12).text(pct(d.row_percent)); }});}}
 bars("#exact", exact, "Exact repository-license identifiers", "license", d=>colors[d.license_category]||"#486b74");
 bars("#family", family, "Behaviour families", "behavior_family", d=>d.behavior_family.includes("no public")?"#b55d5d":d.behavior_family.includes("strong")?"#936a2d":d.behavior_family.includes("weak")?"#7a5b9a":d.behavior_family.includes("attribution")?"#486b74":"#4f7f52");
-detail("Public-open release",360768,65.5568,"Default Hugging Face payload contains permissive-license rows only.");
+detail("Public-open release",414522,75.3186,"Default Hugging Face payload contains permissive-license rows only.");
 </script></body></html>
 """
     return _iframe(doc, "Interactive license-behaviour explorer", 720)
@@ -1675,7 +1675,7 @@ def restricted_repository_table() -> pd.DataFrame:
 def citation_text() -> str:
     return f"""@dataset{{gasparini_2026_pqid,
   author    = {{Gasparini, Elias Abebe}},
-  title     = {{PQID v1.0.1: Parallel Quantum Instruction Dataset}},
+  title     = {{PQID v1.0.2: Parallel Quantum Instruction Dataset}},
   year      = {{2026}},
   publisher = {{Zenodo}},
   doi       = {{10.5281/zenodo.20024477}},

@@ -1,6 +1,7 @@
 ﻿repo_owner,repo_name,repo_license,license_category,rows,source_url_count,sample_source_url
 runtsang,Q-Bridge,MIT,permissive,72888,6358,https://github.com/runtsang/Q-Bridge/blob/master/ML-2-QML/Ansatz/Ansatz38.py
 Ahmik-Virani,Differentiating-Quantum-Bug-From-Noise-Statistical-Approach,MIT,permissive,69294,11535,https://github.com/Ahmik-Virani/Differentiating-Quantum-Bug-From-Noise-Statistical-Approach/blob/main/Case Study - DJA.ipynb
+backordinary,QDP-FSL,MIT,permissive,53754,3859,https://github.com/backordinary/QDP-FSL/blob/main/code/Evaluate_FSL.py
 wjy99-c,QDiff,BSD-3-Clause,permissive,49044,8163,https://github.com/wjy99-c/QDiff/blob/master/WrongBehavior/Found_errors/Cirq1/Runendlessly.py
 AayushSarkar,Qiskit-Experiment-Hub,Apache-2.0,permissive,32070,1779,https://github.com/AayushSarkar/Qiskit-Experiment-Hub/blob/main/.venv/Lib/site-packages/PIL/BdfFontFile.py
 Ali-hey-0,Qiskit,Apache-2.0,permissive,16398,406,https://github.com/Ali-hey-0/Qiskit/blob/main/qiskit/circuit/_add_control.py
