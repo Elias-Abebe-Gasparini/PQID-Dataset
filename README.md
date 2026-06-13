@@ -1,10 +1,9 @@
 # PQID: Parallel Quantum Instruction Dataset ⚛️
 
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
-[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.20024477-blue)](https://doi.org/10.5281/zenodo.20024477)
-[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-md.svg)](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway)
+[![Gradio Space](https://img.shields.io/badge/Gradio-Dataset%20Gateway-orange)](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway)
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20024477.svg)](https://doi.org/10.5281/zenodo.20024477)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](./LICENSE.md)
-
 
 The **Parallel Quantum Instruction Dataset (PQID)** is a curated parallel corpus for supervised fine-tuning of large language models in quantum circuit design. It pairs natural-language instructions with standardized **IBM Qiskit** implementations and corresponding **OpenQASM 3.0** representations.
 
@@ -16,16 +15,17 @@ The original thesis-era corpus remains part of the project and is preserved belo
 - benchmark views of **803 / 11,999** under `n/7`
 - cleanliness-aware benchmark views of **415 / 734** under `n/8`
 
-The current full PQID schema now documents **149 metadata fields across 17 documented clusters**. The active pre-seed merged `metadata_design_v3` corpus materializes **146** of those metadata keys, with the remaining generation-only fields appearing later on seed and paraphrase artifacts.
+The current full PQID schema now documents **151 metadata fields across 17 documented clusters**. The active pre-seed merged `metadata_design_v3` corpus materializes **146** of those metadata keys, with the remaining generation-only fields appearing later on seed and paraphrase artifacts.
 
 The freeze-ready v1 instruction layer contains **550,314** rows: **91,719** seeds and **458,595** paraphrases. The Stage K acceptance pilot has been adjudicated to **209 accept / 47 rewrite**, and the reviewed JSONL / summary sidecars have been synced after that adjudication. A bounded remediation sidecar closes the `47` rewrite-required rows plus `235` same-lineage neighbors (`282` candidates total): the materialized result layer now records `282 / 282` rewritten outputs after two final manual closeout overrides, without mutating the canonical acceptance-gate manifest.
 
-Public release is intentionally narrower than the full construction corpus. The current release-ready views live under `PQID/data/processed/release_views/`: `pqid_v1_public_open_*` contains **360,768** permissive-license rows, while `pqid_v1_license_valid_*` contains **368,826** license-valid rows by adding **7,356** copyleft rows and **702** manually reviewed `other`-license rows with downstream obligations preserved. Unresolved/no-license rows remain restricted/internal (**181,488** rows). The v1.0.1 license-evidence pass reclassified `49,044` historical `wjy99-c/QDiff` rows as BSD-3-Clause based on the current `UCLA-SEAL/QDiff` root license and matched file-path/blob evidence. The final license-normalization pass recoded the former `18` missing-license-category rows into explicit `no_license`, so the current missing-license internal manifest contains **0** rows.
+Public release is intentionally narrower than the full construction corpus. The current release-ready views live under `PQID/data/processed/release_views/`: `pqid_v1_public_open_*` contains **414,522** permissive-license rows, while `pqid_v1_license_valid_*` contains **422,580** license-valid rows by adding **7,356** copyleft rows and **702** manually reviewed `other`-license rows with downstream obligations preserved. Unresolved/no-license rows remain restricted/internal (**127,734** rows). The v1.0.1 license-evidence pass reclassified `49,044` historical `wjy99-c/QDiff` rows as BSD-3-Clause based on the current `UCLA-SEAL/QDiff` root license and matched file-path/blob evidence. The v1.0.2 license-evidence pass reclassified `53,754` historical `backordinary/QDP-FSL` rows as MIT after the upstream repository added a root license file on 2026-05-27. The final license-normalization pass recoded the former `18` missing-license-category rows into explicit `no_license`, so the current missing-license internal manifest contains **0** rows.
 
 Documentation scope note:
 - `README.md` is the project-facing overview
 - `PIPELINE.md` is the full operational master log
 - `SCHEMA.md` is the authoritative metadata inventory
+- `submissions/` contains the active Scientific Data, ICSE, and ACM TQC / PQID-Bench draft packages
 
 So if `README.md` ever feels shorter than before, that is mostly because more implementation detail has been moved into the pipeline and schema references to avoid contradictory duplicate documentation.
 
@@ -51,6 +51,7 @@ So if `README.md` ever feels shorter than before, that is mostly because more im
 - [📜 Citation & Academic Context](#-citation--academic-context)
   - [📝 How to Cite](#-how-to-cite)
   - [🔬 Research Context](#-research-context)
+  - [⏳ Research Roadmap](#-research-roadmap)
 - [📧 Contact](#-contact)
 
 ---
@@ -124,8 +125,13 @@ PQID/
 ├── .gitignore
 ├── ARCHITECTURE.mmd
 ├── README.md
+├── RESEARCH_CONTEXT.md
+├── CONTEXT.md
 ├── PIPELINE.md
 ├── SCHEMA.md
+├── SEED_GENERATION_DESIGN.md
+├── .github/
+│   └── FUNDING.yml
 ├── 00_database_infrastructure/
 │   ├── DATABASE.md
 │   ├── etl_and_cleaning.sql
@@ -216,7 +222,7 @@ The active rebuild is now best understood through the following corrected counts
 | Mutation-stress block (`n/8`) | 11,265 | mutation-suite / bug-stress layer |
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'background': '#111827', 'mainBkg': '#111827', 'textColor': '#f8fafc', 'primaryTextColor': '#f8fafc', 'pieTitleTextColor': '#f8fafc', 'pieSectionTextColor': '#f8fafc', 'pieLegendTextColor': '#f8fafc', 'pieStrokeColor': '#111827', 'pieOuterStrokeColor': '#e5e7eb', 'pieOpacity': '0.92', 'pie1': '#60a5fa', 'pie2': '#34d399', 'pie3': '#fbbf24', 'pie4': '#a3a3a3', 'fontFamily': 'Arial, sans-serif'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'pieTitleTextColor': '#111827', 'pieSectionTextColor': '#111827', 'pieLegendTextColor': '#111827', 'pieStrokeColor': '#ffffff', 'pieOuterStrokeColor': '#334155', 'pieOpacity': '0.9', 'pie1': '#8fc5e8', 'pie2': '#9ad29f', 'pie3': '#f5d37b', 'pie4': '#e5e7eb', 'fontFamily': 'Arial, sans-serif'}}}%%
 pie title PQID 2026 Rebuild Tier Distribution
     "Strict core candidate (803)" : 803
     "Extended-only candidate (11,196)" : 11196
@@ -250,6 +256,7 @@ The current rebuild adds a much richer metadata layer than the original thesis c
 - structural and transpilation metrics
 - repository context and license metadata
 - `circuit_family` and `semantic_intent`
+- generation-layer semantic audit fields, including sentence-transformer similarity, BERTScore precision/recall/F1, BLEU-4, ROUGE-L, and normalized edit distance for seed-paraphrase consistency checks
 - benchmark readiness under both **`n/7`** and **`n/8`**
 - the additive `metadata_design_v3` transparency layer, including provenance, governance, split, benchmark-packaging, lineage, and audit-trace fields such as:
   - `source_snapshot_timestamp`
@@ -287,7 +294,7 @@ For the active rebuild, the mathematically relevant benchmark formalization is n
 where `M` is the late-stage cleanliness indicator for `non_mutation_suite_path`.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'background': '#111827', 'mainBkg': '#111827', 'textColor': '#f8fafc', 'primaryTextColor': '#f8fafc', 'pieTitleTextColor': '#f8fafc', 'pieSectionTextColor': '#f8fafc', 'pieLegendTextColor': '#f8fafc', 'pieStrokeColor': '#111827', 'pieOuterStrokeColor': '#e5e7eb', 'pieOpacity': '0.92', 'pie1': '#60a5fa', 'pie2': '#34d399', 'pie3': '#fbbf24', 'pie4': '#a3a3a3', 'fontFamily': 'Arial, sans-serif'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'pieTitleTextColor': '#111827', 'pieSectionTextColor': '#111827', 'pieLegendTextColor': '#111827', 'pieStrokeColor': '#ffffff', 'pieOuterStrokeColor': '#334155', 'pieOpacity': '0.9', 'pie1': '#8fc5e8', 'pie2': '#9ad29f', 'pie3': '#f5d37b', 'pie4': '#e5e7eb', 'fontFamily': 'Arial, sans-serif'}}}%%
 pie title Master Corpus Composition Under the n/8 View
     "Strict core candidate (415)" : 415
     "Extended core candidate (319)" : 319
@@ -327,7 +334,7 @@ PQID is intended as a validated resource for quantum instruction-code research, 
 - **Paraphrase-based instruction expansion:** Most thesis-era instruction variants were generated through paraphrastic expansion rather than independently authored by multiple human annotators. As a result, the legacy corpus captures linguistic variation, but not the full diversity of naturally occurring user prompts.
 - **Validation scope:** Dataset validation covers Python syntactic correctness, successful circuit construction in Qiskit, and transpilation/export into **OpenQASM 3.0** where applicable. This should not be interpreted as universal proof of semantic equivalence, hardware execution success across all backends, or full functional correctness in every downstream setting.
 - **Source distribution bias:** The base circuits were collected from public repositories and benchmark sources. Consequently, the dataset may reflect the stylistic, structural, and task-distribution biases of those sources rather than the full space of quantum programming practice.
-- **Provenance-limited secondary sources:** Rows whose licensing or provenance cannot be resolved are retained only in restricted/internal views and are not included in the public-open release.
+- **Provenance-limited secondary sources:** Some secondary-source material, especially Q-Bridge-derived rows, remains restricted / provenance-unresolved because public artifacts expose seed-file references rather than upstream repository-owner and license mappings. Such material is not treated as rights-cleared for public redistribution.
 - **Task and framework scope:** PQID is currently centered on natural-language mappings to **IBM Qiskit** and **OpenQASM 3.0** representations. The instruction surface is **English-dominant**, but the corpus is not strictly English-only: source-grounded outputs can preserve multilingual upstream comments/docstrings, and a heuristic language-audit sidecar is used to quantify that distribution. In the current acceptance-gate manifest, `550,300 / 550,314` inputs resolve as English and `14` resolve as Bengali. On the output side, multilingual traces are small and concentrated in the source-grounded tail: `216` Spanish, `132` Portuguese, `78` French, `156` Japanese, `90` Korean, `12` unresolved Cyrillic-script rows, and `330` short fragments, alongside `9,660` `code_only` outputs. For reproducibility, the audit keeps both raw and resolved labels rather than collapsing them into one opaque `unknown` bucket. PQID still does not aim to cover a broader range of quantum software stacks or alternative hardware/software ecosystems.
 - **Benchmark complexity:** The 2026 rebuild is no longer just a small instruction corpus; it is also a benchmark-derivation and metadata-audit framework, which makes it richer but less plug-and-play than tiny evaluation-only benchmarks.
 - **Model-performance interpretation:** The accompanying fine-tuning experiments are intended to demonstrate the dataset’s utility, not to establish that direct generation from PQID alone is sufficient for fully reliable deployment-ready quantum code generation in all cases.
@@ -382,8 +389,36 @@ If you use the PQID dataset or this pipeline in your research, please cite it as
 
 This dataset and its accompanying compilation pipeline were developed as part of a Master's Thesis in the **Department of Innovation** at **Yonsei University** and have since evolved into a broader rebuild and benchmark-construction effort. For full details regarding the project's independent methodology, current metadata layer, and institutional framing, please refer to:
 
+- [RESEARCH_CONTEXT.md](./RESEARCH_CONTEXT.md)
 - [PIPELINE.md](./PIPELINE.md)
 - [SCHEMA.md](./SCHEMA.md)
+- [SEED_GENERATION_DESIGN.md](./SEED_GENERATION_DESIGN.md)
+
+### ⏳ Research Roadmap
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'mainBkg': '#ffffff', 'textColor': '#111827', 'primaryTextColor': '#111827', 'taskTextColor': '#111827', 'taskTextDarkColor': '#111827', 'taskTextLightColor': '#111827', 'sectionBkgTextColor': '#111827', 'gridColor': '#cbd5e1', 'todayLineColor': '#ef4444', 'fontFamily': 'Arial, sans-serif'}}}%%
+gantt
+    title PQID Development and Publication Roadmap
+    dateFormat  YYYY-MM-DD
+    axisFormat  %b %Y
+
+    section 🏗️ Completed Data Engineering
+    Circuit Acquisition and Harmonisation    :done, a1, 2025-01-01, 2025-06-01
+    Validation and Instruction Generation    :done, b1, 2025-03-01, 2025-10-01
+    1.3B SFT Model Training                  :done, c1, 2025-06-01, 2025-09-01
+    Phase 3 Metadata Freeze                 :done, d1, 2026-04-01, 2026-04-10
+
+    section 🌐 Platform Release
+    Phase 4 Recovery and Rebalancing        :active, p1, 2026-04-10, 14d
+    Phase 5 Publication Packaging           :p2, after p1, 14d
+
+    section 📚 Planned Publications
+    Scientific Data Preparation             :crit, s1, 2026-05-01, 60d
+    ICSE Dataset-Engineering Paper          :s2, after s1, 45d
+    ACM TQC / PQID-Bench Paper              :s3, after s2, 90d
+    ML Training / Hallucination Study       :s4, after s3, 120d
+```
 
 ## 📧 Contact
 

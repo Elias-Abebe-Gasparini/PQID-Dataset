@@ -6,29 +6,29 @@
 - included license categories: `permissive`
 - manually reviewed other licenses: `none`
 - total input rows: `550,314`
-- total exported rows: `360,768`
-- total excluded rows: `189,546`
+- total exported rows: `414,522`
+- total excluded rows: `135,792`
 
 ## Split Counts
 
 | split      | input_rows | exported_rows | excluded_rows |
 | ---------- | ---------- | ------------- | ------------- |
-| train      | 440580     | 288744        | 151836        |
-| validation | 55110      | 36198         | 18912         |
-| test       | 54624      | 35826         | 18798         |
+| train      | 440580     | 331908        | 108672        |
+| validation | 55110      | 41520         | 13590         |
+| test       | 54624      | 41094         | 13530         |
 
 ## Exported License Categories
 
 | license_category | rows   |
 | ---------------- | ------ |
-| permissive       | 360768 |
+| permissive       | 414522 |
 
 ## Excluded License Categories
 
 | license_category | rows   |
 | ---------------- | ------ |
 | copyleft         | 7356   |
-| no_license       | 181488 |
+| no_license       | 127734 |
 | other            | 702    |
 
 ## Release Rule

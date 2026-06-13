@@ -44,11 +44,11 @@ Every entry is a **triple parallel representation**:
 | 11 | [Transpilation Metrics](#11-transpilation-metrics) | 8 fields | enrich_metadata.py |
 | 12 | [License Fields](#12-license-fields) | 2 fields | enrich_repo_license.py |
 | 13 | [Circuit Family Fields](#13-circuit-family-fields) | 2 fields | enrich_circuit_family.py |
-| 14 | [Semantic Consistency Metrics](#14-semantic-consistency-metrics) | 5 fields | enrich_semantic_consistency.py |
+| 14 | [Semantic Consistency Metrics](#14-semantic-consistency-metrics) | 7 fields | enrich_semantic_consistency.py |
 | 15 | [Metadata-Design Overlay Fields](#15-metadata-design-overlay-fields) | 27 fields | derive_pqid_metadata_design_fields.py |
 
 **Documented cluster rows**: 17
-**Total metadata fields across the full PQID schema**: 149
+**Total metadata fields across the full PQID schema**: 151
 **Top-level fields**: 4 (`input`, `output`, `openqasm3_code`, `metadata`)
 
 Fields from clusters 4–11 are `null` until `enrich_metadata.py` runs. Fields from clusters 12–15 are absent until their respective enrichment scripts or notebooks run.
@@ -451,7 +451,9 @@ Added by `enrich_semantic_consistency.py`. Evaluates per-entry linguistic simila
 | Field | Type | Description |
 |-------|------|-------------|
 | `semantic_similarity_to_seed` | `float\|null` | Cosine similarity (0–1) between this paraphrase and its seed prompt, computed with `all-MiniLM-L6-v2` embeddings. High values confirm intent preservation; low values flag semantic drift |
-| `bert_score_f1` | `float\|null` | BERTScore F1 of this paraphrase against the seed prompt. Captures contextual lexical overlap beyond n-gram matching |
+| `bert_score_precision` | `float\|null` | BERTScore precision of this paraphrase against the seed prompt. Helps flag unsupported additions or over-expansion in paraphrased text |
+| `bert_score_recall` | `float\|null` | BERTScore recall of this paraphrase against the seed prompt. Helps flag omissions or under-coverage of seed content |
+| `bert_score_f1` | `float\|null` | BERTScore F1 of this paraphrase against the seed prompt. Summarizes contextual lexical overlap beyond n-gram matching |
 | `bleu_score_to_seed` | `float\|null` | BLEU-4 score of this paraphrase relative to the seed prompt. Low values indicate high surface-form diversity (desirable for augmentation) |
 | `rouge_l_to_seed` | `float\|null` | ROUGE-L (longest common subsequence F1) of this paraphrase against the seed. Complements BLEU-4 |
 | `normalized_edit_distance` | `float\|null` | Character-level Levenshtein distance divided by `max(len(seed), len(paraphrase))`. Values near 1.0 indicate maximal surface variation |
@@ -861,6 +863,8 @@ For quick lookup. Cluster numbers reference the sections above.
 | `benchmark_suitability_tier` | 4 | `str\|null` |
 | `benchmark_view_membership` | 15 | `str` |
 | `bert_score_f1` | 14 | `float\|null` |
+| `bert_score_precision` | 14 | `float\|null` |
+| `bert_score_recall` | 14 | `float\|null` |
 | `bleu_score_to_seed` | 14 | `float\|null` |
 | `circuit_depth` | 5 | `int` |
 | `circuit_expressiveness` | 6 | `str` |

@@ -4,7 +4,10 @@
 Parallel corpus: natural-language instructions ↔ Qiskit / OpenQASM quantum circuit code.
 Working directory: `PQID/data/processed/` (all JSONL files live here)
 Active rebuild notebook: `PQID/scripts/scrape_github_unified.ipynb`
+Internal archive notebook: `PQID/scripts/scrape_github_unified_internal_debug_archive.ipynb`
+Instruction-generation notebook: `PQID/scripts/03_instruction_generation/instruction_generation_pipeline.ipynb`
 Quality-aware seed notebook: `PQID/scripts/03_instruction_generation/seed_generation_quality_aware_pipeline.ipynb`
+Seed-generation design spec: `PQID/SEED_GENERATION_DESIGN.md`
 
 ---
 
@@ -28,8 +31,9 @@ Quality-aware seed notebook: `PQID/scripts/03_instruction_generation/seed_genera
 10. [Split Design](#10-split-design)
 11. [Tier System](#11-tier-system)
 12. [XAI Design Principles](#12-xai-design-principles)
-13. [API Keys & Tokens](#13-api-keys--tokens)
-14. [Critical Conventions](#14-critical-conventions)
+13. [Publication Plan](#13-publication-plan)
+14. [API Keys & Tokens](#14-api-keys--tokens)
+15. [Critical Conventions](#15-critical-conventions)
 
 ---
 
@@ -51,7 +55,7 @@ Current corrected public-state counts:
 | Extended benchmark core | 11,999 | `circuits_unified_plus_phase2_plus_phase3_core_extended_enriched.jsonl` |
 
 Current documentation-facing metadata headline:
-- full PQID schema: **149 metadata fields across 17 documented clusters**
+- full PQID schema: **151 metadata fields across 17 documented clusters**
 - active merged `metadata_design_v3` corpus view: **146 materialized metadata keys**
 - difference: the remaining schema fields are generation-stage fields that appear later on seed / paraphrase artifacts rather than on the pre-seed merged corpus
 
@@ -64,6 +68,8 @@ Verification-stage note:
 - `Master B` in the notebook is an intermediate structural snapshot taken before pre-seed metadata refresh; it confirms that the master processable corpus has the expected size and readiness composition
 - `Pre-Seed D` is a targeted completeness check for newly populated metadata fields
 - `Master C` is the final post-refresh metadata-freeze checkpoint and should be treated as the authoritative master-corpus summary before seed generation
+
+For current operational handoff on the rebuild workflow, prefer `CONTEXT.md`.
 
 ### Dual Benchmark-Readiness Views
 
@@ -80,7 +86,7 @@ Both views are retained intentionally.
 
 ### Seed-Generation Note
 
-Seed generation is intentionally deferred until after the metadata layer, benchmark logic, and release-facing artifacts are frozen. The quality-aware regime is documented in the notebook and companion scripts so that the instruction layer is reproducible and auditable in the same way as the upstream acquisition and benchmark-construction phases.
+Seed generation is intentionally deferred until after the metadata layer, benchmark logic, and publication-facing artifacts are frozen. The quality-aware regime is documented separately in `SEED_GENERATION_DESIGN.md` so that the instruction layer is reproducible and auditable in the same way as the upstream acquisition and benchmark-construction phases.
 
 The current implemented logic is:
 
@@ -227,18 +233,23 @@ Public release note:
 
 - the full `550,314`-row instruction layer is a construction-complete internal artifact
 - public upload should use license-filtered release views under `PQID/data/processed/release_views/`
-- current public-open release view:
-  - total rows: `311,724`
+- recommended first upload:
+  - `pqid_v1_license_valid_train.jsonl`
+  - `pqid_v1_license_valid_validation.jsonl`
+  - `pqid_v1_license_valid_test.jsonl`
+  - total rows: `246,894`
+  - includes `7,356` copyleft rows marked as `public_open_with_obligations`
+  - includes `702` manually reviewed `other` rows marked as `public_open_with_obligations`
+- strict permissive-only fallback:
+  - `pqid_v1_public_open_train.jsonl`
+  - `pqid_v1_public_open_validation.jsonl`
+  - `pqid_v1_public_open_test.jsonl`
+  - total rows: `238,836`
   - rule: permissive-license rows only
-- current license-valid release view:
-  - total rows: `319,782`
-  - includes `311,724` permissive rows
-  - includes `7,356` copyleft rows with downstream obligations preserved
-  - includes `702` manually reviewed `other` rows with downstream obligations preserved
-- excluded from public release:
-  - no-license rows remain restricted/internal
-  - the former `18` missing-license-category rows have been normalized to explicit `no_license`
-  - the current missing-license internal-only summary contains `0` rows
+- excluded from public release for now:
+  - `303,402` `no_license` rows
+  - `18` missing-license rows
+  - missing-license rows are preserved in `pqid_v1_missing_license_internal_only.jsonl`
     - output scopes:
       - `full_output_text`: `532,302`
       - `code_comments_or_docstrings`: `8,352`
@@ -532,7 +543,7 @@ The full RevLib `.tgz` archive is available locally and the extraction script (`
 | 34 | `enrich_circuit_family.py` | GPT-4.1-mini circuit_family + semantic_intent | pending Cell 33 |
 | 35 | `split_validated.py` | Tier 1 / Tier 2 partition | pending Cell 34 |
 | — | `enrich_repo_license.py` | SPDX license per repo → repo_license, license_category | after Cell 35 |
-| — | `enrich_semantic_consistency.py` | Per-entry semantic similarity, BERTScore, BLEU-4, ROUGE-L, edit distance vs seed | after Cell 35 |
+| — | `enrich_semantic_consistency.py` | Per-entry semantic similarity, BERTScore precision/recall/F1, BLEU-4, ROUGE-L, edit distance vs seed | after Cell 35 |
 | — | `check_leakage.py` | Verify no hash overlap across splits | run any time |
 | — | `compute_paraphrase_diversity.py` | Pairwise BLEU-4 + TTR diversity report (10K sample) | run any time |
 
@@ -542,9 +553,9 @@ Execution note for the rebuilt quality-aware corpus:
   semantic-analysis step**
 - first pass:
   - local chunked CPU-safe run
-  - computes the lighter semantic metrics and leaves `bert_score_f1` null
+  - computes the lighter semantic metrics and leaves the BERTScore fields null
 - second pass:
-  - GPU-backed backfill of `bert_score_f1`
+  - GPU-backed backfill of `bert_score_precision`, `bert_score_recall`, and `bert_score_f1`
   - preferred current target: Google Cloud
 - detailed operational note:
   - `PQID/GCP_BERT_BACKFILL_STRATEGY.md`
@@ -1166,7 +1177,7 @@ All entries with any other validation status (timeout, no_circuit, import_error,
 
 File: `community_unvalidated.jsonl`
 
-**Use case**: community annotation and human evaluation. Community annotators can review and fix circuits, providing human preference signal for later repair, critique, or preference-learning experiments.
+**Use case**: HuggingFace community annotation challenge for human evaluation. Community annotators review and fix circuits, providing human preference signal for RLHF/DPO training (NeurIPS main / Nature Machine Intelligence track).
 
 ---
 
@@ -1192,7 +1203,20 @@ Every metadata field answers a specific explainability question:
 
 ---
 
-## 13. API Keys & Tokens
+## 13. Publication Plan
+
+| # | Venue | Track | Timeline | Focus |
+|---|-------|-------|----------|-------|
+| 1 | arXiv preprint | — | Day 1 of public release | Dataset announcement |
+| 2 | Scientific Data (Nature) | — | ~2026 Q3 | Methodology + quality + Data Records |
+| 3 | NeurIPS D&B | Datasets & Benchmarks | ~May/June 2026 | Dataset + benchmarks + leakage analysis |
+| 4 | ACM TQC | — | 6–12 months post-release | Model training results |
+| 5 | ICML DCAI Workshop | Data-Centric AI | 2026 | Tier 2 community annotation challenge |
+| 6 | NeurIPS main / Nature MI | — | 12–36 months | Human preference data; RLHF/DPO for quantum code generation |
+
+---
+
+## 14. API Keys & Tokens
 
 | Service | Preferred secret source |
 |---------|--------------------------|
@@ -1201,7 +1225,7 @@ Every metadata field answers a specific explainability question:
 
 ---
 
-## 14. Critical Conventions
+## 15. Critical Conventions
 
 ### Resume Safety
 - All scripts are resume-safe: re-running skips already-processed entries via `circuit_hash` or `content_hash` checks. Never delete intermediate output files before a run completes.

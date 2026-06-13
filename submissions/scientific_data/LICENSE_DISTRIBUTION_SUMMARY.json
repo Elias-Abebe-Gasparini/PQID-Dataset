@@ -10,26 +10,26 @@
     "license_category_distribution": [
       {
         "license_category": "permissive",
-        "rows": 360768,
-        "row_percent": 65.5568,
-        "unique_repositories": 1647,
-        "unique_source_keys": 60128,
+        "rows": 414522,
+        "row_percent": 75.3246,
+        "unique_repositories": 1648,
+        "unique_source_keys": 69087,
         "split_counts": {
-          "test": 35826,
-          "train": 288744,
-          "validation": 36198
+          "test": 41094,
+          "train": 331908,
+          "validation": 41520
         }
       },
       {
         "license_category": "no_license",
-        "rows": 181488,
-        "row_percent": 32.979,
-        "unique_repositories": 2732,
-        "unique_source_keys": 30248,
+        "rows": 127734,
+        "row_percent": 23.2111,
+        "unique_repositories": 2731,
+        "unique_source_keys": 21289,
         "split_counts": {
-          "test": 17874,
-          "train": 145404,
-          "validation": 18210
+          "test": 12606,
+          "train": 102240,
+          "validation": 12888
         }
       },
       {
@@ -59,18 +59,11 @@
     ],
     "repo_license_distribution": [
       {
-        "license_category": "no_license",
-        "repo_license": "<missing>",
-        "rows": 181488,
-        "row_percent": 32.979,
-        "unique_repositories": 2732
-      },
-      {
         "license_category": "permissive",
         "repo_license": "MIT",
-        "rows": 175830,
-        "row_percent": 31.9508,
-        "unique_repositories": 936
+        "rows": 229584,
+        "row_percent": 41.7187,
+        "unique_repositories": 937
       },
       {
         "license_category": "permissive",
@@ -78,6 +71,13 @@
         "rows": 133302,
         "row_percent": 24.2229,
         "unique_repositories": 641
+      },
+      {
+        "license_category": "no_license",
+        "repo_license": "<missing>",
+        "rows": 127734,
+        "row_percent": 23.2111,
+        "unique_repositories": 2731
       },
       {
         "license_category": "permissive",
@@ -193,8 +193,8 @@
       }
     ],
     "public_release_bucket_counts": {
-      "<missing>": 428364,
-      "public_open": 121932,
+      "<missing>": 374610,
+      "public_open": 175686,
       "restricted_internal_only": 18
     },
     "top_repositories_by_license_category": {
@@ -206,6 +206,10 @@
         {
           "repository": "Ahmik-Virani/Differentiating-Quantum-Bug-From-Noise-Statistical-Approach",
           "rows": 69294
+        },
+        {
+          "repository": "backordinary/QDP-FSL",
+          "rows": 53754
         },
         {
           "repository": "wjy99-c/QDiff",
@@ -254,17 +258,9 @@
         {
           "repository": "Quantinuum/qiskit-terra",
           "rows": 1578
-        },
-        {
-          "repository": "qiskit-community/qiskit-community-tutorials",
-          "rows": 1374
         }
       ],
       "no_license": [
-        {
-          "repository": "backordinary/QDP-FSL",
-          "rows": 53754
-        },
         {
           "repository": "lockephi/Allentown-L104-Node",
           "rows": 29874
@@ -320,6 +316,10 @@
         {
           "repository": "LBNL-HEP-QIS/QCLatticeJLabTutorial",
           "rows": 420
+        },
+        {
+          "repository": "Quantinuum/circuit-benchmarks-guppy",
+          "rows": 414
         }
       ],
       "copyleft": [
@@ -443,45 +443,45 @@
           "input_file": "PQID/data/processed/train_clean.jsonl",
           "output_file": "PQID/data/processed/release_views/pqid_v1_license_valid_train.jsonl",
           "input_rows": 440580,
-          "exported_rows": 295176,
-          "excluded_rows": 145404,
+          "exported_rows": 338340,
+          "excluded_rows": 102240,
           "exported_license_category_counts": {
             "copyleft": 5898,
             "other": 534,
-            "permissive": 288744
+            "permissive": 331908
           },
           "excluded_license_category_counts": {
-            "no_license": 145404
+            "no_license": 102240
           }
         },
         "validation": {
           "input_file": "PQID/data/processed/validation_clean.jsonl",
           "output_file": "PQID/data/processed/release_views/pqid_v1_license_valid_validation.jsonl",
           "input_rows": 55110,
-          "exported_rows": 36900,
-          "excluded_rows": 18210,
+          "exported_rows": 42222,
+          "excluded_rows": 12888,
           "exported_license_category_counts": {
             "copyleft": 648,
             "other": 54,
-            "permissive": 36198
+            "permissive": 41520
           },
           "excluded_license_category_counts": {
-            "no_license": 18210
+            "no_license": 12888
           }
         },
         "test": {
           "input_file": "PQID/data/processed/test_clean.jsonl",
           "output_file": "PQID/data/processed/release_views/pqid_v1_license_valid_test.jsonl",
           "input_rows": 54624,
-          "exported_rows": 36750,
-          "excluded_rows": 17874,
+          "exported_rows": 42018,
+          "excluded_rows": 12606,
           "exported_license_category_counts": {
             "copyleft": 810,
             "other": 114,
-            "permissive": 35826
+            "permissive": 41094
           },
           "excluded_license_category_counts": {
-            "no_license": 17874
+            "no_license": 12606
           }
         }
       },
@@ -489,15 +489,15 @@
       "summary_markdown_file": "PQID/data/processed/release_views/pqid_v1_license_valid_summary.md",
       "attribution_manifest_file": "PQID/data/processed/release_views/pqid_v1_license_valid_attribution_manifest.csv",
       "total_input_rows": 550314,
-      "total_exported_rows": 368826,
-      "total_excluded_rows": 181488,
+      "total_exported_rows": 422580,
+      "total_excluded_rows": 127734,
       "exported_license_category_counts": {
         "copyleft": 7356,
         "other": 702,
-        "permissive": 360768
+        "permissive": 414522
       },
       "excluded_license_category_counts": {
-        "no_license": 181488
+        "no_license": 127734
       },
       "included_other_license_counts": {
         "BSD-3-Clause-Clear": 90,
@@ -510,13 +510,6 @@
       "missing_license_internal_rows": 0,
       "missing_license_internal_split_counts": {},
       "top_excluded_repositories": [
-        {
-          "repo": "backordinary/QDP-FSL",
-          "excluded_rows": 53754,
-          "excluded_license_category_counts": {
-            "no_license": 53754
-          }
-        },
         {
           "repo": "lockephi/Allentown-L104-Node",
           "excluded_rows": 29874,
@@ -859,6 +852,13 @@
           "excluded_license_category_counts": {
             "no_license": 210
           }
+        },
+        {
+          "repo": "Valmohaugen/iQuHack-2026",
+          "excluded_rows": 204,
+          "excluded_license_category_counts": {
+            "no_license": 204
+          }
         }
       ],
       "release_rule": "Export rows whose metadata.license_category is in the selected profile. Export `other` rows only when their detected license appears in the manual review override list. Always exclude no_license rows; residual missing license-category rows, if present, are restricted governance-metadata gaps."
@@ -878,14 +878,14 @@
           "input_file": "PQID/data/processed/train_clean.jsonl",
           "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_train.jsonl",
           "input_rows": 440580,
-          "exported_rows": 288744,
-          "excluded_rows": 151836,
+          "exported_rows": 331908,
+          "excluded_rows": 108672,
           "exported_license_category_counts": {
-            "permissive": 288744
+            "permissive": 331908
           },
           "excluded_license_category_counts": {
             "copyleft": 5898,
-            "no_license": 145404,
+            "no_license": 102240,
             "other": 534
           }
         },
@@ -893,14 +893,14 @@
           "input_file": "PQID/data/processed/validation_clean.jsonl",
           "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_validation.jsonl",
           "input_rows": 55110,
-          "exported_rows": 36198,
-          "excluded_rows": 18912,
+          "exported_rows": 41520,
+          "excluded_rows": 13590,
           "exported_license_category_counts": {
-            "permissive": 36198
+            "permissive": 41520
           },
           "excluded_license_category_counts": {
             "copyleft": 648,
-            "no_license": 18210,
+            "no_license": 12888,
             "other": 54
           }
         },
@@ -908,14 +908,14 @@
           "input_file": "PQID/data/processed/test_clean.jsonl",
           "output_file": "PQID/data/processed/release_views/pqid_v1_public_open_test.jsonl",
           "input_rows": 54624,
-          "exported_rows": 35826,
-          "excluded_rows": 18798,
+          "exported_rows": 41094,
+          "excluded_rows": 13530,
           "exported_license_category_counts": {
-            "permissive": 35826
+            "permissive": 41094
           },
           "excluded_license_category_counts": {
             "copyleft": 810,
-            "no_license": 17874,
+            "no_license": 12606,
             "other": 114
           }
         }
@@ -924,14 +924,14 @@
       "summary_markdown_file": "PQID/data/processed/release_views/pqid_v1_public_open_summary.md",
       "attribution_manifest_file": "PQID/data/processed/release_views/pqid_v1_public_open_attribution_manifest.csv",
       "total_input_rows": 550314,
-      "total_exported_rows": 360768,
-      "total_excluded_rows": 189546,
+      "total_exported_rows": 414522,
+      "total_excluded_rows": 135792,
       "exported_license_category_counts": {
-        "permissive": 360768
+        "permissive": 414522
       },
       "excluded_license_category_counts": {
         "copyleft": 7356,
-        "no_license": 181488,
+        "no_license": 127734,
         "other": 702
       },
       "included_other_license_counts": {},
@@ -940,13 +940,6 @@
       "missing_license_internal_rows": 0,
       "missing_license_internal_split_counts": {},
       "top_excluded_repositories": [
-        {
-          "repo": "backordinary/QDP-FSL",
-          "excluded_rows": 53754,
-          "excluded_license_category_counts": {
-            "no_license": 53754
-          }
-        },
         {
           "repo": "lockephi/Allentown-L104-Node",
           "excluded_rows": 29874,
@@ -1285,6 +1278,13 @@
         },
         {
           "repo": "miguelmm97/Quantum-algorithms-infolattice",
+          "excluded_rows": 216,
+          "excluded_license_category_counts": {
+            "no_license": 216
+          }
+        },
+        {
+          "repo": "romainX17/QUPROFS",
           "excluded_rows": 216,
           "excluded_license_category_counts": {
             "no_license": 216

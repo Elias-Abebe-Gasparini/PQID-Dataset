@@ -1,5 +1,5 @@
 license_category,rows,row_percent,unique_repositories,unique_source_keys,split_counts
-permissive,360768,65.5568,1647,60128,"{'test': 35826, 'train': 288744, 'validation': 36198}"
-no_license,181488,32.979,2732,30248,"{'test': 17874, 'train': 145404, 'validation': 18210}"
+permissive,414522,75.3246,1648,69087,"{'test': 41094, 'train': 331908, 'validation': 41520}"
+no_license,127734,23.2111,2731,21289,"{'test': 12606, 'train': 102240, 'validation': 12888}"
 copyleft,7356,1.3367,163,1226,"{'test': 810, 'train': 5898, 'validation': 648}"
 other,702,0.1276,8,117,"{'test': 114, 'train': 534, 'validation': 54}"

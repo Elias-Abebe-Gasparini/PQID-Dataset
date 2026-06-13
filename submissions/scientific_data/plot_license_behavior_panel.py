@@ -216,14 +216,14 @@ def draw_panel(df: pd.DataFrame, behavior: pd.DataFrame, release: pd.DataFrame, 
     )
 
     total = df["rows"].sum()
-    fig = plt.figure(figsize=(13.2, 9.3), facecolor="white")
+    fig = plt.figure(figsize=(13.2, 8.55), facecolor="white")
     gs = GridSpec(
         2,
         2,
         figure=fig,
-        height_ratios=[1.15, 1.30],
+        height_ratios=[1.08, 1.22],
         width_ratios=[0.96, 1.34],
-        hspace=0.32,
+        hspace=0.24,
         wspace=0.42,
     )
 
@@ -385,9 +385,9 @@ def draw_panel(df: pd.DataFrame, behavior: pd.DataFrame, release: pd.DataFrame, 
         mode="expand",
         columnspacing=1.9,
         handlelength=4.6,
-        handleheight=1.9,
+        handleheight=1.55,
         borderaxespad=0,
-        fontsize=9.6,
+        fontsize=9.2,
     )
 
     for suffix in ("svg", "png"):
@@ -402,6 +402,10 @@ def main() -> None:
     behavior, release = write_tables(df)
     draw_panel(df, behavior, release, FIGURES, "Times New Roman")
     draw_panel(df, behavior, release, FIGURES_CALIBRI, "Calibri")
+    from sync_manuscript_figure_labels import sync_manuscript_figure_labels
+
+    for target in sync_manuscript_figure_labels():
+        print(f"synced {target}")
     print(f"saved {BEHAVIOR_CSV}")
     print(f"saved {RELEASE_VIEW_CSV}")
 

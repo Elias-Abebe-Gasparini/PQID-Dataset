@@ -1,16 +1,16 @@
 # PQID License Distribution Summary
 
 - canonical construction rows: `550,314`
-- license-valid rows: `368,826`
-- public-open permissive rows: `360,768`
+- license-valid rows: `422,580`
+- public-open permissive rows: `414,522`
 - internal-only missing-license rows: `0`
 
 ## License Categories In Canonical Construction Splits
 
 | category | rows | percent | unique repositories | unique source keys |
 | --- | ---: | ---: | ---: | ---: |
-| permissive | 360,768 | 65.5568% | 1,647 | 60,128 |
-| no_license | 181,488 | 32.9790% | 2,732 | 30,248 |
+| permissive | 414,522 | 75.3246% | 1,648 | 69,087 |
+| no_license | 127,734 | 23.2111% | 2,731 | 21,289 |
 | copyleft | 7,356 | 1.3367% | 163 | 1,226 |
 | other | 702 | 0.1276% | 8 | 117 |
 
@@ -18,9 +18,9 @@
 
 | category | repo_license | rows | percent | unique repositories |
 | --- | --- | ---: | ---: | ---: |
-| no_license | `<missing>` | 181,488 | 32.9790% | 2,732 |
-| permissive | `MIT` | 175,830 | 31.9508% | 936 |
+| permissive | `MIT` | 229,584 | 41.7187% | 937 |
 | permissive | `Apache-2.0` | 133,302 | 24.2229% | 641 |
+| no_license | `<missing>` | 127,734 | 23.2111% | 2,731 |
 | permissive | `BSD-3-Clause` | 49,926 | 9.0723% | 31 |
 | copyleft | `GPL-3.0` | 5,988 | 1.0881% | 126 |
 | copyleft | `AGPL-3.0` | 876 | 0.1592% | 26 |
@@ -42,5 +42,5 @@
 
 | release view | categories | excluded categories |
 | --- | --- | --- |
-| `license_valid` | copyleft: 7,356, other: 702, permissive: 360,768 | no_license: 181,488 |
-| `public_open` | permissive: 360,768 | copyleft: 7,356, no_license: 181,488, other: 702 |
+| `license_valid` | copyleft: 7,356, other: 702, permissive: 414,522 | no_license: 127,734 |
+| `public_open` | permissive: 414,522 | copyleft: 7,356, no_license: 127,734, other: 702 |

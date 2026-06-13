@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PQID Pipeline Explorer Preview</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #102033;
+      --muted: #5d6978;
+      --line: #cbd5df;
+      --panel: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 18px;
+      color: var(--ink);
+      font-family: Calibri, Arial, sans-serif;
+      background: #ffffff;
+    }
+    .shell {
+      max-width: 1220px;
+      margin: 0 auto;
+      border: 1px solid #d6dee8;
+      border-radius: 8px;
+      padding: 14px;
+      background: #ffffff;
+    }
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 23px;
+      line-height: 1.15;
+      margin: 0 0 4px;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+      margin: 0;
+      max-width: 780px;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 7px 10px;
+      font-size: 12px;
+      color: #405063;
+      min-width: 270px;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .swatch {
+      width: 18px;
+      height: 8px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(520px, 1.45fr) minmax(300px, 0.8fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+    .canvas {
+      border: 1px solid #dce3ea;
+      border-radius: 8px;
+      min-height: 430px;
+      background: linear-gradient(180deg, rgba(248,250,252,0.92), rgba(255,255,255,0.96));
+      overflow: hidden;
+    }
+    svg {
+      width: 100%;
+      height: 390px;
+      display: block;
+    }
+    .node rect {
+      fill: #fff;
+      stroke-width: 2;
+      filter: drop-shadow(0 3px 5px rgba(21, 32, 43, 0.10));
+      transition: stroke-width 160ms ease, filter 160ms ease;
+    }
+    .node text {
+      pointer-events: none;
+      fill: #102033;
+    }
+    .node .label {
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .node .metric {
+      fill: #59677a;
+      font-size: 11px;
+    }
+    .node.active rect {
+      stroke-width: 4;
+      filter: drop-shadow(0 5px 8px rgba(21, 32, 43, 0.18));
+    }
+    .node.dimmed { opacity: 0.46; }
+    .node { cursor: pointer; }
+    .edge {
+      fill: none;
+      stroke: #b9c4cf;
+      stroke-width: 2.4;
+      opacity: 0.8;
+    }
+    .edge.active {
+      stroke: #2f6f8f;
+      stroke-width: 4;
+      opacity: 1;
+    }
+    .arrow { fill: #a9b5c0; }
+    .detail {
+      border: 1px solid #dce3ea;
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px 16px 14px;
+      min-height: 430px;
+    }
+    .detail h2 {
+      font-size: 21px;
+      line-height: 1.15;
+      margin: 0 0 7px;
+    }
+    .chip {
+      display: inline-block;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 4px 7px;
+      margin-bottom: 10px;
+    }
+    .metric-box {
+      background: #ffffff;
+      border: 1px solid #dce3ea;
+      border-left: 4px solid var(--accent, #2f6f8f);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin: 8px 0 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .detail p {
+      color: #28384a;
+      font-size: 14px;
+      line-height: 1.45;
+      margin: 0 0 12px;
+    }
+    .detail h3 {
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin: 13px 0 6px;
+      color: #526174;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #28384a;
+      font-size: 13px;
+      line-height: 1.42;
+    }
+    .artifacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+    .artifacts a {
+      border: 1px solid #cbd5df;
+      border-radius: 5px;
+      color: #102033;
+      background: #fff;
+      padding: 6px 8px;
+      font-weight: 700;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .stage-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 4px 12px 12px;
+    }
+    .stage-buttons button {
+      border: 1px solid #cbd5df;
+      border-radius: 5px;
+      background: #ffffff;
+      color: #102033;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 9px;
+    }
+    .stage-buttons button.active {
+      background: #102033;
+      border-color: #102033;
+      color: #ffffff;
+    }
+    @media (max-width: 760px) {
+      .header { display: block; }
+      .legend { justify-content: flex-start; margin-top: 10px; }
+      .layout { grid-template-columns: 1fr; }
+      svg { height: 520px; }
+      .detail { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <div>
+        <h1>Interactive PQID Pipeline Explorer</h1>
+        <p class="sub">Standalone preview of the D3 explorer embedded in the Gradio dashboard. This file does not require local Gradio.</p>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="layout">
+      <div class="canvas">
+        <svg id="pipeline-svg" viewBox="0 0 960 350" role="img" aria-label="Interactive PQID construction and release pipeline"></svg>
+        <div class="stage-buttons" id="stage-buttons"></div>
+      </div>
+      <aside class="detail" id="detail"></aside>
+    </div>
+  </div>
+  <script>
+    const HF_DATASET_URL = "https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID";
+    const GITHUB_URL = "https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/tree/v1.0.0-scientific-data-submission";
+    const ZENODO_URL = "https://doi.org/10.5281/zenodo.20024477";
+    const ISSUES_URL = "https://github.com/Elias-Abebe-Gasparini/PQID-Dataset/issues";
+    const STAGES = [
+      {
+        id: "acquisition", label: "GitHub API acquisition", short: "Acquisition",
+        layer: "Data acquisition", color: "#2f6f8f", x: 90, y: 210,
+        metric: "source repos", headline: "Repository-scale quantum-code harvesting",
+        detail: "PQID begins with GitHub API collection of Qiskit/OpenQASM-bearing artifacts. The acquisition layer preserves repository names, file paths, source URLs, source keys, and scrape metadata so later rows can be audited back to their public repository context.",
+        evidence: ["GitHub API provenance fields", "Repository, branch, path, URL, and source-key metadata", "Acquisition and recall-expansion notebooks"],
+        artifacts: [["Pipeline documentation", GITHUB_URL], ["Archived release", ZENODO_URL]]
+      },
+      {
+        id: "normalization", label: "Normalization and schema design", short: "Normalization",
+        layer: "Code normalization", color: "#4f7f52", x: 245, y: 112,
+        metric: "550,314 construction rows", headline: "A unified code/instruction object",
+        detail: "Raw code fragments are normalized into a stable schema with cleaned inputs, outputs, metadata, lineage fields, split assignments, and governance annotations. This makes the dataset inspectable as a row-level research object instead of a loose scrape.",
+        evidence: ["SCHEMA.md", "train/validation/test JSONL construction corpus", "Metadata design and evaluation notebook"],
+        artifacts: [["GitHub release snapshot", GITHUB_URL], ["Zenodo record", ZENODO_URL]]
+      },
+      {
+        id: "seed-generation", label: "OpenAI seed generation", short: "Seed generation",
+        layer: "Instruction synthesis", color: "#936a2d", x: 400, y: 210,
+        metric: "quality-aware prompts", headline: "Natural-language instructions from code objects",
+        detail: "Instruction generation uses OpenAI API calls with quality-aware prompting. Stubborn near-duplicate or low-diversity inputs are backfilled through progressively higher temperature retries, creating usable instructions while preserving audit metadata.",
+        evidence: ["seed_generation_quality_aware_pipeline.ipynb", "Progressive-temperature retry records", "Instruction acceptance sidecars"],
+        artifacts: [["Hugging Face dataset", HF_DATASET_URL], ["Pipeline snapshot", GITHUB_URL]]
+      },
+      {
+        id: "semantic-audit", label: "Semantic and BERT-F1 audit", short: "Semantic audit",
+        layer: "Quality evidence", color: "#7a5b9a", x: 555, y: 112,
+        metric: "BERT-F1 and embeddings", headline: "Distributional evidence for paraphrase quality",
+        detail: "Semantic consistency checks compare generated instructions and code objects through embedding-based similarity and BERT-F1 scoring. GCP backfill is used to accelerate expensive semantic scoring at corpus scale.",
+        evidence: ["BERT-F1 enrichment script", "GCP semantic backfill workflow", "Validation-quality metric distributions"],
+        artifacts: [["Scientific Data figures", GITHUB_URL], ["Dataset card", HF_DATASET_URL]]
+      },
+      {
+        id: "acceptance-gate", label: "Acceptance gate and remediation", short: "Acceptance gate",
+        layer: "Human/LLM audit", color: "#b55d5d", x: 710, y: 210,
+        metric: "282 rewrite outputs", headline: "Closing the non-trivial rewrite tail",
+        detail: "The pilot review sheet was adjudicated, then the 47 rewrite rows and their nearest risk-neighbours were remediated. The final closeout converted the remaining remediation candidates to rewrite decisions with no missing outputs.",
+        evidence: ["209 accept / 47 rewrite pilot adjudication", "47 core rewrites plus lineage neighbours", "282 final remediation rewrite outputs"],
+        artifacts: [["Audit trail snapshot", GITHUB_URL], ["Issue tracker", ISSUES_URL]]
+      },
+      {
+        id: "release-stratification", label: "License-aware release stratification", short: "Release",
+        layer: "Release governance", color: "#486b74", x: 865, y: 112,
+        metric: "311,724 public-open rows", headline: "Public release without redistributing no-license rows",
+        detail: "The public-open Hugging Face payload exposes permissive-license rows. The broader license-valid view documents copyleft and reviewed other license rows for audit, while no-license rows remain restricted and are not redistributed.",
+        evidence: ["Public-open summary JSON", "License-valid summary JSON", "Attribution manifest", "Zenodo immutable release"],
+        artifacts: [["Hugging Face dataset", HF_DATASET_URL], ["Zenodo DOI", ZENODO_URL], ["GitHub release snapshot", GITHUB_URL]]
+      }
+    ];
+    const EDGES = [
+      ["acquisition", "normalization"],
+      ["normalization", "seed-generation"],
+      ["seed-generation", "semantic-audit"],
+      ["semantic-audit", "acceptance-gate"],
+      ["acceptance-gate", "release-stratification"]
+    ];
+    const layers = Array.from(new Map(STAGES.map(d => [d.layer, d.color])).entries());
+    let selected = STAGES[0].id;
+
+    function htmlEscape(value) {
+      return String(value).replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[s]));
+    }
+    function isConnected(edge, id) { return edge[0] === id || edge[1] === id; }
+    function updateDetail(stage) {
+      const detail = document.getElementById("detail");
+      const evidence = stage.evidence.map(item => `<li>${htmlEscape(item)}</li>`).join("");
+      const artifacts = stage.artifacts.map(([label, url]) =>
+        `<a href="${htmlEscape(url)}" target="_blank" rel="noopener noreferrer">${htmlEscape(label)}</a>`
+      ).join("");
+      detail.style.setProperty("--accent", stage.color);
+      detail.innerHTML = `
+        <span class="chip" style="background:${stage.color}">${htmlEscape(stage.layer)}</span>
+        <h2>${htmlEscape(stage.headline)}</h2>
+        <div class="metric-box">${htmlEscape(stage.metric)}</div>
+        <p>${htmlEscape(stage.detail)}</p>
+        <h3>Audit evidence</h3>
+        <ul>${evidence}</ul>
+        <h3>Public verification links</h3>
+        <div class="artifacts">${artifacts}</div>
+      `;
+    }
+    function chooseStage(id) {
+      selected = id;
+      const stage = STAGES.find(d => d.id === id);
+      updateDetail(stage);
+      d3.selectAll(".node")
+        .classed("active", d => d.id === selected)
+        .classed("dimmed", d => d.id !== selected && !EDGES.some(edge => isConnected(edge, d.id) && isConnected(edge, selected)));
+      d3.selectAll(".edge").classed("active", d => isConnected(d, selected));
+      document.querySelectorAll(".stage-buttons button").forEach(button => {
+        button.classList.toggle("active", button.dataset.stageId === selected);
+      });
+    }
+    function wrapText(text, width) {
+      text.each(function() {
+        const textEl = d3.select(this);
+        const words = textEl.text().split(/\s+/).reverse();
+        const y = textEl.attr("y");
+        const x = textEl.attr("x");
+        let line = [];
+        let lineNumber = 0;
+        let word;
+        let tspan = textEl.text(null).append("tspan").attr("x", x).attr("y", y);
+        while ((word = words.pop())) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width && line.length > 1) {
+            line.pop();
+            tspan.text(line.join(" "));
+            line = [word];
+            tspan = textEl.append("tspan").attr("x", x).attr("y", y).attr("dy", `${++lineNumber * 1.1}em`).text(word);
+          }
+        }
+      });
+    }
+    function render() {
+      const byId = new Map(STAGES.map(d => [d.id, d]));
+      const svg = d3.select("#pipeline-svg");
+      svg.append("defs").append("marker")
+        .attr("id", "arrowhead").attr("viewBox", "0 -5 10 10")
+        .attr("refX", 9).attr("refY", 0).attr("markerWidth", 8)
+        .attr("markerHeight", 8).attr("orient", "auto")
+        .append("path").attr("class", "arrow").attr("d", "M0,-5L10,0L0,5");
+      svg.append("g").attr("class", "edges").selectAll("path").data(EDGES).join("path")
+        .attr("class", "edge").attr("marker-end", "url(#arrowhead)")
+        .attr("d", ([sourceId, targetId]) => {
+          const source = byId.get(sourceId);
+          const target = byId.get(targetId);
+          const sx = source.x + 62, sy = source.y, tx = target.x - 62, ty = target.y;
+          const mx = (sx + tx) / 2;
+          return `M${sx},${sy} C${mx},${sy} ${mx},${ty} ${tx},${ty}`;
+        });
+      const node = svg.append("g").attr("class", "nodes").selectAll("g").data(STAGES).join("g")
+        .attr("class", "node").attr("tabindex", 0).attr("role", "button")
+        .attr("aria-label", d => d.label).attr("transform", d => `translate(${d.x},${d.y})`)
+        .on("click", (event, d) => chooseStage(d.id))
+        .on("keydown", (event, d) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            chooseStage(d.id);
+          }
+        });
+      node.append("rect").attr("x", -64).attr("y", -35).attr("width", 128).attr("height", 78).attr("rx", 8).attr("stroke", d => d.color);
+      node.append("text").attr("class", "label").attr("text-anchor", "middle").attr("x", 0).attr("y", -12).text(d => d.short).call(wrapText, 106);
+      node.append("text").attr("class", "metric").attr("text-anchor", "middle").attr("x", 0).attr("y", 24).text(d => d.metric).call(wrapText, 108);
+      d3.select("#legend").selectAll("span").data(layers).join("span").html(([layer, color]) => `<i class="swatch" style="background:${color}"></i>${htmlEscape(layer)}`);
+      d3.select("#stage-buttons").selectAll("button").data(STAGES).join("button").attr("type", "button").attr("data-stage-id", d => d.id).text(d => d.short).on("click", (event, d) => chooseStage(d.id));
+      chooseStage(selected);
+    }
+    render();
+  </script>
+</body>
+</html>

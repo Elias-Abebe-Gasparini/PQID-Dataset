@@ -1,7 +1,7 @@
 license_category,repo_license,rows,row_percent,unique_repositories
-no_license,<missing>,181488,32.979,2732
-permissive,MIT,175830,31.9508,936
+permissive,MIT,229584,41.7187,937
 permissive,Apache-2.0,133302,24.2229,641
+no_license,<missing>,127734,23.2111,2731
 permissive,BSD-3-Clause,49926,9.0723,31
 copyleft,GPL-3.0,5988,1.0881,126
 copyleft,AGPL-3.0,876,0.1592,26
