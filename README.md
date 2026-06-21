@@ -1,7 +1,7 @@
 # PQID: Parallel Quantum Instruction Dataset ⚛️
 
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-blue)](https://huggingface.co/datasets/Elias-Abebe-Gasparini/PQID)
-[![Gradio Space](https://img.shields.io/badge/Gradio-Dataset%20Gateway-orange)](https://huggingface.co/spaces/Elias-Abebe-Gasparini/PQID-Dataset-Gateway)
+[![Gradio Space](https://img.shields.io/badge/Gradio-Dataset%20Gateway-orange)](https://elias-abebe-gasparini-pqid-dataset-gateway.hf.space)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20019482.svg)](https://doi.org/10.5281/zenodo.20019482)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](./LICENSE.md)
 
